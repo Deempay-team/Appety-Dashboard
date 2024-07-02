@@ -40,15 +40,15 @@ export const UserHomePage = () => {
   const [waitNo, setWaitNo] = useState("");
   //const [merchStatus, setMerchStatus] = useState("");
   const [waitStatus, setWaitStatus] = useState("");
-  const [linkUrlStatus, setLinkUrlStatus] = useState();
+  const [linkUrlStatus, setLinkUrlStatus] = useState("");
 
-  const checkPage = () => {
-    if (linkUrlStatus !== "1") {
-      setQueueWaitPage(false)
-      setNotOpenPage(true);
-      setFillDataPage(false)
-    } 
-  }
+  // const checkPage = () => {
+  //   if (linkUrlStatus !== "1") {
+  //     setQueueWaitPage(false)
+  //     setNotOpenPage(true);
+  //     setFillDataPage(false)
+  //   } 
+  // }
 
   useEffect(() => {
     axios
@@ -60,8 +60,6 @@ export const UserHomePage = () => {
           setMerchName(res.data?.data.merchName);
           setWaitTypeList(res.data?.data.waitType);
           setLinkUrlStatus(res.data?.data.linkUrlStatus)
-         
-          checkPage();
         }
       })
       .catch(function (error) {
