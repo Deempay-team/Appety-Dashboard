@@ -1,0 +1,1 @@
+export { AdminMerchantListPage } from "./MerchantList";
