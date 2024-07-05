@@ -41,4 +41,3 @@ const MenuItem = ({ item }) => {
 
 export default MenuItem;
 
-

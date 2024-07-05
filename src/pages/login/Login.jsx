@@ -17,7 +17,6 @@ export const LoginPage = () => {
   const [apiResponseError, setApiResponseError] = useState("");
   const { login } = useAuth();
   
-
   // CALL LOGIN API
   const {
     isLoading: isLoggingIn,
@@ -37,6 +36,12 @@ export const LoginPage = () => {
   } = useForm();
 
   useEffect(() => {
+    if (email && password) {
+      loginUser();
+    }
+  }, [email, password])
+
+  useEffect(() => {
     if (data?.code === "000000") {
       navigate("/dashboard/merchant");
       const { data: userDetails } = data;
@@ -52,6 +57,7 @@ export const LoginPage = () => {
           phoneNo: userDetails?.phoneNo,
         })
       );
+      reset();
       //setUserId(userDetails?.userId);
     } else if (data?.code === "U00005") {
       setApiResponseError(
@@ -73,7 +79,6 @@ export const LoginPage = () => {
     const { email, password } = data;
     setEmail(email);
     setPassword(password);
-    loginUser();
   };
 
   return (

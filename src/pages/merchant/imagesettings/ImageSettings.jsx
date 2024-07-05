@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 //import getCroppedImg from "./cropImage";
 import Layout from "../../../components/MerchantLayout";
 import { UploadImageIcon } from "../../../assests/icons/Icons";
+//import html2canvas from "html2canvas";
 import storage from "../../../utils/storage";
 import ReactCrop, {
   centerCrop,
@@ -9,12 +10,15 @@ import ReactCrop, {
   makeAspectCrop,
 } from "react-image-crop";
 import setCanvasPreview from "./setCanvasPreview";
+//import { image } from "html2canvas/dist/types/css/types/image";
 
 const ASPECT_RATIO = 1;
 const MIN_DIMENSION = 150;
 
 const ImageSettingsPage = () => {
   const uploadId = useRef();
+  const imgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
   const [idName, setIdName] = useState("");
   const [isImageUploadingId, setIsImageUploadingId] = useState(false);
 
@@ -42,8 +46,6 @@ const ImageSettingsPage = () => {
   });
   reader.readAsDataURL(file);
   };
-
-
 
   const onImageLoad = (e) => {
     const {width, height} = e.currentTarget
@@ -74,7 +76,7 @@ const ImageSettingsPage = () => {
   return (
     <>
       <Layout>
-        <main className="sm:ml-[350px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+        <main className="sm:ml-[350px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] ">
           <h2 className="text_18 pb-4 pt-10">Upload Logo</h2>
           <div class="text-[#6b6968] rounded-[15px]  bg-[#ffffff] sm:max-w-[579px] max-w-[386px]">
 
@@ -149,16 +151,41 @@ const ImageSettingsPage = () => {
                aspect={ASPECT_RATIO}
                minWidth={MIN_DIMENSION}
               >
-                <img src={imgSrc} alt="upload"
+                <img 
+                ref={imgRef}
+                src={imgSrc} alt="upload"
                  style={{maxHeight: "70vh"}}
                  onLoad={onImageLoad}
                 />
               </ReactCrop>
+              <button 
+              onClick={() => {
+                setCanvasPreview(
+                  imgRef.current,
+                  previewCanvasRef.current,
+                  convertToPixelCrop(
+                    imgRef.current.width,
+                    imgRef.current.height
+                  )
+                )
+              }}
+              className="submit_btn ">
+                Crop Image
+              </button>
             </div>
           }
-
-
-   
+          {crop && 
+          <canvas
+          ref={previewCanvasRef}
+           className="mt4" 
+           style={{
+            border: "1px solid black",
+            objectFit: "contain",
+            width: 150,
+            height: 150,
+           }}
+          />
+          }
         </main>
       </Layout>
     </>

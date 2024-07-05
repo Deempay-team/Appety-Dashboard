@@ -2,9 +2,9 @@ import React from "react";
 
 import "./styles.css";
 
-export const Spinner = () => {
+export const SpinnerOrange = () => {
   return (
-    <div class="text-center justify-center w-6 h-6 border-[3px] border-[#F99762] mx-auto rounded-full loader"></div>
+    <div class="text-center justify-center w-8 h-8 border-[3px] border-[#F99762] mx-auto rounded-full loader"></div>
   );
 };
 
@@ -14,9 +14,9 @@ export const SpinnerWhite = () => {
   );
 };
 
-export const SpinnerMedium = () => {
+export const SpinnerOrangeMedium = () => {
   return (
-    <div class="w-3.5 h-3.5 border-2 border-[#F99762] rounded-full mx-auto loader text-center"></div>
+    <div class="text-center justify-center w-6 h-6 border-[3px] border-[#F99762] mx-auto rounded-full loader"></div>
   );
 };
 
@@ -25,6 +25,17 @@ export const SpinnerMediumWhite = () => {
     <div class="w-3.5 h-3.5 border-2 border-[#ffffff] rounded-full mx-auto loader text-center"></div>
   );
 };
+
+
+// {isLoadingWait || queueList.length > 0 ? (
+// <>
+// </>
+// ) : !!isLoadingWait || queueList.length === 0 ? (
+// <>
+// </>
+// ) : ("")}
+
+
 
 
 

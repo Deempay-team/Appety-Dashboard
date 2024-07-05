@@ -11,6 +11,7 @@ const HeaderPage = () => {
   const merchName = JSON.parse(storage.fetch("merchantDetails")).merchName;
   const logoUrl = JSON.parse(storage.fetch("merchantDetails")).logoUrl;
   const [changeIcon, setChangeIcon] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleLogout = () => {
     storage.clear();
@@ -22,7 +23,18 @@ const HeaderPage = () => {
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
           <div className="flex items-center">
-            {logoUrl === null ? (
+          <img
+              src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
+              alt="User avatar"
+              //style={{ borderRadius: "50px" }}
+              className={`${
+                imageLoaded
+                  ? "visible rounded-full h-[50px] w-[50px]"
+                  : "hidden rounded-full h-[50px] w-[50px]"
+              }`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
               <FaUserCircle
                 size={50}
                 style={{
@@ -32,16 +44,8 @@ const HeaderPage = () => {
                   cursor: "pointer",
                 }}
               />
-            ) : (
-              <img
-                src={logoUrl}
-                width="50px"
-                height="50px"
-                alt="User avatar"
-                style={{ borderRadius: "50px" }}
-              />
             )}
-            <p className="font-medium text-[32px] text-black pl-3 capitalize">
+            <p className="font-semibold text-[32px] text-black pl-3 capitalize">
               {merchName}
             </p>
           </div>

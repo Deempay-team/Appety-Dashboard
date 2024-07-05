@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+   font-family: 'SF Pro Display', sans-serif;                                      
+} 
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -18,20 +23,39 @@
 
 .login-image {
   background-image: url("../src/assests/images/login.png");
- }
+}
 
- .signup-image {
+.signup-image {
   background-image: url("../src/assests/images/signup.png");
- }
+}
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 20px;
+  }
+
+  ::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #f7f4ed;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #FEEAE0;
+    border-radius: 100vh;
+    border: 2px solid #f6f7ed;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FDDCCB;
+  }
 }
 
 @layer components {
-
   .text-col {
     @apply text-[#F99762];
   }
@@ -45,17 +69,16 @@
   }
 
   .darker-bg {
-    @apply bg-[#FBBA96]; 
+    @apply bg-[#FBBA96];
   }
 
   .gray-bg {
-    @apply bg-[#f3f4f6]; 
+    @apply bg-[#f3f4f6];
   }
 
   .gray2-bg {
-    @apply bg-[#e5e7eb]; 
+    @apply bg-[#e5e7eb];
   }
-
 
   .text_12 {
     @apply text-[#000000] text-xs text-[10px] font-normal leading-3;
@@ -82,7 +105,7 @@
   }
 
   .input_label {
-    @apply block mb-2 sm:text-sm text-xs font-medium text-[#595959] dark:text-[#595959]  
+    @apply block mb-2 sm:text-sm text-xs font-medium text-[#595959] dark:text-[#595959];
   }
 
   .in_put {
@@ -97,15 +120,13 @@
     @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[3px] block max-w-10 px-2 dark:placeholder-[#8d8d8d] h-[40px];
   }
 
-
-
   .in_pt {
     @apply bg-[#f7f7f7] border-[none]  text-[#000000]  text-sm   dark:bg-[#f7f7f7] focus:border-[#1a71ff]   dark:text-[#000000]  dark:border-[#1a71ff];
   }
 
   .input_error {
-    @apply block flex-1  w-full text-sm rounded-lg border-[red] focus:border-[red] outline-none border-[2px] ;
-  } 
+    @apply block flex-1  w-full text-sm rounded-lg border-[red] focus:border-[red] outline-none border-[2px];
+  }
 
   .submit_btn {
     @apply text-base leading-4 text-[#ffffff] h-[52px]  rounded-lg bg-[#F99762] hover:bg-[#ed996c]  w-full;
@@ -116,17 +137,12 @@
   }
 
   .short_btn_white {
-    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762] hover:bg-[#F99762] hover:text-[#ffffff]  w-[158px] text-sm text-[#F99762] font-normal;
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762]  w-[158px] text-sm text-[#F99762] font-normal;
   }
 
   .short_btn_green {
     @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#33B469] hover:bg-[#46be78] hover:text-[#ffffff]  w-[158px] text-sm text-[#FFFFFF] font-normal;
   }
-
-
- 
-
-
 
   .big_btn {
     @apply text-[#130e0e] sm:h-[48px] h-[38px] rounded-lg bg-[#1a71ff] hover:bg-[#2491f0] w-full;
@@ -140,12 +156,11 @@
     @apply sm:text-base text-sm font-medium text-[#000000] items-center justify-center flex;
   }
 
-  
   .half_label {
-    @apply inline-flex items-center sm:px-3 px-2 text_14_400  text-[#1a71ff] bg-[#F5F9FF] border border-r-0 rounded-l-md dark:border-[#F5F9FF]
+    @apply inline-flex items-center sm:px-3 px-2 text_14_400  text-[#1a71ff] bg-[#F5F9FF] border border-r-0 rounded-l-md dark:border-[#F5F9FF];
   }
 
   .inPut_error {
-    @apply border-2 dark:border-[red] outline-none focus:ring-[red] focus:border-[red]
+    @apply border-2 dark:border-[red] outline-none focus:ring-[red] focus:border-[red];
   }
 }

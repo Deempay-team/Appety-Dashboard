@@ -42,14 +42,7 @@ export const UserHomePage = () => {
   const [waitStatus, setWaitStatus] = useState("");
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
 
-  // const checkPage = () => {
-  //   if (linkUrlStatus !== "1") {
-  //     setQueueWaitPage(false)
-  //     setNotOpenPage(true);
-  //     setFillDataPage(false)
-  //   } 
-  // }
-
+  //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {
     axios
       .get(`http://159.223.37.225/api/v1/link/fetch/${linkUrl}`)
@@ -59,7 +52,7 @@ export const UserHomePage = () => {
           setLogoUrl(res.data?.data.logoUrl);
           setMerchName(res.data?.data.merchName);
           setWaitTypeList(res.data?.data.waitType);
-          setLinkUrlStatus(res.data?.data.linkUrlStatus)
+          setLinkUrlStatus(res.data?.data.linkUrlStatus);
         }
       })
       .catch(function (error) {
@@ -76,6 +69,7 @@ export const UserHomePage = () => {
 
   const paxNoD = watch("paxNo");
 
+  //LOGIC TO FILTER WAITTYPE
   useEffect(() => {
     if (paxNoD) {
       for (let i = 0; i < waitTypeList.length; i++) {
@@ -89,7 +83,6 @@ export const UserHomePage = () => {
           setWaitTypeId(waitTypeList[i].waitTypeId);
           setWaitType(waitTypeList[i].waitTypeName);
           setWaitTypeNameId(waitTypeList[i].waitTypeNameId);
-          //setEstimateTime(waitTypeList[i].estimateTime)
         }
       }
     }
@@ -117,33 +110,68 @@ export const UserHomePage = () => {
   };
 
   useEffect(() => {
+    if (
+      email &&
+      cusPhone &&
+      cusName &&
+      paxNo &&
+      merchId &&
+      waitType &&
+      waitTypeNameId &&
+      waitTypeId &&
+      marketing
+    ) {
+      joinQueue();
+    }
+  }, [
+    email,
+    cusPhone,
+    cusName,
+    paxNo,
+    merchId,
+    waitType,
+    waitTypeNameId,
+    waitTypeId,
+    marketing,
+  ]);
+
+  //CALL API TO JOIN QUEUE
+  useEffect(() => {
     if (data?.code === "000000") {
       setWaitNo(data?.data?.waitNo);
       setWaitPosition(data?.data?.waitPosition);
       setuserName(data?.data?.cusName);
       setEstimateTime(data?.data?.estimateWaitTime);
       setPersonNo(data?.data?.paxNo);
-      setWaitStatus(data?.data?.status)
+      setWaitStatus(data?.data?.status);
       setFillDataPage(false);
       setQueueWaitPage(true);
       setNotOpenPage(false);
-
-   
     }
   }, [data]);
 
-  useEffect (() => {
-   if (waitStatus === "WAITING") {
-     setProgressBar(true);
-     setIsTableReady(false);
-     console.log("data", data.data);
-   } else {
-    setProgressBar(false);
-     setIsTableReady(true);
-   }
-  }, [waitStatus])
+  //CHECK IF THE CUSTOMER IS CHECKED IN
+  useEffect(() => {
+    if (waitStatus === "WAITING") {
+      setProgressBar(true);
+      setIsTableReady(false);
+      console.log("data", data.data);
+    } else {
+      setProgressBar(false);
+      setIsTableReady(true);
+    }
+  }, [waitStatus]);
 
-  console.log("data", waitStatus);
+  //CHECK IF THE MERCHANT IS OPEN OR NOT
+  useEffect(() => {
+    if (linkUrlStatus) {
+      if (linkUrlStatus !== "1") {
+        setQueueWaitPage(false);
+        setNotOpenPage(true);
+        setFillDataPage(false);
+      }
+    }
+  }, [linkUrlStatus]);
 
   //SUBMIT USER DATA
   const onSubmitHandler = (data) => {
@@ -153,7 +181,15 @@ export const UserHomePage = () => {
     setCusName(cusName);
     setPaxNo(paxNo);
 
+    if ( email && cusPhone && cusName && paxNo) {
+      joinQueue();
+    }else {
+    setEmail(email);
+    setCusPhone(cusPhone);
+    setCusName(cusName);
+    setPaxNo(paxNo);
     joinQueue();
+    }    
   };
 
   return (
@@ -162,30 +198,30 @@ export const UserHomePage = () => {
         <div className="bg-[#F6F7F9] ">
           <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
             <div className="flex justify-between">
-            <div className="flex items-center">
-                  {logoUrl === null ? (
-                    <FaUserCircle
-                      size={50}
-                      style={{
-                        display: "flex",
-                        alignSelf: "center",
-                        opacity: 0.25,
-                        cursor: "pointer",
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={logoUrl}
-                      width="50px"
-                      height="50px"
-                      alt="User avatar"
-                      style={{ borderRadius: "50px" }}
-                    />
-                  )}
-                  <p className="font-medium text-base text-black pl-3 capitalize">
-                    {merchName}
-                  </p>
-                </div>
+              <div className="flex items-center">
+                {logoUrl === null ? (
+                  <FaUserCircle
+                    size={50}
+                    style={{
+                      display: "flex",
+                      alignSelf: "center",
+                      opacity: 0.25,
+                      cursor: "pointer",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={logoUrl}
+                    width="50px"
+                    height="50px"
+                    alt="User avatar"
+                    style={{ borderRadius: "50px" }}
+                  />
+                )}
+                <p className="font-medium text-base text-black pl-3 capitalize">
+                  {merchName}
+                </p>
+              </div>
               <div className="flex place-items-end">
                 <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
                   <p className="">{currentDate}</p>
@@ -250,8 +286,8 @@ export const UserHomePage = () => {
                     required: "Pax is required",
                     pattern: {
                       value: /^(?!(0))[0-9]+$/,
-                      message: "Your value must be greater than 0"
-                    }
+                      message: "Your value must be greater than 0",
+                    },
                   })}
                 />
                 {errors.paxNo && (
@@ -300,7 +336,11 @@ export const UserHomePage = () => {
               ) : null}
 
               <div>
-                <button type="submit" disabled={isJoining} className="submit_btn mt-[80px] ">
+                <button
+                  type="submit"
+                  disabled={isJoining}
+                  className="submit_btn mt-[80px] "
+                >
                   {isJoining ? <SpinnerWhite /> : "submit"}
                 </button>
               </div>
@@ -434,30 +474,30 @@ export const UserHomePage = () => {
         <>
           <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
             <div className="flex justify-between">
-            <div className="flex items-center">
-                  {logoUrl === null ? (
-                    <FaUserCircle
-                      size={50}
-                      style={{
-                        display: "flex",
-                        alignSelf: "center",
-                        opacity: 0.25,
-                        cursor: "pointer",
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={logoUrl}
-                      width="50px"
-                      height="50px"
-                      alt="User avatar"
-                      style={{ borderRadius: "50px" }}
-                    />
-                  )}
-                  <p className="font-medium text-base text-black pl-3 capitalize">
-                    {merchName}
-                  </p>
-                </div>
+              <div className="flex items-center">
+                {logoUrl === null ? (
+                  <FaUserCircle
+                    size={50}
+                    style={{
+                      display: "flex",
+                      alignSelf: "center",
+                      opacity: 0.25,
+                      cursor: "pointer",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={logoUrl}
+                    width="50px"
+                    height="50px"
+                    alt="User avatar"
+                    style={{ borderRadius: "50px" }}
+                  />
+                )}
+                <p className="font-medium text-base text-black pl-3 capitalize">
+                  {merchName}
+                </p>
+              </div>
               <div className="flex place-items-end">
                 <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
                   <p className="">{currentDate}</p>

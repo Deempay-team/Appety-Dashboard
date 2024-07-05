@@ -50,20 +50,44 @@ export const SignUpPage = () => {
   };
 
   useEffect(() => {
+    if (
+      password &&
+      firstName &&
+      lastName &&
+      email &&
+      businessName &&
+      phoneNo &&
+      address &&
+      role
+    ) {
+      registerUser();
+    }
+  }, [
+    password,
+    firstName,
+    lastName,
+    email,
+    businessName,
+    phoneNo,
+    address,
+    role,
+  ]);
+
+  useEffect(() => {
     if (data?.code === "000000") {
-      navigate("/verify-account"); 
+      navigate("/verify-account");
       const { data: RegisterDetails } = data;
       storage.add(
         "RegisterDetails",
         JSON.stringify({
           userId: RegisterDetails?.userId,
           firstName: RegisterDetails?.firstName,
-          lastName:RegisterDetails?.lastName,
+          lastName: RegisterDetails?.lastName,
           email: RegisterDetails?.email,
           status: RegisterDetails?.status,
           pathFrom,
         })
-      );   
+      );
     } else if (data?.code === "U00002") {
       Modal.success({
         title: "Email already registered!",
@@ -76,7 +100,15 @@ export const SignUpPage = () => {
   }, [data]);
 
   const onSubmitHandler = (data) => {
-    const { password, firstName, lastName, email, businessName, phoneNo, address } = data;
+    const {
+      password,
+      firstName,
+      lastName,
+      email,
+      businessName,
+      phoneNo,
+      address,
+    } = data;
     setPassword(password);
     setFirstName(firstName);
     setLastName(lastName);
@@ -85,10 +117,8 @@ export const SignUpPage = () => {
     setPhoneNo(phoneNo);
     setAddress(address);
     setBusinessName(businessName);
-    
-    storage.add("EmailDetails", JSON.stringify(email));
 
-    registerUser();
+    storage.add("EmailDetails", JSON.stringify(email));
   };
 
   return (
@@ -167,36 +197,36 @@ export const SignUpPage = () => {
             </div>
 
             <div className="mt-8">
-                <input
-                  placeholder="Enter Email"
-                  type="email"
-                  className={`in_put ${errors.email && "input_error"}`}
-                  {...register("email", {
-                    required: "Email is required",
-                  })}
-                />
-                {errors.email && (
-                  <p className=" mt-1 text-sm text-[red]">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
+              <input
+                placeholder="Enter Email"
+                type="email"
+                className={`in_put ${errors.email && "input_error"}`}
+                {...register("email", {
+                  required: "Email is required",
+                })}
+              />
+              {errors.email && (
+                <p className=" mt-1 text-sm text-[red]">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
-              <div className="mt-8">
-                <input
-                  placeholder="Enter Address"
-                  type="text"
-                  className={`in_put ${errors.address && "input_error"}`}
-                  {...register("address", {
-                    required: "Address is required",
-                  })}
-                />
-                {errors.address && (
-                  <p className=" mt-1 text-sm text-[red]">
-                    {errors.address.message}
-                  </p>
-                )}
-              </div>
+            <div className="mt-8">
+              <input
+                placeholder="Enter Address"
+                type="text"
+                className={`in_put ${errors.address && "input_error"}`}
+                {...register("address", {
+                  required: "Address is required",
+                })}
+              />
+              {errors.address && (
+                <p className=" mt-1 text-sm text-[red]">
+                  {errors.address.message}
+                </p>
+              )}
+            </div>
 
             <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid mb-11">
               <div className="mt-8">
@@ -215,33 +245,33 @@ export const SignUpPage = () => {
                 )}
               </div>
               <div className="relative">
-              <div className="mt-8">
-                <input
-                  type={show ? "text" : "password"}
-                  placeholder="Enter Password"
-                  className={`in_put ${errors.password && "input_error"}`}
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                />
-                {errors.password && (
-                  <p className=" mt-1 text-sm text-[red]">
-                    {errors.password.message}
-                  </p>
-                )}
+                <div className="mt-8">
+                  <input
+                    type={show ? "text" : "password"}
+                    placeholder="Enter Password"
+                    className={`in_put ${errors.password && "input_error"}`}
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                  />
+                  {errors.password && (
+                    <p className=" mt-1 text-sm text-[red]">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+                <span onClick={() => setShow(!show)}>
+                  {show ? (
+                    <span className="absolute cursor-pointer right-[5%] top-[60%] ">
+                      <OpenIcon />
+                    </span>
+                  ) : (
+                    <span className="absolute cursor-pointer right-[5%] top-[60%] ">
+                      <CloseIcon />
+                    </span>
+                  )}
+                </span>
               </div>
-              <span onClick={() => setShow(!show)}>
-                {show ? (
-                  <span className="absolute cursor-pointer right-[5%] top-[60%] ">
-                    <OpenIcon />
-                  </span>
-                ) : (
-                  <span className="absolute cursor-pointer right-[5%] top-[60%] ">
-                    <CloseIcon />
-                  </span>
-                )}
-              </span>
-            </div>
             </div>
 
             <div>
@@ -250,8 +280,7 @@ export const SignUpPage = () => {
                 className="submit_btn"
                 disabled={isRegistering}
               >
-                 {isRegistering ? <SpinnerWhite /> : " SiginUp"}
-               
+                {isRegistering ? <SpinnerWhite /> : " SiginUp"}
               </button>
             </div>
           </form>

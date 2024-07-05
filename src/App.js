@@ -22,9 +22,6 @@ import QueueSettingsPage from "./pages/merchant/queuesettings/QueueSettings";
 import { VerifyPage } from "./pages/verify";
 import { TvPage } from "./pages/tv";
 import { AdminMerchantListPage } from "./pages/admin/merchant-list";
-import TablePage from "./pages/merchant/queuesettings/Table";
-
-//import  BaseRoute  from "./routes/BaseRoute";
 
 const queryClient = new QueryClient();
 
@@ -62,7 +59,6 @@ const App = () => {
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
           <Route path="/signup" element={<SignUpPage />} exact />
           <Route path="/verify-account/:userEmail?" element={<VerifyPage />} exact />
-          <Route path="/table" element={<TablePage />} exact />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
