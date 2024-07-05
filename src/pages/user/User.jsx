@@ -14,7 +14,6 @@ import { useJoinQueue } from "../../hooks/useUser";
 
 export const UserHomePage = () => {
   const { linkUrl } = useParams();
-  //const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const [fillDataPage, setFillDataPage] = useState(true);
   const [queueWaitPage, setQueueWaitPage] = useState(false);
   const [notOpenPage, setNotOpenPage] = useState(false);
@@ -41,6 +40,7 @@ export const UserHomePage = () => {
   //const [merchStatus, setMerchStatus] = useState("");
   const [waitStatus, setWaitStatus] = useState("");
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {
@@ -109,31 +109,21 @@ export const UserHomePage = () => {
     setIsEmail(event.target.checked);
   };
 
-  useEffect(() => {
-    if (
-      email &&
-      cusPhone &&
-      cusName &&
-      paxNo &&
-      merchId &&
-      waitType &&
-      waitTypeNameId &&
-      waitTypeId &&
-      marketing
-    ) {
-      joinQueue();
-    }
-  }, [
-    email,
-    cusPhone,
-    cusName,
-    paxNo,
-    merchId,
-    waitType,
-    waitTypeNameId,
-    waitTypeId,
-    marketing,
-  ]);
+  // useEffect(() => {
+  //   if (
+  //     email &&
+  //     cusPhone &&
+  //     cusName &&
+  //     paxNo
+  //   ) {
+  //     joinQueue();
+  //   }
+  // }, [
+  //   email,
+  //   cusPhone,
+  //   cusName,
+  //   paxNo,
+  // ]);
 
   //CALL API TO JOIN QUEUE
   useEffect(() => {
@@ -155,7 +145,6 @@ export const UserHomePage = () => {
     if (waitStatus === "WAITING") {
       setProgressBar(true);
       setIsTableReady(false);
-      console.log("data", data.data);
     } else {
       setProgressBar(false);
       setIsTableReady(true);
@@ -181,55 +170,51 @@ export const UserHomePage = () => {
     setCusName(cusName);
     setPaxNo(paxNo);
 
-    if ( email && cusPhone && cusName && paxNo) {
-      joinQueue();
-    }else {
-    setEmail(email);
-    setCusPhone(cusPhone);
-    setCusName(cusName);
-    setPaxNo(paxNo);
     joinQueue();
-    }    
   };
 
   return (
     <div className="bg-[#F6F7F9]">
+      <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
+        <div className="flex justify-between">
+          <div className="flex items-center">
+            <img
+              src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
+              alt="User avatar"
+              className={`${
+                imageLoaded
+                  ? "visible rounded-full h-[50px] w-[50px]"
+                  : "hidden rounded-full h-[50px] w-[50px]"
+              }`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
+              <FaUserCircle
+                size={50}
+                style={{
+                  display: "flex",
+                  alignSelf: "center",
+                  opacity: 0.25,
+                  cursor: "pointer",
+                }}
+              />
+            )}
+            <p className="font-medium text-base text-black pl-3 capitalize">
+              {merchName}
+            </p>
+          </div>
+          <div className="flex place-items-end">
+            <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
+              <p className="">{currentDate}</p>
+              <div class="h-4 mx-[4px] border-[0.5px] border-[#f99762]"></div>
+              <p className="">{currentTime}</p>
+            </span>
+          </div>
+        </div>
+      </div>
       {fillDataPage ? (
         <div className="bg-[#F6F7F9] ">
           <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
-            <div className="flex justify-between">
-              <div className="flex items-center">
-                {logoUrl === null ? (
-                  <FaUserCircle
-                    size={50}
-                    style={{
-                      display: "flex",
-                      alignSelf: "center",
-                      opacity: 0.25,
-                      cursor: "pointer",
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={logoUrl}
-                    width="50px"
-                    height="50px"
-                    alt="User avatar"
-                    style={{ borderRadius: "50px" }}
-                  />
-                )}
-                <p className="font-medium text-base text-black pl-3 capitalize">
-                  {merchName}
-                </p>
-              </div>
-              <div className="flex place-items-end">
-                <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
-                  <p className="">{currentDate}</p>
-                  <div class="h-4 mx-[4px] border-[0.5px] border-[#f99762]"></div>
-                  <p className="">{currentTime}</p>
-                </span>
-              </div>
-            </div>
             <h1 className="text-2xl text-black font-semibold mb-3 mt-9">
               Hello There,
             </h1>
@@ -341,7 +326,7 @@ export const UserHomePage = () => {
                   disabled={isJoining}
                   className="submit_btn mt-[80px] "
                 >
-                  {isJoining ? <SpinnerWhite /> : "submit"}
+                  {isJoining ? <SpinnerWhite /> : "Submit"}
                 </button>
               </div>
             </form>
@@ -352,41 +337,7 @@ export const UserHomePage = () => {
       {queueWaitPage ? (
         <>
           <div className="bg-[#F6F7F9]">
-            <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#f6f7f9] py-1 sm:px-0 px-6">
-              <div className="flex justify-between">
-                <div className="flex items-center">
-                  {logoUrl === null ? (
-                    <FaUserCircle
-                      size={50}
-                      style={{
-                        display: "flex",
-                        alignSelf: "center",
-                        opacity: 0.25,
-                        cursor: "pointer",
-                      }}
-                    />
-                  ) : (
-                    <img
-                      src={logoUrl}
-                      width="50px"
-                      height="50px"
-                      alt="User avatar"
-                      style={{ borderRadius: "50px" }}
-                    />
-                  )}
-                  <p className="font-medium text-base text-black pl-3 capitalize">
-                    {merchName}
-                  </p>
-                </div>
-                <div className="flex place-items-end">
-                  <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
-                    <p className="">{currentDate}</p>
-                    <div class="h-4 mx-[4px] border-[0.5px] border-[#f99762]"></div>
-                    <p className="">{currentTime}</p>
-                  </span>
-                </div>
-              </div>
-            </div>
+            <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#f6f7f9] py-1 sm:px-0 px-6"></div>
 
             {progressBar ? (
               <div className="mt-[38px] sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] pb-6 pt-3 px-6">
@@ -473,39 +424,6 @@ export const UserHomePage = () => {
       {notOpenPage ? (
         <>
           <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
-            <div className="flex justify-between">
-              <div className="flex items-center">
-                {logoUrl === null ? (
-                  <FaUserCircle
-                    size={50}
-                    style={{
-                      display: "flex",
-                      alignSelf: "center",
-                      opacity: 0.25,
-                      cursor: "pointer",
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={logoUrl}
-                    width="50px"
-                    height="50px"
-                    alt="User avatar"
-                    style={{ borderRadius: "50px" }}
-                  />
-                )}
-                <p className="font-medium text-base text-black pl-3 capitalize">
-                  {merchName}
-                </p>
-              </div>
-              <div className="flex place-items-end">
-                <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
-                  <p className="">{currentDate}</p>
-                  <div class="h-4 mx-[4px] border-[0.5px] border-[#f99762]"></div>
-                  <p className="">{currentTime}</p>
-                </span>
-              </div>
-            </div>
             <div>
               <span className="mt-[184px] flex items-center justify-center">
                 <NotOpenIcon />
@@ -521,7 +439,7 @@ export const UserHomePage = () => {
         </>
       ) : null}
 
-      <div className="mt-10 pb-7 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
+      <div className="mt-10 pb-8 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
         <div>
           <p className="text-base">Terms and Conditions</p>
         </div>

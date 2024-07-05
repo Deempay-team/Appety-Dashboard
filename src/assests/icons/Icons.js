@@ -343,11 +343,17 @@ export const RemoveQueueModalIcon = () => {
 
 export const CloseModalIcon = () => {
   return (
-    <svg width="14" height="14" fill="none">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="22"
+      height="22"
+      fill="none"
+      viewBox="0 0 22 22"
+    >
       <path
-        d="M13 1a1 1 0 0 0-1.414 0L7 5.586 2.414 1A1 1 0 0 0 1 2.414L5.586 7 1 11.586A1 1 0 0 0 2.414 13L7 8.414 11.586 13A1 1 0 0 0 13 11.586L8.414 7 13 2.414A1 1 0 0 0 13 1Z"
-        fill="#000000"
-      />
+        fill="#1C1B1F"
+        d="M1.667 21.513l-1.18-1.18L9.821 11 .487 1.667l1.18-1.18L11 9.821 20.334.487l1.18 1.18L12.18 11l9.333 9.333-1.18 1.18L11 12.18l-9.333 9.333z"
+      ></path>
     </svg>
   );
 };

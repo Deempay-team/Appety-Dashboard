@@ -5,6 +5,7 @@ import {
   DownLoadIconWhite,
   ArrowDownIcon,
   ArrowUpIcon,
+  CloseModalIcon,
 } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
@@ -18,7 +19,6 @@ import {
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
-
 
 const column = [
   "Queue Type",
@@ -51,6 +51,7 @@ export const MerchantHomePage = () => {
   const [isLoadingServed, setIsLoadingServed] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [isCancellingQueue, setIsCancellingQueue] = useState(false);
+  const [isLoadingCancelModal, setIsLoadingCancelModal] = useState(false);
   const [isCheckInQueue, setIsCheckInQueue] = useState(false);
   const [currentName, setCurrentName] = useState("");
   const [currentPax, setCurrentPax] = useState("");
@@ -63,6 +64,8 @@ export const MerchantHomePage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [activeWaitTypeId, setActiveWaitTypeId] = useState(1);
   const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelQueueList, setCancelQueueList] = useState([]);
 
   //CALL TO UPDATE QUEUE
   const {
@@ -113,7 +116,6 @@ export const MerchantHomePage = () => {
           setQueueType(res.data.data);
           setWaitTypeId(res.data.data[0].waitTypeId);
           setWaitTypeName(res.data.data[0].waitTypeName);
-          console.log("data=", res.data.data);
         }
       })
       .catch(function (error) {
@@ -186,7 +188,6 @@ export const MerchantHomePage = () => {
     }
   }, [waitTypeId, statusUpdateSuccess]);
 
-
   const callApi = () => {
     if (waitTypeId) {
       axios
@@ -212,14 +213,13 @@ export const MerchantHomePage = () => {
     }
   }, [serveStatus]);
 
-  const handleServe = () => {
+  const handleServeStatus = () => {
     setServeStatus("SERVED");
     setIsServed(true);
     setIsCancelled(false);
-    //setIsLoadingServed(true);
   };
 
-  const handleCancel = () => {
+  const handleCancelStatus = () => {
     setServeStatus("CANCELLED");
     setIsServed(false);
     setIsCancelled(true);
@@ -240,35 +240,35 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     if (queueUpdateData?.code === "000000") {
       setIsCancellingQueue(false);
+      setShowCancelModal(false);
       setIsCheckInQueue(false);
-      //   window.location.reload();
+      setIsLoadingCancelModal(false);
       // show notification
-       Notify(
-          "success",
-          "Updated Succesfully!",
-          "Your Queue has being updated!",
-          7
-        );
+      Notify(
+        "success",
+        "Updated Succesfully!",
+        "Your Queue has being updated!",
+        7
+      );
 
       setStatusUpdateSuccess(true);
 
       if (updateStatus === "SERVED") {
         // //call served queue api
         if (serveStatus !== "SERVED") {
-          handleServe();
+          handleServeStatus();
         } else {
           callApi();
           setIsLoadingServed(true);
         }
       } else {
         if (serveStatus !== "CANCELLED") {
-          handleCancel();
+          handleCancelStatus();
         } else {
           callApi();
           setIsLoadingServed(true);
         }
       }
-
       // call waiting queue api
     }
   }, [queueUpdateData]);
@@ -276,7 +276,6 @@ export const MerchantHomePage = () => {
   const handleCheckIn = () => {
     setUpdateStatus("SERVED");
     setIsCheckInQueue(true);
-    //fetchQueueUpdate({status: "SERVED"});
   };
 
   const handleCancelQueue = () => {
@@ -291,9 +290,20 @@ export const MerchantHomePage = () => {
     navigate("/login");
   };
 
-  console.log("active", activeWaitTypeId);
-  let whatsappText =
-    "Hello {customer name} your table is ready,  proceed to the restaurant";
+  const handleWaitModal = (index) => {
+    setShowCancelModal(true);
+    setCancelQueueList(queueList[index]);
+  };
+
+  const cancelQueueModal = () => {
+    setUpdateStatus("CANCELLED");
+    setIsLoadingCancelModal(true)
+    //setShowCancelModal(false);
+  };
+
+  const closeModal = () => {
+    setShowCancelModal(false);
+  };
 
   return (
     <>
@@ -303,7 +313,6 @@ export const MerchantHomePage = () => {
             <img
               src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
               alt="User avatar"
-              //style={{ borderRadius: "50px" }}
               className={`${
                 imageLoaded
                   ? "visible rounded-full h-[50px] w-[50px]"
@@ -396,7 +405,7 @@ export const MerchantHomePage = () => {
       {/* BODY */}
       <div className="flex min-h-screen items-start fixed">
         {/* LEFT SIDE */}
-        <div class="sticky top-0  w-[362px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
+        <div class="sticky top-0  w-[370px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
@@ -422,11 +431,14 @@ export const MerchantHomePage = () => {
                   </>
                 ) : (
                   <>
-                    <div className="w-[362px]   bg-[#F6F7F9]">
+                    <div className="w-[362px]   bg-[#F6F7F9] mb-[300px] mt-8">
                       {queueList?.map((list, index) => (
                         <div key={index} className="flex items-center  ">
-                          <div className=" grid mx-auto justify-center items-center mt-8 ">
-                            <div class="py-8 pl-5 text-[#6b6968] rounded-lg   bg-[#ffffff] w-[285px]  mb-6">
+                          <div className=" grid mx-auto justify-center items-center ">
+                            <div
+                              onClick={() => handleWaitModal(index)}
+                              class="py-8 pl-5 text-[#6b6968] rounded-lg cursor-pointer  bg-[#ffffff] w-[285px]  mb-6"
+                            >
                               <div className="pb-9 grid grid-cols-2	">
                                 <div>
                                   <p className="text_12 text-[#6b6968] capitalize ">
@@ -528,36 +540,6 @@ export const MerchantHomePage = () => {
                     ))}
                   </thead>
                   <tbody className="px-5">
-                    {/* {queueType?.map((queueType, i) => (
-                      <tr className="bg-[#ffffff]" key={i}>
-                        <td className="text_16 px-2 py-4">
-                          <button
-                            onClick={() => {
-                              changeWaitTypeId(i);
-                            }}
-                            className={
-                              isActive(queueType.i)
-                                ? "bg-[#F99762] text-[#ffffff] rounded-[5px] px-9 py-4 cursor-pointer"
-                                : "bg-[#ffffff] border border-[#d9d9d9] text-[#000000] rounded-[5px] px-9 py-4 cursor-pointer"
-                            }
-                          >
-                            {queueType.waitTypeName}
-                          </button>
-                        </td>
-                        <td className="text_16 px-2 py-7">
-                          {queueType.paxRange}
-                        </td>
-                        <td className="text_16 px-2 py-7">
-                          {queueType.nextInLine}
-                        </td>
-                        <td className="text_16 px-2 py-7">
-                          {queueType.totalServed}
-                        </td>
-                        <td className="text_16 px-2 py-7">
-                          {queueType.totalWaiting}
-                        </td>
-                      </tr>
-                    ))} */}
                     <tr className="bg-[#ffffff] ">
                       <td className="text_16 px-2 pt-6 pb-2 pl-10">
                         <button
@@ -717,11 +699,10 @@ export const MerchantHomePage = () => {
               </div>
             </div>
 
-            <div className="text-[#6b6968] rounded-lg  bg-[#ffffff] w-full mt-8 items-center mx-auto ">
+            <div className="text-[#6b6968] rounded-lg  bg-[#ffffff] w-full mt-8 items-center mx-auto mb-[100px] ">
               <div className="flex bg-[#ffffff] grid-col-3  pt-4  pb-2">
-                {/* <div class="py-8 pl8 pr-8 text-[#6b6968] "> */}
                 <div className="px-16 grid pt-4">
-                  <div className="pb-9 grid grid-cols-2	">
+                  <div className="pb-9 grid grid-cols-2	gap-4">
                     <div>
                       <p className="text_12 text-[#6b6968] capitalize ">Name</p>
                       <p className="text_16 text-[#000000] capitalize ">
@@ -743,7 +724,7 @@ export const MerchantHomePage = () => {
                     </div>
                   </div>
 
-                  <div className="pb-9 grid grid-cols-2">
+                  <div className="pb-9 grid grid-cols-2 gap-4">
                     <div>
                       <p className="text_12 text-[#6b6968] capitalize ">Pax</p>
                       <p className="text_16 text-[#000000] ">{currentPax}</p>
@@ -792,33 +773,23 @@ export const MerchantHomePage = () => {
                 </button>
               </div>
             </div>
-
-            {/* </>
-       )} */}
-            {/* </>
-   ) : !!isLoadingWait || queueList.length === 0 ? (
-     ""
-   ) : (
-     ""
-   )} */}
           </main>
         </div>
 
         {/* RIGHT SIDE */}
-
-        <div className="sticky top-0  w-[362px] border-l border-[#D9D9D9] bg-[#F6F7F9] ">
+        <div className="sticky top-0  w-[404px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
           <div className="flow-root border-b border-[#d9d9d9]">
             <span className="flex  items-center justify-center py-6 ">
               {isServed ? (
                 <>
                   <button
-                    onClick={handleServe}
+                    onClick={handleServeStatus}
                     className="cursor-pointer rounded-l-lg bg-[#ededee] border-t border-l border-b border-[#D9D9D9] py-2 px-[44px]"
                   >
                     Served
                   </button>
                   <button
-                    onClick={handleCancel}
+                    onClick={handleCancelStatus}
                     className="cursor-pointer rounded-r-lg bg-[#ffffff] border-t border-r border-b border-[#D9D9D9]  py-2 px-[44px]"
                   >
                     Cancelled
@@ -828,13 +799,13 @@ export const MerchantHomePage = () => {
               {isCancelled ? (
                 <>
                   <button
-                    onClick={handleServe}
+                    onClick={handleServeStatus}
                     className="cursor-pointer rounded-l-lg bg-[#ffffff] border-t border-l border-b border-[#D9D9D9] py-2 px-[44px]"
                   >
                     Served
                   </button>
                   <button
-                    onClick={handleCancel}
+                    onClick={handleCancelStatus}
                     className="cursor-pointer rounded-r-lg bg-[#ededee] border-t border-r border-b border-[#D9D9D9]  py-2 px-[44px]"
                   >
                     Cancelled
@@ -844,7 +815,7 @@ export const MerchantHomePage = () => {
             </span>
           </div>
 
-          <div className="flow-root overflow-y-auto h-screen">
+          <div className="flow-root overflow-y-auto h-screen ">
             {isLoadingServed || servedList.length > 0 ? (
               <>
                 {isLoadingServed ? (
@@ -858,10 +829,10 @@ export const MerchantHomePage = () => {
                   </>
                 ) : (
                   <>
-                    <div className="w-[362px]   bg-[#F6F7F9]">
+                    <div className="  bg-[#F6F7F9] mb-[300px] mt-8">
                       {servedList?.map((list, index) => (
                         <div key={index} className="flex items-center  ">
-                          <div className=" grid mx-auto justify-center items-center mt-8 ">
+                          <div className=" grid mx-auto justify-center items-center ">
                             <div class="py-8 pl-5 text-[#6b6968] rounded-lg   bg-[#ffffff] w-[285px]  mb-6">
                               <div className="pb-9 grid grid-cols-2	">
                                 <div>
@@ -877,7 +848,12 @@ export const MerchantHomePage = () => {
                                     Phone Number
                                   </p>
                                   <p className="text_16 text-[#33B469] underline">
-                                    {addSpace(list.cusPhone)}
+                                    <Link
+                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to the restaurant`}
+                                      target="_blank"
+                                    >
+                                      {addSpace(list.cusPhone)}
+                                    </Link>
                                   </p>
                                 </div>
                               </div>
@@ -927,13 +903,13 @@ export const MerchantHomePage = () => {
               </>
             ) : !!isLoadingServed || servedList.length === 0 ? (
               <>
-                <div className="w-[362px] ">
+                {/* <div className="w-[362px] ">
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
                     <h4 className="text_16">
                       You do not have any Waiting Queue
                     </h4>
                   </span>
-                </div>
+                </div> */}
               </>
             ) : (
               ""
@@ -941,6 +917,89 @@ export const MerchantHomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* SHOW CANCEL QUEUE MODAL */}
+      {showCancelModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg px-[112px] pt-[53px] pb-[63px] w-[600px] relative">
+              <p className="text-[32px] mb-8">Details</p>
+              <span
+                onClick={closeModal}
+                class="absolute top-[12.2%] right-[18.6%] cursor-pointer"
+              >
+                <CloseModalIcon />
+              </span>
+
+              <div className="">
+                <div class="py-6  text-[#6b6968]  w-full border-b border-[#d9d9d9]">
+                  <div className="pb-8 grid gap-8 grid-cols-2	">
+                    <div>
+                      <p className="text_14 text-[#6b6968]">Name</p>
+                      <p className="text_18 text-[#000000] capitalize ">
+                        {cancelQueueList?.cusName}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text_14 text-[#6b6968]">Phone Number</p>
+                      <p className="text_18 text-[#33B469] underline">
+                        <Link
+                          to={`https://api.whatsapp.com/send?phone=${cancelQueueList?.cusPhone}&text=Hello ${cancelQueueList?.cusName} your table is ready, please proceed to the restaurant`}
+                          target="_blank"
+                        >
+                          {addSpace(cancelQueueList?.cusPhone)}
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pb-8 grid gap-8 grid-cols-2">
+                    <div>
+                      <p className="text_14 text-[#6b6968] capitalize ">Pax</p>
+                      <p className="text_18 text-[#000000] ">
+                        {cancelQueueList?.paxNo}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text_14 text-[#6b6968] capitalize ">
+                        Status
+                      </p>
+                      <p className="text_18 text-[#000000] capitalize ">
+                        {cancelQueueList?.status}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-8 pb-3">
+                    <div>
+                      <p className="text_14 text-[#6b6968] capitalize ">
+                        Queue Number
+                      </p>
+                      <p className="text_18 text-[#000000] ">
+                        {cancelQueueList?.waitNo}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text_14 text-[#6b6968] ">Date/Time</p>
+                      <p className="text_18 text-[#000000]">
+                        {currentDate} {currentTime}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  onClick={cancelQueueModal}
+                  type="submit"
+                  className="submit_btn mt-[35px]"
+                >
+                  {isLoadingCancelModal ? <SpinnerWhite /> : "Cancel"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };
