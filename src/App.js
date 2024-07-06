@@ -53,7 +53,7 @@ const App = () => {
             <Route path="/dashboard/merchant/settings/queue" element={<QueueSettingsPage />} exact />
           </Route>
           <Route path="/user/:linkUrl" element={<UserHomePage />} exact />
-          <Route path="/" exact element={<HomePage />} />
+          <Route path="/" exact element={<LoginPage />} />
           <Route path="/login" exact element={<LoginPage />} />
           <Route path="/password/reset" exact element={<ResetPasswordPage />} />
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
