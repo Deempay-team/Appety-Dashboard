@@ -109,7 +109,7 @@ body {
   }
 
   .in_put {
-    @apply bg-[#EEEEEE] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full px-4 dark:placeholder-[#8d8d8d] h-[52px];
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full px-4 dark:placeholder-[#8d8d8d] h-[52px];
   }
 
   .input-short {

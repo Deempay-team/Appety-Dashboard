@@ -83,7 +83,7 @@ export const LoginPage = () => {
 
   return (
     <>
-      <div className="login-image md:grid-cols-2 grid-cols-1 overflow-hidden md:flex grid">
+      <div className="login-image md:grid-cols-2 grid-cols-1 h-screen md:flex grid">
         <div className=" w-full md:pt-[250px] pt-10 md:pl-16 pl-4 ">
           <div className="flex items-center ">
             <AppetyLogoBig />

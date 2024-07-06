@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { currentDate, currentTime } from "../../utils/functions";
 import { SpinnerWhite } from "../../components/spinner/Spinner";
@@ -11,9 +11,11 @@ import {
   TickIcon,
 } from "../../assests/icons/Icons";
 import { useJoinQueue } from "../../hooks/useUser";
+import secrets from "../../config/secrets";
 
 export const UserHomePage = () => {
   const { linkUrl } = useParams();
+  const baseURL = secrets.baseURL;
   const [fillDataPage, setFillDataPage] = useState(true);
   const [queueWaitPage, setQueueWaitPage] = useState(false);
   const [notOpenPage, setNotOpenPage] = useState(false);
@@ -24,7 +26,7 @@ export const UserHomePage = () => {
   const [cusName, setCusName] = useState("");
   const [marketing, setMarketing] = useState(1);
   const [merchId, setMerchId] = useState("");
-  const [merchName, setMerchName] = useState(1);
+  const [merchName, setMerchName] = useState("");
   const [email, setEmail] = useState("");
   const [paxNo, setPaxNo] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
@@ -32,20 +34,25 @@ export const UserHomePage = () => {
   const [waitType, setWaitType] = useState("");
   const [waitTypeNameId, setWaitTypeNameId] = useState("");
   const [waitTypeId, setWaitTypeId] = useState("");
-  const [estimateTime, setEstimateTime] = useState("");
+  const [estimateTime, setEstimateTime] = useState("--");
   const [waitPostion, setWaitPosition] = useState("");
   const [userName, setuserName] = useState("");
   const [personNo, setPersonNo] = useState("");
   const [waitNo, setWaitNo] = useState("");
-  //const [merchStatus, setMerchStatus] = useState("");
+  const [waitId, setWaitId] = useState("");
   const [waitStatus, setWaitStatus] = useState("");
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [posPercent, setPosPercent] = useState(0);
+  const [callTimer, setCallTime] = useState(0);
+  const [callInterval, setCallInterval] = useState(10000);
+
+  var timeOutId;
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {
     axios
-      .get(`http://159.223.37.225/api/v1/link/fetch/${linkUrl}`)
+      .get(`${baseURL}/api/v1/link/fetch/${linkUrl}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setMerchId(res.data?.data.merchId);
@@ -74,8 +81,13 @@ export const UserHomePage = () => {
     if (paxNoD) {
       for (let i = 0; i < waitTypeList.length; i++) {
         var minPax = waitTypeList[i].minPax;
-        var maxPax =
-          waitTypeList[i].maxPax !== "-" ? waitTypeList[i].maxPax : "1000";
+        var maxPax = "";
+        if (i < waitTypeList.length - 1) {
+          maxPax = waitTypeList[i].maxPax;
+        } else {
+          maxPax = "1000";
+        }
+
         if (
           parseInt(paxNoD) >= parseInt(minPax) &&
           parseInt(paxNoD) <= parseInt(maxPax)
@@ -83,8 +95,13 @@ export const UserHomePage = () => {
           setWaitTypeId(waitTypeList[i].waitTypeId);
           setWaitType(waitTypeList[i].waitTypeName);
           setWaitTypeNameId(waitTypeList[i].waitTypeNameId);
+          setEstimateTime(waitTypeList[i].estimateTime);
         }
       }
+    }
+
+    if (paxNoD === "0" || paxNoD === " " || paxNoD === "") {
+      setEstimateTime("--");
     }
   }, [paxNoD]);
 
@@ -109,21 +126,11 @@ export const UserHomePage = () => {
     setIsEmail(event.target.checked);
   };
 
-  // useEffect(() => {
-  //   if (
-  //     email &&
-  //     cusPhone &&
-  //     cusName &&
-  //     paxNo
-  //   ) {
-  //     joinQueue();
-  //   }
-  // }, [
-  //   email,
-  //   cusPhone,
-  //   cusName,
-  //   paxNo,
-  // ]);
+  useEffect(() => {
+    if (cusPhone) {
+      joinQueue();
+    }
+  }, [cusPhone]);
 
   //CALL API TO JOIN QUEUE
   useEffect(() => {
@@ -131,14 +138,147 @@ export const UserHomePage = () => {
       setWaitNo(data?.data?.waitNo);
       setWaitPosition(data?.data?.waitPosition);
       setuserName(data?.data?.cusName);
-      setEstimateTime(data?.data?.estimateWaitTime);
+      setEstimateTime(parseInt(data?.data?.estimateWaitTime));
       setPersonNo(data?.data?.paxNo);
       setWaitStatus(data?.data?.status);
       setFillDataPage(false);
       setQueueWaitPage(true);
       setNotOpenPage(false);
+      setWaitId(data?.data?.waitId);
+
+      var totalQueue = data?.data?.totalNumberQueue;
+      var waitos = data?.data?.waitPosition;
+      var percentPos =
+        ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
+        100;
+      setPosPercent(percentPos);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (waitId) {
+      // start timer
+      handleStartTimer();
+    }
+  }, [waitId]);
+
+  //API CALL TO QUERY QUEUE
+  useEffect(() => {
+    if (callTimer) {
+      // axios
+      //   .get(
+      //     `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
+      //   )
+      //   .then(function (res) {
+      //     if (res.data.code === "000000") {
+      //       console.log("res.data", res.data.data);
+      //       setWaitPosition(data?.data?.waitPosition);
+      //       setEstimateTime(data?.data?.estimateWaitTime);
+      //       setWaitStatus(data?.data?.status);
+      //       setFillDataPage(false);
+      //       setQueueWaitPage(true);
+      //       setNotOpenPage(false);
+      //       var totalQueue = data?.data?.totalNumberQueue;
+      //       var waitos = data?.data?.waitPosition;
+      //       var percentPos =
+      //         ((parseInt(totalQueue) - parseInt(waitos)) /
+      //           parseInt(totalQueue)) *
+      //         100;
+      //       setPosPercent(percentPos);
+      //       if (data?.data?.waitPosition === 0)
+      //       clearTimeout(timeOutId);
+      //     }
+      //   })
+      //   .catch(function (error) {
+      //     console.log("log-error", error);
+      //   });
+    }
+  }, [callTimer]);
+
+  const handlerCallQueueStatus = () => {
+    axios
+      .get(
+        `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
+      )
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setWaitPosition(data?.data?.waitPosition);
+          setEstimateTime(data?.data?.estimateWaitTime);
+          setWaitStatus(data?.data?.status);
+          setFillDataPage(false);
+          setQueueWaitPage(true);
+          setNotOpenPage(false);
+          var totalQueue = data?.data?.totalNumberQueue;
+          var waitos = data?.data?.waitPosition;
+          var percentPos =
+            ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
+            100;
+          setPosPercent(percentPos);
+
+          if (data?.data?.waitPosition === 0) clearTimeout(timeOutId);
+        }
+      })
+      .catch(function (error) {
+        console.log("log-error", error);
+      });
+  };
+
+  // start timer function
+  let timer = 0;
+  const handleStartTimer = () => {
+    timeOutId = setInterval(function () {
+      timer += 1;
+      setCallTime(timer);
+      axios
+      .get(
+        `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
+      )
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setWaitPosition(res?.data?.data?.waitPosition);
+          setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
+          setWaitStatus(res?.data?.data?.status);
+          setFillDataPage(false);
+          setQueueWaitPage(true);
+          setNotOpenPage(false);
+          var totalQueue = res?.data?.data?.totalNumberQueue;
+          var waitos = res?.data?.data?.waitPosition;
+          var percentPos =
+            ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
+            100;
+          setPosPercent(percentPos);
+
+          if (data?.data?.waitPosition === 0) clearTimeout(timeOutId);
+          console.log("waitPosition", res?.data?.data?.waitPosition);
+          console.log("estimateWaitTime", res?.data?.data?.estimateWaitTime);
+        }
+      })
+      .catch(function (error) {
+        console.log("log-error", error);
+      });
+      //handleTest();
+    }, callInterval);
+  };
+  let x = 0;
+  let handleTest = () => {
+    //setCallTime(callTimer + 1);
+    x += 1;
+    setCallTime(x);
+
+    console.log("log-callTimerInn", x);
+  };
+
+  useEffect(() => {
+    if (callTimer) {
+      //handlerCallQueueStatus();
+      //console.log("log-callTimer", callTimer);
+    }
+  }, [callTimer]);
+
+  useEffect(() => {
+    if (waitId) {
+    }
+  }, [waitId]);
 
   //CHECK IF THE CUSTOMER IS CHECKED IN
   useEffect(() => {
@@ -169,14 +309,13 @@ export const UserHomePage = () => {
     setCusPhone(cusPhone);
     setCusName(cusName);
     setPaxNo(paxNo);
-
-    joinQueue();
   };
 
   return (
     <div className="bg-[#F6F7F9]">
-      <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
-        <div className="flex justify-between">
+      {/* HEADER */}
+      <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
+        <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
               src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
@@ -199,26 +338,28 @@ export const UserHomePage = () => {
                 }}
               />
             )}
-            <p className="font-medium text-base text-black pl-3 capitalize">
+            <p className="font-semibold text-[13px] text-black pl-3 capitalize">
               {merchName}
             </p>
           </div>
           <div className="flex place-items-end">
-            <span className="flex bg-[#FDDCCB] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-col text-[12px] font-normal">
+            <span className="flex bg-[#dddddd] rounded-[5px] items-center justify-center py-[8px] px-[14px] text-[#000000] text-[12px] font-normal">
               <p className="">{currentDate}</p>
-              <div class="h-4 mx-[4px] border-[0.5px] border-[#f99762]"></div>
+              <div class="h-4 mx-[4px] border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
             </span>
           </div>
         </div>
       </div>
+
+      {/* FORM FILL-IN SIDE */}
       {fillDataPage ? (
         <div className="bg-[#F6F7F9] ">
-          <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
-            <h1 className="text-2xl text-black font-semibold mb-3 mt-9">
+          <div className=" max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
+            <h1 className="text-2xl text-black font-semibold mb-[4px] mt-10">
               Hello There,
             </h1>
-            <p className="text-base text-[#1f222a] mb-[52px]">
+            <p className="text-base text-[#1f222a] mb-10">
               Fill out the form below for a queue position.
             </p>
           </div>
@@ -228,7 +369,7 @@ export const UserHomePage = () => {
                 <input
                   type="text"
                   placeholder="Enter Your Name"
-                  className={`in_put bg-[#FEEAE0] ${
+                  className={`in_put bg-[#ffffff] ${
                     errors.cusName && "input_error"
                   }`}
                   {...register("cusName", {
@@ -246,7 +387,7 @@ export const UserHomePage = () => {
                 <input
                   type="number"
                   placeholder="Enter Your Phone Number"
-                  className={`in_put bg-[#FEEAE0] ${
+                  className={`in_put bg-[#ffffff] ${
                     errors.cusPhone && "input_error"
                   }`}
                   {...register("cusPhone", {
@@ -264,7 +405,7 @@ export const UserHomePage = () => {
                 <input
                   type="number"
                   placeholder="Enter Pax"
-                  className={`in_put bg-[#FEEAE0] ${
+                  className={`in_put bg-[#ffffff] ${
                     errors.paxNo && "input_error"
                   }`}
                   {...register("paxNo", {
@@ -282,9 +423,9 @@ export const UserHomePage = () => {
                 )}
               </div>
 
-              <div class="text-[#606060] rounded-lg py-3.5 px-4 flex justify-between darker-bg w-full mt-10">
-                <span class="text-[#ffffff] text-sm">Estimated Time</span>
-                <span class="text-[#ffffff] ">----</span>
+              <div class="text-[#606060] rounded-lg h-[50px] px-4 flex items-center  justify-between bg-[#F6F7F9] w-full mt-10">
+                <span class="text-[#6B6968] text-sm">Estimated Time</span>
+                <span class="text-[#000000] ">{estimateTime}</span>
               </div>
 
               <div className="mt-6 flex ">
@@ -296,16 +437,40 @@ export const UserHomePage = () => {
                   id="link-checkbox"
                   type="checkbox"
                   value=""
-                  class="w-4 h-4 accent-[#f99762] bg-gray-100 border-gray-300 rounded"
+                  className="
+                   relative peer shrink-0
+                   appearance-none w-5 h-5 border border-[#6B6968] rounded-sm bg-white
+                 checked:bg-[#F99762] checked:border-0
+                   focus:outline-none 
+                   disabled:border-steel-400 disabled:bg-steel-400
+                   "
                 ></input>
+                <svg
+                  className="
+                  absolute 
+                  bottom-[21.4%]
+                  left-[77.7%]
+                  w-4 h-4 mt-1
+                  hidden peer-checked:block
+                  pointer-events-none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
               </div>
 
               {isEmail ? (
                 <div className="mt-6">
                   <input
                     type="email"
-                    placeholder="Enter Your Name"
-                    className={`in_put bg-[#FEEAE0] ${
+                    placeholder="Enter Your Email"
+                    className={`in_put bg-[#ffffff] ${
                       errors.email && "input_error"
                     }`}
                     {...register("email", {
@@ -334,13 +499,14 @@ export const UserHomePage = () => {
         </div>
       ) : null}
 
+      {/* WAIT QUEUE SIDE */}
       {queueWaitPage ? (
         <>
           <div className="bg-[#F6F7F9]">
-            <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#f6f7f9] py-1 sm:px-0 px-6"></div>
+            <div className=" max-w-md items-center mx-auto grid  bg-[#f6f7f9] sm:px-0 px-6"></div>
 
             {progressBar ? (
-              <div className="mt-[38px] sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] pb-6 pt-3 px-6">
+              <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] pb-6 pt-3 px-6">
                 <p className="text-center text-[#000000] font-normal">
                   Group before you
                 </p>
@@ -349,10 +515,13 @@ export const UserHomePage = () => {
                   style={{ width: "100%" }}
                 >
                   <div
-                    style={{ width: "50%" }}
+                    style={{ width: `${posPercent + "%"}` }}
                     className={"h-full bg-[#F99762] rounded"}
                   ></div>
-                  <spa className="absolute text-[#ffffff] top-[-150%] left-[46%]  items-center border border-[#f99762] rounded-2xl px-[8px] py-[1px] bg-[#FCCBB0] ">
+                  <spa
+                    style={{ left: `${posPercent - 4 + "%"}` }}
+                    className="absolute text-[#ffffff] top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
+                  >
                     {waitPostion}
                   </spa>
                 </div>
@@ -360,7 +529,7 @@ export const UserHomePage = () => {
             ) : null}
 
             {isTableReady ? (
-              <div className="mt-[38px] sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
+              <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
                 <div className="flex items-center justify-center text-base">
                   <TickIcon />
                   <p className="text-center text-[#ffffff] pl-2 text-sm">
@@ -377,12 +546,12 @@ export const UserHomePage = () => {
               <h3 className="text-center text-[56px] text-[#000000] font-semibold">
                 {waitNo}
               </h3>
-              <div class="  rounded-b-[5px] border-t-2 border-[#e0e0e0] py-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
+              <div class="rounded-b-[5px] border-t-[1px] border-[#e0e0e0] py-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
                 <span class="text-base font-normal text-[#8a8a89]">
                   Estimated Time
                 </span>
                 <span class="text-lg font-medium text-[#000000]">
-                  {estimateTime} Mins
+                  {estimateTime + " mins"}
                 </span>
               </div>
             </div>
@@ -394,7 +563,7 @@ export const UserHomePage = () => {
                 </span>
               </div>
 
-              <div class="mx-6 border-[0.5px] border-[#e0e0e0]"></div>
+              <div class="mx-6 border-[0.1px] border-[#e0e0e0]"></div>
               <div className="py-5 px-6 flex justify-between">
                 <span class="text-base font-normal text-[#8a8a89]">Pax</span>
                 <span class="text-lg font-medium">{personNo}</span>
@@ -406,24 +575,27 @@ export const UserHomePage = () => {
                 Do Not Close This Page
               </p>
               <p className="text-center text-sm mt-[14px]">
-                Queue number will be updated here, if you accidentally close
-                this page, re-enter the same mobile to get the queue information
-                again.
+                Queue number will be updated here, if you accidentally you close
+                this page, rescan QR code and enter the same hone number to
+                obtain your queue number back.
               </p>
             </div>
 
             <div class=" sm:max-w-md max-w-[366px]  items-center mx-auto mt-10">
-              <button type="submit" className="submit_btn">
-                Pre Order
-              </button>
+              <Link to="#">
+                <button type="submit" className="submit_btn">
+                  Pre Order
+                </button>
+              </Link>
             </div>
           </div>
         </>
       ) : null}
 
+      {/* OFFLINE SIDE */}
       {notOpenPage ? (
         <>
-          <div className="pt-10 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
+          <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
             <div>
               <span className="mt-[184px] flex items-center justify-center">
                 <NotOpenIcon />
@@ -439,9 +611,12 @@ export const UserHomePage = () => {
         </>
       ) : null}
 
+      {/* FOOTER */}
       <div className="mt-10 pb-8 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
         <div>
-          <p className="text-base">Terms and Conditions</p>
+          <Link to="#">
+            <p className="text-base">Terms and Conditions</p>
+          </Link>
         </div>
         <div className="flex items-center justify-center text-base">
           <p className="text-center pr-2">Powered By</p>

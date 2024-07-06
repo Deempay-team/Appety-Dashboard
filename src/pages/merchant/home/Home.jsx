@@ -19,6 +19,7 @@ import {
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
+import secrets from "../../../config/secrets";
 
 const column = [
   "Queue Type",
@@ -31,7 +32,7 @@ const column = [
 export const MerchantHomePage = () => {
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
-
+  const baseURL = secrets.baseURL
   const navigate = useNavigate();
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
@@ -66,6 +67,7 @@ export const MerchantHomePage = () => {
   const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelQueueList, setCancelQueueList] = useState([]);
+  const [isButtonWaitTye, setIsButtonWaitTye] = useState(false);
 
   //CALL TO UPDATE QUEUE
   const {
@@ -81,7 +83,7 @@ export const MerchantHomePage = () => {
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {
     axios
-      .get(`http://159.223.37.225/api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}/api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setMerchName(res.data.data?.merchName);
@@ -109,7 +111,7 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     setIsLoadingWaitType(true);
     axios
-      .get(`http://159.223.37.225/api/v1/wait/summary/${merchId}`)
+      .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);
@@ -123,12 +125,34 @@ export const MerchantHomePage = () => {
       });
   }, []);
 
+
+
+  //CALL QUERY SUMMARY API
+  useEffect(() => {
+    //setIsLoadingWaitType(true);
+    if (isButtonWaitTye || statusUpdateSuccess) {
+      axios
+      .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setIsLoadingWaitType(false);
+          setQueueType(res.data.data);
+          setIsButtonWaitTye(false)
+        }
+      })
+      .catch(function (error) {
+        console.log("summary-error", error);
+      });
+    }
+    
+  }, [isButtonWaitTye, statusUpdateSuccess]);
+
   //CALL QUERY QUEUE FOR DOWNLOAD
   const exportQueueDetails = () => {
     setIsExporting(true);
     axios
       .get(
-        `http://159.223.37.225/api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
+        `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
       )
       .then(function (res) {
         if (res.data.code === "000000") {
@@ -166,7 +190,7 @@ export const MerchantHomePage = () => {
       callApi();
       axios
         .get(
-          `http://159.223.37.225/api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res.data.code === "000000") {
@@ -192,7 +216,7 @@ export const MerchantHomePage = () => {
     if (waitTypeId) {
       axios
         .get(
-          `http://159.223.37.225/api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res.data.code === "000000") {
@@ -229,6 +253,7 @@ export const MerchantHomePage = () => {
     setWaitTypeId(queueType[i - 1].waitTypeId);
     setWaitTypeName(queueType[i - 1].waitTypeName);
     setActiveWaitTypeId(i);
+    setIsButtonWaitTye(true);
   };
 
   useEffect(() => {
@@ -266,9 +291,10 @@ export const MerchantHomePage = () => {
           handleCancelStatus();
         } else {
           callApi();
-          setIsLoadingServed(true);
+          setIsLoadingServed(false);
         }
       }
+      setUpdateStatus("");
       // call waiting queue api
     }
   }, [queueUpdateData]);
@@ -298,7 +324,6 @@ export const MerchantHomePage = () => {
   const cancelQueueModal = () => {
     setUpdateStatus("CANCELLED");
     setIsLoadingCancelModal(true)
-    //setShowCancelModal(false);
   };
 
   const closeModal = () => {
