@@ -430,7 +430,7 @@ export const MerchantHomePage = () => {
       {/* BODY */}
       <div className="flex min-h-screen items-start fixed">
         {/* LEFT SIDE */}
-        <div class="sticky top-0  w-[370px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
+        <div class="sticky top-0  w-[380px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
@@ -802,7 +802,7 @@ export const MerchantHomePage = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="sticky top-0  w-[404px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
+        <div className="sticky top-0  w-[395px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
           <div className="flow-root border-b border-[#d9d9d9]">
             <span className="flex  items-center justify-center py-6 ">
               {isServed ? (
@@ -928,13 +928,13 @@ export const MerchantHomePage = () => {
               </>
             ) : !!isLoadingServed || servedList.length === 0 ? (
               <>
-                {/* <div className="w-[362px] ">
+                <div className="w-[362px] ">
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
                     <h4 className="text_16">
                       You do not have any Waiting Queue
                     </h4>
                   </span>
-                </div> */}
+                </div>
               </>
             ) : (
               ""
