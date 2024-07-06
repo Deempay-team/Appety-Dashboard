@@ -47,7 +47,7 @@ const LinkSettingsPage = () => {
   return (
     <>
       <Layout>
-         <main className="sm:ml-[350px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+         <main className="sm:ml-[370px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
          <h2 className="text_18 pb-4 pt-10">Queue Available Time</h2>
         <div className="">
           <LinkSettingsTable

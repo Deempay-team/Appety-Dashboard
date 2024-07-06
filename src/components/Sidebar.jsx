@@ -27,7 +27,7 @@ useEffect(() => {
 
   return (
     <>
-      <div className="fixed h-full top-0 md:block hidden items-center justify-center w-[350px] bg-[#F6F7F9] border-r border-[#D9D9D9]">
+      <div className="fixed h-full top-0 md:block hidden items-center justify-center w-[370px] bg-[#F6F7F9] border-r border-[#D9D9D9]">
         <div className="">
         {isAdmin && (
            <div className="mt-[120px] ">

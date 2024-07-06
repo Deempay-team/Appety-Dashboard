@@ -27,14 +27,15 @@ const HeaderPage = () => {
               src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
               alt="User avatar"
               //style={{ borderRadius: "50px" }}
-              className={`${
-                imageLoaded
-                  ? "visible rounded-full h-[50px] w-[50px]"
-                  : "hidden rounded-full h-[50px] w-[50px]"
-              }`}
-              onLoad={() => setImageLoaded(true)}
+              className=
+              // {`${
+              //   imageLoaded
+                  "visible rounded-full h-[50px] w-[50px]"
+                 // : "hidden rounded-full h-[50px] w-[50px]"
+              // }`}
+             //onLoad={() => setImageLoaded(true)}
             />
-            {!imageLoaded && (
+            {/* {!imageLoaded && (
               <FaUserCircle
                 size={50}
                 style={{
@@ -44,7 +45,7 @@ const HeaderPage = () => {
                   cursor: "pointer",
                 }}
               />
-            )}
+            )} */}
             <p className="font-semibold text-[32px] text-black pl-3 capitalize">
               {merchName}
             </p>

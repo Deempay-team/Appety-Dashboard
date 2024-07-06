@@ -68,6 +68,8 @@ export const MerchantHomePage = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelQueueList, setCancelQueueList] = useState([]);
   const [isButtonWaitTye, setIsButtonWaitTye] = useState(false);
+  const [waitCall, setWaitCall] = useState("0");
+  const [isLoadingWaitCall, setIsLoadingWaitCall] = useState(false);
 
   //CALL TO UPDATE QUEUE
   const {
@@ -78,6 +80,7 @@ export const MerchantHomePage = () => {
     merchId,
     waitId: currentWaitId,
     status: updateStatus,
+    waitCall,
   });
 
   //CALL QUERY MERCHANT DETAILS API
@@ -202,7 +205,13 @@ export const MerchantHomePage = () => {
             setCurrentPhone(res.data.data[0]?.cusPhone ?? "-");
             setCurrentWaitId(res.data.data[0]?.waitId ?? "-");
             setCurrentWait(res.data.data[0]?.waitNo ?? "-");
-            setCurrentStatus(res.data.data[0]?.status ?? "-");
+
+            if (res.data.data[0]?.waitCall === "1") {
+              setCurrentStatus("Called");
+            }else {
+              setCurrentStatus(res.data.data[0]?.status ?? "-");
+            }
+            
             setStatusUpdateSuccess(false);
           }
         })
@@ -268,6 +277,8 @@ export const MerchantHomePage = () => {
       setShowCancelModal(false);
       setIsCheckInQueue(false);
       setIsLoadingCancelModal(false);
+      setWaitCall("0");
+      setIsLoadingWaitCall(false)
       // show notification
       Notify(
         "success",
@@ -309,7 +320,11 @@ export const MerchantHomePage = () => {
     setIsCancellingQueue(true);
   };
 
-  const handleCall = () => {};
+  const handleCall = () => {
+    setUpdateStatus("WAITING");
+    setWaitCall("1");
+    setIsLoadingWaitCall(true)
+  };
 
   const handleLogout = () => {
     storage.clear();
@@ -391,11 +406,10 @@ export const MerchantHomePage = () => {
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
             </span>
-            <span className="relative flex items-center bg-[#D9D9D9] opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
+            <span onClick={() => setChangeIcon(!changeIcon)} className="relative flex items-center bg-[#D9D9D9] opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
               <p className="text_16 text-[#000000] capitalize">{firstName}</p>
               <p
                 className="cursor-pointer ml-4"
-                onClick={() => setChangeIcon(!changeIcon)}
               >
                 {changeIcon ? <ArrowDownIcon /> : <ArrowUpIcon />}
               </p>
@@ -501,7 +515,7 @@ export const MerchantHomePage = () => {
                                     Status
                                   </p>
                                   <p className="text_16 text-[#000000] capitalize ">
-                                    {list.status}
+                                    {list.waitCall === "1" ? "Called" : list.status}
                                   </p>
                                 </div>
                               </div>
@@ -552,7 +566,7 @@ export const MerchantHomePage = () => {
           <main className="px-10 py-8">
             <div className="mt-1 mb-8 ">
               <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[5px] ">
-                <table className=" w-full text-base text-center py-14 border-collapse ">
+                <table className=" w-full text-base text-center  border-collapse ">
                   <thead className="text_14 capitalize bg-[#ffffff] ">
                     {column.map((header, i) => (
                       <th
@@ -794,7 +808,7 @@ export const MerchantHomePage = () => {
                 </button>
 
                 <button onClick={handleCall} className="short_btn_green ml-6 ">
-                  Call
+                {isLoadingWaitCall ? <SpinnerWhite /> : " Call"}
                 </button>
               </div>
             </div>

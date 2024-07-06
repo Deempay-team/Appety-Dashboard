@@ -162,66 +162,6 @@ export const UserHomePage = () => {
     }
   }, [waitId]);
 
-  //API CALL TO QUERY QUEUE
-  useEffect(() => {
-    if (callTimer) {
-      // axios
-      //   .get(
-      //     `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
-      //   )
-      //   .then(function (res) {
-      //     if (res.data.code === "000000") {
-      //       console.log("res.data", res.data.data);
-      //       setWaitPosition(data?.data?.waitPosition);
-      //       setEstimateTime(data?.data?.estimateWaitTime);
-      //       setWaitStatus(data?.data?.status);
-      //       setFillDataPage(false);
-      //       setQueueWaitPage(true);
-      //       setNotOpenPage(false);
-      //       var totalQueue = data?.data?.totalNumberQueue;
-      //       var waitos = data?.data?.waitPosition;
-      //       var percentPos =
-      //         ((parseInt(totalQueue) - parseInt(waitos)) /
-      //           parseInt(totalQueue)) *
-      //         100;
-      //       setPosPercent(percentPos);
-      //       if (data?.data?.waitPosition === 0)
-      //       clearTimeout(timeOutId);
-      //     }
-      //   })
-      //   .catch(function (error) {
-      //     console.log("log-error", error);
-      //   });
-    }
-  }, [callTimer]);
-
-  const handlerCallQueueStatus = () => {
-    axios
-      .get(
-        `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
-      )
-      .then(function (res) {
-        if (res.data.code === "000000") {
-          setWaitPosition(data?.data?.waitPosition);
-          setEstimateTime(data?.data?.estimateWaitTime);
-          setWaitStatus(data?.data?.status);
-          setFillDataPage(false);
-          setQueueWaitPage(true);
-          setNotOpenPage(false);
-          var totalQueue = data?.data?.totalNumberQueue;
-          var waitos = data?.data?.waitPosition;
-          var percentPos =
-            ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
-            100;
-          setPosPercent(percentPos);
-
-          if (data?.data?.waitPosition === 0) clearTimeout(timeOutId);
-        }
-      })
-      .catch(function (error) {
-        console.log("log-error", error);
-      });
-  };
 
   // start timer function
   let timer = 0;
@@ -248,7 +188,11 @@ export const UserHomePage = () => {
             100;
           setPosPercent(percentPos);
 
-          if (data?.data?.waitPosition === 0) clearTimeout(timeOutId);
+
+
+          if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
+
+          if (res?.data?.data?.waitCall === "1") setProgressBar(false)
           console.log("waitPosition", res?.data?.data?.waitPosition);
           console.log("estimateWaitTime", res?.data?.data?.estimateWaitTime);
         }
@@ -259,37 +203,6 @@ export const UserHomePage = () => {
       //handleTest();
     }, callInterval);
   };
-  let x = 0;
-  let handleTest = () => {
-    //setCallTime(callTimer + 1);
-    x += 1;
-    setCallTime(x);
-
-    console.log("log-callTimerInn", x);
-  };
-
-  useEffect(() => {
-    if (callTimer) {
-      //handlerCallQueueStatus();
-      //console.log("log-callTimer", callTimer);
-    }
-  }, [callTimer]);
-
-  useEffect(() => {
-    if (waitId) {
-    }
-  }, [waitId]);
-
-  //CHECK IF THE CUSTOMER IS CHECKED IN
-  useEffect(() => {
-    if (waitStatus === "WAITING") {
-      setProgressBar(true);
-      setIsTableReady(false);
-    } else {
-      setProgressBar(false);
-      setIsTableReady(true);
-    }
-  }, [waitStatus]);
 
   //CHECK IF THE MERCHANT IS OPEN OR NOT
   useEffect(() => {
@@ -473,9 +386,7 @@ export const UserHomePage = () => {
                     className={`in_put bg-[#ffffff] ${
                       errors.email && "input_error"
                     }`}
-                    {...register("email", {
-                      required: "Email is required",
-                    })}
+                    {...register("email")}
                   />
                   {errors.email && (
                     <p className=" mt-1 text-sm text-[red]">
@@ -511,33 +422,31 @@ export const UserHomePage = () => {
                   Group before you
                 </p>
                 <div
-                  className="h-2 w-full bg-[#FDDCCB] rounded mt-4 relative"
+                  className="h-2 w-full bg-[#F99762] rounded mt-4 relative"
                   style={{ width: "100%" }}
                 >
                   <div
                     style={{ width: `${posPercent + "%"}` }}
-                    className={"h-full bg-[#F99762] rounded"}
+                    className={"h-full bg-[#FDDCCB] rounded"}
                   ></div>
                   <spa
                     style={{ left: `${posPercent - 4 + "%"}` }}
-                    className="absolute text-[#ffffff] top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
+                    className="absolute text-[#000000] font-semibold top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
                   >
                     {waitPostion}
                   </spa>
                 </div>
               </div>
-            ) : null}
-
-            {isTableReady ? (
+            ) : (
               <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
-                <div className="flex items-center justify-center text-base">
-                  <TickIcon />
-                  <p className="text-center text-[#ffffff] pl-2 text-sm">
-                    Your table is ready
-                  </p>
-                </div>
+              <div className="flex items-center justify-center text-base">
+                <TickIcon />
+                <p className="text-center text-[#ffffff] pl-2 text-sm">
+                  Your table is ready
+                </p>
               </div>
-            ) : null}
+            </div>
+            )}
 
             <div className="sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] mt-6 ">
               <h2 className="text-center mt-8 text-base text-[#6B6968] font-normal">

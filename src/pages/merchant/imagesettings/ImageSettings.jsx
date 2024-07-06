@@ -76,7 +76,7 @@ const ImageSettingsPage = () => {
   return (
     <>
       <Layout>
-        <main className="sm:ml-[350px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] ">
+        <main className="sm:ml-[370px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] ">
           <h2 className="text_18 pb-4 pt-10">Upload Logo</h2>
           <div class="text-[#6b6968] rounded-[15px]  bg-[#ffffff] sm:max-w-[579px] max-w-[386px]">
 

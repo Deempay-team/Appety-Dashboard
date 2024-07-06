@@ -3,7 +3,7 @@ import Layout from "../../../components/MerchantLayout";
 import axios from "axios";
 
 const column = [
-  "Queue",
+  "Name",
   "Pax (Min)",
   "Pax (Max)",
   "Waiting Time",
@@ -34,14 +34,14 @@ const [data, setData] = useState([])
   return (
     <>
       <Layout className="bg-[red]">
-        <main className="ml-[350px] px-10 pt-10 bg-[#F6F7F9] h-screen">
+        <main className="ml-[370px] px-10 pt-10 bg-[#F6F7F9] h-screen">
         <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[10px]  ">
-        <table className=" w-full text-base text-center py-1  border-collapse ">
-          <thead className="text_16 font-normal capitalize bg-[#ffffff] ">
+        <table className=" w-full text-base text-center py-14  border-collapse ">
+          <thead className="text_16  font-normal capitalize bg-[#ffffff] ">
             {column.map((header, i) => (
               <th
                 scope="col"
-                className="py-5 px-3 font-normal border-b border-solid border-[#d7d7d7]"
+                className="font-normal py-7 px-8 border-b border-solid border-[#d7d7d7]"
                 key={i}
               >
                 {header}
@@ -54,11 +54,11 @@ const [data, setData] = useState([])
               className="  hover:bg-[#e4e6e9] odd:bg-[#ffffff] even:bg-[#f7f7f7]"
               //key={i}
             >
-              <td className="text_16 px-2 py-5 capitalize">Q2</td>
-              <td className="text_16 px-2 py-5">1</td>
-              <td className="text_16 px-2 py-5">2</td>
-              <td className="text_16 px-2 py-5">20 Mins</td>
-              <td className="text_16 px-2 py-5 underline">
+              <td className="text_16   capitalize">Q2</td>
+              <td className="text_16  ">1</td>
+              <td className="text_16  ">2</td>
+              <td className="text_16  ">20 Mins</td>
+              <td className="text_16 underline">
                 <span onClick={() => setIsDropDown(true)} className="cursor-pointer reltive">More</span>
                 {isDropDown ? (
                 <>
@@ -91,65 +91,14 @@ const [data, setData] = useState([])
               </td>
             </tr>
             {/* ))} */}
-          </tbody>
-
-          <tbody className=" border-b border-solid border-[#d7d7d7] " >
-            {/* {data.map((transaction, i) => ( */}
-            <tr
-              className="  hover:bg-[#e4e6e9] odd:bg-[#ffffff] even:bg-[#f7f7f7]"
-              //key={i}
-            >
-              <td className="text_16 px-2 py-5 capitalize">Q2</td>
-              <td className="text_16 px-2 py-5">1</td>
-              <td className="text_16 px-2 py-5">2</td>
-              <td className="text_16 px-2 py-5">20 Mins</td>
-              <td className="text_16 px-2 py-5 underline">
-                More
-              </td>
-            </tr>
-            {/* ))} */}
-          </tbody>
-
-          <tbody className=" border-b border-solid border-[#d7d7d7]" >
-            {/* {data.map((transaction, i) => ( */}
-            <tr
-              className="  hover:bg-[#e4e6e9] odd:bg-[#ffffff] even:bg-[#f7f7f7]"
-              //key={i}
-            >
-              <td className="text_16 px-2 py-5 capitalize">Q1</td>
-              <td className="text_16 px-2 py-5">1</td>
-              <td className="text_16 px-2 py-5">2</td>
-              <td className="text_16 px-2 py-5">20 Mins</td>
-              <td className="text_16 px-2 py-5 underline">
-                More
-              </td>
-            </tr>
-            {/* ))} */}
-          </tbody>
-
-          <tbody>
-            <tr
-              className="  hover:bg-[#e4e6e9] odd:bg-[#ffffff] even:bg-[#f7f7f7]"
-              //key={i}
-            >
-              <td className="text_16 px-2 py-5 capitalize">Q1</td>
-              <td className="text_16 px-2 py-5">1</td>
-              <td className="text_16 px-2 py-5">2</td>
-              <td className="text_16 px-2 py-5">20 Mins</td>
-              <td className="text_16 px-2 py-5 underline">
-                More
-              </td>
-            </tr>
-            {/* ))} */}
-          </tbody>
-          
+          </tbody>          
         </table>
       </div>
 
 
 
 
-      <table>
+      {/* <table>
         <thead>
           <tr>
             <th>ID</th>
@@ -170,7 +119,7 @@ const [data, setData] = useState([])
               ))
             }
         </tbody>
-      </table>
+      </table> */}
 
 
    

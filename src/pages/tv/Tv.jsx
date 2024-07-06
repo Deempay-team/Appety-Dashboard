@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import QRCode from "qrcode.react";
 import { currentDate, currentTime } from "../../utils/functions";
-import { Avatar } from "../../components/Avatar";
 import { TvTable } from "../../components/TvTable"; 
 //import ReactPlayer from 'react-player'
 
@@ -37,7 +36,7 @@ export const TvPage = () => {
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
           <div className="flex items-center">
-            <Avatar imageUrl={imageUrls} />
+            {/* <Avatar imageUrl={imageUrls} /> */}
             <p className="font-medium text-[32px] text-black pl-3 capitalize">
               chicken republic
             </p>

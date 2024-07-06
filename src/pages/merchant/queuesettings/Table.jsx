@@ -75,9 +75,6 @@ const TablePage = () => {
 
   return (
     <>
-      {/* <Layout className="bg-[red]">
-        <main className="ml-[350px] px-10 pt-10 bg-[#F6F7F9] h-screen"> */}
-
       <div className="bg-[yellow]">
         <div>
           <form className="mb-4" onSubmit={handleSubmit}>
