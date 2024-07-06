@@ -13,7 +13,6 @@ export const LoginPage = () => {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- // const [userId, setUserId] = useState("");
   const [apiResponseError, setApiResponseError] = useState("");
   const { login } = useAuth();
   
