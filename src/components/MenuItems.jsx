@@ -1,6 +1,5 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-//import { Notify } from "../../components/notification";
 
 const MenuItem = ({ item }) => {
   const location = useLocation();
@@ -11,10 +10,7 @@ const MenuItem = ({ item }) => {
   }
 
   const checkInternet = (pageUrl) => {
-    //  if (navigator.onLine) {
       navigate(pageUrl);
-      // } else {
-      // }
   }
 
   return (
@@ -24,7 +20,7 @@ const MenuItem = ({ item }) => {
           <li
             className={
               isMatch(item.keyWord)
-                ? "flex items-center px-[40px] mt-6 text-[#ffffff] w-[282px] mx-auto cursor-pointer rounded-lg bg-[#F99762] py-[13px]"
+                ? "flex items-center px-[27px] mt-6 text-[#ffffff] w-[282px] mx-auto cursor-pointer rounded-lg bg-[#F99762] py-[13px]"
                 : "flex items-center px-[70px] py-2 mt-6 text-gray-500 cursor-pointer "
             }
              onClick={(node, event) =>checkInternet(item.route)}

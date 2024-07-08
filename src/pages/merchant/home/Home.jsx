@@ -32,7 +32,7 @@ const column = [
 export const MerchantHomePage = () => {
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
-  const baseURL = secrets.baseURL
+  const baseURL = secrets.baseURL;
   const navigate = useNavigate();
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
@@ -128,26 +128,23 @@ export const MerchantHomePage = () => {
       });
   }, []);
 
-
-
   //CALL QUERY SUMMARY API
   useEffect(() => {
     //setIsLoadingWaitType(true);
     if (isButtonWaitTye || statusUpdateSuccess) {
       axios
-      .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
-      .then(function (res) {
-        if (res.data.code === "000000") {
-          setIsLoadingWaitType(false);
-          setQueueType(res.data.data);
-          setIsButtonWaitTye(false)
-        }
-      })
-      .catch(function (error) {
-        console.log("summary-error", error);
-      });
+        .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
+        .then(function (res) {
+          if (res.data.code === "000000") {
+            setIsLoadingWaitType(false);
+            setQueueType(res.data.data);
+            setIsButtonWaitTye(false);
+          }
+        })
+        .catch(function (error) {
+          console.log("summary-error", error);
+        });
     }
-    
   }, [isButtonWaitTye, statusUpdateSuccess]);
 
   //CALL QUERY QUEUE FOR DOWNLOAD
@@ -208,10 +205,10 @@ export const MerchantHomePage = () => {
 
             if (res.data.data[0]?.waitCall === "1") {
               setCurrentStatus("Called");
-            }else {
+            } else {
               setCurrentStatus(res.data.data[0]?.status ?? "-");
             }
-            
+
             setStatusUpdateSuccess(false);
           }
         })
@@ -278,7 +275,7 @@ export const MerchantHomePage = () => {
       setIsCheckInQueue(false);
       setIsLoadingCancelModal(false);
       setWaitCall("0");
-      setIsLoadingWaitCall(false)
+      setIsLoadingWaitCall(false);
       // show notification
       Notify(
         "success",
@@ -323,7 +320,7 @@ export const MerchantHomePage = () => {
   const handleCall = () => {
     setUpdateStatus("WAITING");
     setWaitCall("1");
-    setIsLoadingWaitCall(true)
+    setIsLoadingWaitCall(true);
   };
 
   const handleLogout = () => {
@@ -338,7 +335,7 @@ export const MerchantHomePage = () => {
 
   const cancelQueueModal = () => {
     setUpdateStatus("CANCELLED");
-    setIsLoadingCancelModal(true)
+    setIsLoadingCancelModal(true);
   };
 
   const closeModal = () => {
@@ -406,11 +403,12 @@ export const MerchantHomePage = () => {
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
             </span>
-            <span onClick={() => setChangeIcon(!changeIcon)} className="relative flex items-center bg-[#D9D9D9] opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
+            <span
+              onClick={() => setChangeIcon(!changeIcon)}
+              className="relative cursor-pointer  flex items-center bg-[#D9D9D9] opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium"
+            >
               <p className="text_16 text-[#000000] capitalize">{firstName}</p>
-              <p
-                className="cursor-pointer ml-4"
-              >
+              <p className="cursor-pointer ml-4">
                 {changeIcon ? <ArrowDownIcon /> : <ArrowUpIcon />}
               </p>
 
@@ -515,7 +513,9 @@ export const MerchantHomePage = () => {
                                     Status
                                   </p>
                                   <p className="text_16 text-[#000000] capitalize ">
-                                    {list.waitCall === "1" ? "Called" : list.status}
+                                    {list.waitCall === "1"
+                                      ? "Called"
+                                      : list.status}
                                   </p>
                                 </div>
                               </div>
@@ -549,9 +549,8 @@ export const MerchantHomePage = () => {
               <>
                 <div className="w-[362px] ">
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
-                    <h4 className="text_16">
-                      You do not have any Waiting Queue
-                    </h4>
+                    <h2 className="text_24 font-semibold">Sorry</h2>
+                    <h4 className="text_16">There is no available Queue</h4>
                   </span>
                 </div>
               </>
@@ -808,7 +807,7 @@ export const MerchantHomePage = () => {
                 </button>
 
                 <button onClick={handleCall} className="short_btn_green ml-6 ">
-                {isLoadingWaitCall ? <SpinnerWhite /> : " Call"}
+                  {isLoadingWaitCall ? <SpinnerWhite /> : " Call"}
                 </button>
               </div>
             </div>
@@ -944,9 +943,8 @@ export const MerchantHomePage = () => {
               <>
                 <div className="w-[362px] ">
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
-                    <h4 className="text_16">
-                      You do not have any Waiting Queue
-                    </h4>
+                    <h2 className="text_24 font-semibold">Sorry</h2>
+                    <h4 className="text_16">There is no available Queue</h4>
                   </span>
                 </div>
               </>

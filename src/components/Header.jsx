@@ -56,11 +56,10 @@ const HeaderPage = () => {
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
             </span>
-            <span className="relative flex items-center gray2-bg opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
+            <span  onClick={() => setChangeIcon(!changeIcon)} className="relative cursor-pointer  flex items-center gray2-bg opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
               <p className="text_16 text-[#000000]">{firstName}</p>
               <p
                 className="cursor-pointer ml-4"
-                onClick={() => setChangeIcon(!changeIcon)}
               >
                 {changeIcon ? <ArrowDownIcon /> : <ArrowUpIcon />}
               </p>

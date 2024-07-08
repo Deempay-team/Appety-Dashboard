@@ -152,6 +152,15 @@ body {
     @apply text-[#595959] rounded-lg items-center justify-center flex space-x-2 w-full sm:text-base text-xs font-medium bg-[#ffffff] hover:bg-[#d9d9d9] sm:px-4 px-3 sm:py-3 py-2 border border-[#d9d9d9];
   }
 
+  .table_short_btn {
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#F99762] hover:bg-[#ed996c] w-[77px] text-sm text-[#ffffff] font-normal;
+  }
+
+  .table_short_white {
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762]  w-[77px] text-sm text-[#F99762] font-normal;
+  }
+
+
   .modal_title {
     @apply sm:text-base text-sm font-medium text-[#000000] items-center justify-center flex;
   }

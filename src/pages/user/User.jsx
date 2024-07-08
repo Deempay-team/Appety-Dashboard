@@ -21,7 +21,6 @@ export const UserHomePage = () => {
   const [notOpenPage, setNotOpenPage] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
   const [progressBar, setProgressBar] = useState(true);
-  const [isTableReady, setIsTableReady] = useState(false);
   const [cusPhone, setCusPhone] = useState("");
   const [cusName, setCusName] = useState("");
   const [marketing, setMarketing] = useState(1);
@@ -188,13 +187,9 @@ export const UserHomePage = () => {
             100;
           setPosPercent(percentPos);
 
-
-
           if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
 
           if (res?.data?.data?.waitCall === "1") setProgressBar(false)
-          console.log("waitPosition", res?.data?.data?.waitPosition);
-          console.log("estimateWaitTime", res?.data?.data?.estimateWaitTime);
         }
       })
       .catch(function (error) {
@@ -343,7 +338,7 @@ export const UserHomePage = () => {
 
               <div className="mt-6 flex ">
                 <p className="text-sm text-[#000000] pr-3">
-                  Do you want to receive marketing emails?
+                  Do you want to receive promotions?
                 </p>
                 <input
                   onChange={handleCheckboxChange}
