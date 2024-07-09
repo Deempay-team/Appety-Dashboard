@@ -1,14 +1,25 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../../components/MerchantLayout";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useEditWaitType } from "../../../hooks/useMechant";
 import storage from "../../../utils/storage";
 import secrets from "../../../config/secrets";
-import { SpinnerOrangeMedium, SpinnerWhite } from "../../../components/spinner/Spinner";
+import { RemoveQueueModalIcon } from "../../../assests/icons/Icons";
+import {
+  SpinnerOrangeMedium,
+  SpinnerWhite,
+} from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
+import { Dropdown, Menu } from "antd";
 
-const column = ["Name", "Pax (Min)", "Pax (Max)", "Waiting Time (mins)", "Action"];
+const column = [
+  "Name",
+  "Pax (Min)",
+  "Pax (Max)",
+  "Waiting Time (mins)",
+  "Action",
+];
 
 const QueueSettingsPage = () => {
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
@@ -22,27 +33,119 @@ const QueueSettingsPage = () => {
   const [queueList, setQueueList] = useState([]);
   const [waitTypeList, setWaitTypeList] = useState([]);
   const [isLoadingEditQ1, setIsLoadingEditQ1] = useState(false);
-  const [isLoadingRemoveQ1, setIsLoadingRemoveQ1] = useState(false);
+  const [isLoadingEditQ2, setIsLoadingEditQ2] = useState(false);
+  const [isLoadingEditQ3, setIsLoadingEditQ3] = useState(false);
+  const [isLoadingEditQ4, setIsLoadingEditQ4] = useState(false);
+  const [isLoadingEditQ5, setIsLoadingEditQ5] = useState(false);
+  const [isLoadingRemove, setIsLoadingRemove] = useState(false);
   const [isEditQ1, setIsEditQ1] = useState(true);
   const [isEditQ2, setIsEditQ2] = useState(true);
   const [isEditQ3, setIsEditQ3] = useState(true);
   const [isEditQ4, setIsEditQ4] = useState(true);
   const [isEditQ5, setIsEditQ5] = useState(true);
-  const [isQ1DropDown, setIsQ1DropDown] = useState(false);
-  const [isQ2DropDown, setIsQ2DropDown] = useState(false);
-  const [isQ3DropDown, setIsQ3DropDown] = useState(false);
-  const [isQ4DropDown, setIsQ4DropDown] = useState(false);
-  const [isQ5DropDown, setIsQ5DropDown] = useState(false);
   const [isLoadingWaitType, setIsLoadingWaitType] = useState(false);
   const [editError, setEditError] = useState("");
   const [listIndex, setListIndex] = useState("0");
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+
+  const openRemoveModal = (index) => {
+    setShowRemoveModal(true);
+    setStatus("0")
+  };
+
+  const one = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditQ1(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const second = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditQ2(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        //open={false}
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const three = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditQ3(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const four = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditQ4(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const five = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditQ5(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
 
   //CALL TO UPDATE QUEUE
-  const {
-    isLoading: isLoadingEditWaitType,
-    data,
-    mutate: fetchEditWaitType,
-  } = useEditWaitType({
+  const { data, mutate: fetchEditWaitType } = useEditWaitType({
     merchId,
     waitTypeId,
     minPax,
@@ -78,62 +181,69 @@ const QueueSettingsPage = () => {
       });
   }, []);
 
-
   //CALL QUERY WAITTYPE API TO UPDATE STATE
   const queryUpdate = () => {
     axios
-    .get(`${baseURL}/api/v1/wait/type/query/${merchId}`)
-    .then(function (res) {
-      if (res.data.code === "000000") {
-        setIsLoadingWaitType(false);
-        const queryData = res.data.data;
-        setQueueList(queryData);
-        setValue()
-      }
-    })
-    .catch(function (error) {
-      console.log("queryWaitType-error", error);
-    });
-  }
+      .get(`${baseURL}/api/v1/wait/type/query/${merchId}`)
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setIsLoadingWaitType(false);
+          const queryData = res.data.data;
+          setQueueList(queryData);
+          setValue();
+        }
+      })
+      .catch(function (error) {
+        console.log("queryWaitType-error", error);
+      });
+  };
 
   //RETURN UPDATE API DATA
   useEffect(() => {
     if (data) {
       setIsLoadingEditQ1(false);
+      setIsLoadingEditQ2(false);
+      setIsLoadingEditQ3(false);
+      setIsLoadingEditQ4(false);
+      setIsLoadingEditQ5(false);
+      setIsLoadingRemove(false);
 
       setIsEditQ1(true);
-      setIsQ1DropDown(false);
       setIsEditQ2(true);
-      setIsQ2DropDown(false);
       setIsEditQ3(true);
-      setIsQ3DropDown(false);
       setIsEditQ4(true);
-      setIsQ4DropDown(false);
       setIsEditQ5(true);
-      setIsQ5DropDown(false);
       queryUpdate();
-      reset();
+      closeModal();
       Notify(
         "success",
-        "Saved Succesfully!",
         "Your Queue has being updated!",
-        5
       );
     }
   }, [data]);
 
   const handleWaitType = (index) => {
     setWaitTypeList(queueList);
-    setListIndex(index)
-    setMaxPax(queueList[index].maxPax)
-    setMinPax(queueList[index].minPax)
-    setEstimateTime(queueList[index].estimateTime)
+    setListIndex(index);
+    // setMaxPax(queueList[index].maxPax);
+    // setMinPax(queueList[index].minPax);
+    // setEstimateTime(queueList[index].estimateTime);
+  };
+
+  const handleRemove = () => {
+      setStatus("0");
+      setWaitTypeId(queueList[listIndex]?.waitTypeId);
+      setWaitTypeName(queueList[listIndex]?.waitTypeName);
+      setMaxPax(queueList[listIndex]?.maxPax);
+      setMinPax(queueList[listIndex]?.minPax);
+      setEstimateTime(queueList[listIndex]?.estimateTime);
+      setIsLoadingRemove(true);
   };
 
   // CALL UPDATE API
   useEffect(() => {
     if (minPax) {
-    // fetchEditWaitType();
+      fetchEditWaitType();
     }
   }, [minPax]);
 
@@ -144,104 +254,112 @@ const QueueSettingsPage = () => {
     setIsLoadingEditQ1(true);
   };
 
-  const handleCancelQ1 = () => {
-    setIsEditQ1(true);
-      setIsQ1DropDown(false);
-    // setWaitTypeId(queueList[0]?.waitTypeId);
-    // setWaitTypeName("Q1");
-    // setStatus("0");
-    
-  };
-
+ 
   const handleEditQ2 = () => {
     setWaitTypeId(queueList[1]?.waitTypeId);
     setStatus("1");
     setWaitTypeName("Q2");
-  };
-
-  const handleCancelQ2 = () => {
-    // setWaitTypeId(queueList[1]?.waitTypeId);
-    // setWaitTypeName("Q2");
-    // setStatus("0");
-    setIsEditQ2(true);
-    setIsQ2DropDown(false);
+    setIsLoadingEditQ2(true);
   };
 
   const handleEditQ3 = () => {
     setWaitTypeId(queueList[2]?.waitTypeId);
     setStatus("1");
     setWaitTypeName("Q3");
-  };
-
-  const handleCancelQ3 = () => {
-    // setWaitTypeId(queueList[2]?.waitTypeId);
-    // setWaitTypeName("Q3");
-    // setStatus("0");
-    setIsEditQ3(true);
-      setIsQ3DropDown(false);
+    setIsLoadingEditQ3(true);
   };
 
   const handleEditQ4 = () => {
     setWaitTypeId(queueList[3]?.waitTypeId);
     setStatus("1");
     setWaitTypeName("Q4");
-  };
-
-  const handleCancelQ4 = () => {
-    // setWaitTypeId(queueList[3]?.waitTypeId);
-    // setWaitTypeName("Q4");
-    // setStatus("0");
-    setIsEditQ4(true);
-      setIsQ4DropDown(false);
+    setIsLoadingEditQ4(true);
   };
 
   const handleEditQ5 = () => {
     setWaitTypeId(queueList[4]?.waitTypeId);
     setStatus("1");
     setWaitTypeName("Q5");
+    setIsLoadingEditQ5(true);
   };
 
-  const handleCancelQ5 = () => {
-    // setWaitTypeId(queueList[4]?.waitTypeId);
-    // setWaitTypeName("Q5");
-    // setStatus("0");
-     setIsEditQ5(true);
-      setIsQ5DropDown(false);
+  const addBack = () => {
+      setStatus("1");
+      setWaitTypeId(queueList[listIndex]?.waitTypeId);
+      setWaitTypeName(queueList[listIndex]?.waitTypeName);
+      setMaxPax(queueList[listIndex]?.maxPax);
+      setMinPax(queueList[listIndex]?.minPax);
+      setEstimateTime(queueList[listIndex]?.estimateTime);
+      setIsLoadingRemove(true);
+
+      console.log("Q-type", queueList[listIndex]?.waitTypeName);
+      console.log("minPax", queueList[listIndex]?.minPax);
+      console.log("Time", queueList[listIndex]?.estimateTime);
+      console.log("status", status);
+    // }
   };
+
+  const queueStatus = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={addBack}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#000000]"
+      >
+        Add Back
+      </span>
+    </Menu>
+  );
 
   const onSubmitHandler = (data) => {
     const { minPax, maxPax, estimateTime } = data;
-
     console.log("data", data);
-
-    console.log("index", listIndex)
-
-    console.log("waitTypeList", waitTypeList)
-
-
-    if (maxPax <= minPax) {
-      return setEditError(<section>Max Pax must be greater than Min Pax</section>);
-    }
-    if (listIndex === 0) {
-      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-        return setEditError(<section>Max Pax should be greater than Min Pax in {waitTypeList[listIndex + 1].waitTypeName}</section>);
-      }
-    }else if (listIndex > 0 &&  listIndex < waitTypeList[listIndex - 1].minPax) {
-      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-        return setEditError(<section>Max Pax should be greater than Min Pax in {waitTypeList[listIndex + 1].waitTypeName}</section>);
-      }
-      if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-        return setEditError(<section>Min Pax should be less or equal to {waitTypeList[listIndex - 1].waitTypeName}</section>);
-      }
-    }else if (listIndex === setWaitTypeList.length - 1) {
-     if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-      return setEditError(<section>Min Pax should  not be greater than {waitTypeList[listIndex - 1].waitTypeName}</section>);
-     }
-    }  
-    
+    // if (maxPax <= minPax) {
+    //   return setEditError(
+    //     <section>Max Pax must be greater than Min Pax</section>
+    //   );
+    // }
+    // if (listIndex === 0) {
+    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+    //     return setEditError(
+    //       <section>
+    //         Max Pax should be greater than Min Pax in{" "}
+    //         {waitTypeList[listIndex + 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // } else if (
+    //   listIndex > 0 &&
+    //   listIndex < waitTypeList[listIndex - 1].minPax
+    // ) {
+    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+    //     return setEditError(
+    //       <section>
+    //         Max Pax should be greater than Min Pax in{" "}
+    //         {waitTypeList[listIndex + 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+    //     return setEditError(
+    //       <section>
+    //         Min Pax should be less or equal to{" "}
+    //         {waitTypeList[listIndex - 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // } else if (listIndex === setWaitTypeList.length - 1) {
+    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+    //     return setEditError(
+    //       <section>
+    //         Min Pax should not be greater than{" "}
+    //         {waitTypeList[listIndex - 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // }
 
     if (maxPax) {
-      setMaxPax(maxPax);;
+      setMaxPax(maxPax);
     }
     if (minPax) {
       setMinPax(minPax);
@@ -249,20 +367,18 @@ const QueueSettingsPage = () => {
     if (estimateTime) {
       setEstimateTime(estimateTime);
     }
-
-    // setMaxPax(maxPax);
-    // setMinPax(minPax);
-    // setEstimateTime(estimateTime);
-  }
+  };
 
   useEffect(() => {
-    // setValue('fieldArray', [{ "maxPax":  }]);
-      setValue("minPax", minPax);
-      setValue("maxPax", maxPax);
-      setValue("estimateTime", estimateTime);
+    setValue("minPax", minPax);
+    setValue("maxPax", maxPax);
+    setValue("estimateTime", estimateTime);
   }, [minPax, maxPax]);
 
-
+  const closeModal = () => {
+    setShowRemoveModal(false);
+    setStatus("1")
+  };
 
   return (
     <>
@@ -297,41 +413,33 @@ const QueueSettingsPage = () => {
                             ? "-"
                             : queueList[0]?.estimateTime + " mins"}
                         </td>
-                        <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => {
-                              setIsQ1DropDown(!isQ1DropDown);
-                              handleWaitType(0);
-                            }}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isQ1DropDown ? (
-                            <>
-                              <div className="absolute right-[4%] xl:top-[22.5%] top-[28.5%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditQ1(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                     {/* {isLoadingEditQ1 ? <SpinnerWhite /> : "Edit"} */}
-                                     Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                    {isLoadingRemoveQ1 ? <SpinnerOrangeMedium /> : "Remove"}
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                            </>
-                          ) : null}
+                        <td className="text_16 py-6 ">
+                          {/* CHECK FOR STATUS */}
+                        {queueList[0]?.status === "1" ? 
+                          <>
+                            <Dropdown overlay={one} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(0);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </> : 
+                          <>
+                            <Dropdown overlay={queueStatus} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(0);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </>}
                         </td>
                       </>
                     ) : (
@@ -339,7 +447,6 @@ const QueueSettingsPage = () => {
                         <td className="">
                           <input
                             type="text"
-                            //onChange={hasTypedMoreThan4Letter}
                             className={`input-shorter mx-auto ${
                               errors.minPax && "input_error"
                             }`}
@@ -359,10 +466,6 @@ const QueueSettingsPage = () => {
                             }`}
                             {...register("maxPax", {
                               required: "",
-                              // pattern: {
-                              //   value:
-                              //     maxPax > queueList[0]?.minPax,
-                              // },
                             })}
                           />
                         </td>
@@ -378,20 +481,22 @@ const QueueSettingsPage = () => {
                           />
                         </td>
                         <td className="text_16 py-6 ">
-                          <button
-                            type="submit"
-                            onClick={handleEditQ1}
-                            className="table_short_btn mr-[13px] "
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="submit"
-                            onClick={handleCancelQ1}
-                            className="table_short_white "
-                          >
-                            Cancel
-                          </button>
+                          <span className="flex items-center justify-center">
+                            <button
+                              type="submit"
+                              onClick={handleEditQ1}
+                              className="table_short_btn mr-[13px]"
+                            >
+                              {isLoadingEditQ1 ? <SpinnerWhite /> : "Save"}
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setIsEditQ1(true)}
+                              className="table_short_white "
+                            >
+                              Cancel
+                            </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -417,41 +522,33 @@ const QueueSettingsPage = () => {
                             ? "-"
                             : queueList[1]?.estimateTime + " mins"}
                         </td>
-                        <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => {
-                              setIsQ2DropDown(!isQ2DropDown);
-                              handleWaitType(1);
-                            }}
-                            class
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isQ2DropDown ? (
-                            <>
-                              <div className="absolute right-[4%] xl:top-[38%] top-[37%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditQ2(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                            </>
-                          ) : null}
+                        <td className="text_16 py-6 ">
+                            {/* CHECK FOR STATUS */}
+                            {queueList[1]?.status === "1" ? 
+                          <>
+                            <Dropdown overlay={second} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(1);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </> : 
+                          <>
+                            <Dropdown overlay={queueStatus} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(1);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </>}
                         </td>
                       </>
                     ) : (
@@ -490,20 +587,22 @@ const QueueSettingsPage = () => {
                           />
                         </td>
                         <td className="text_16 py-6 ">
-                          <button
-                            type="submit"
-                            onClick={handleEditQ2}
-                            className="table_short_btn mr-[13px] "
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="submit"
-                            onClick={handleCancelQ2}
-                            className="table_short_white "
-                          >
-                            Cancel
-                          </button>
+                          <span className="flex items-center justify-center">
+                            <button
+                              type="submit"
+                              onClick={handleEditQ2}
+                              className="table_short_btn mr-[13px] "
+                            >
+                              {isLoadingEditQ2 ? <SpinnerWhite /> : "Save"}
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setIsEditQ2(true)}
+                              className="table_short_white "
+                            >
+                              Cancel
+                            </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -528,40 +627,33 @@ const QueueSettingsPage = () => {
                             ? "-"
                             : queueList[2]?.estimateTime + " mins"}
                         </td>
-                        <td className="text_16 py-6 underline">
-                          <span
-                               onClick={() => {
-                                setIsQ3DropDown(!isQ3DropDown);
+                        <td className="text_16 py-6 ">
+                          {/* CHECK FOR STATUS */}
+                          {queueList[2]?.status === "1" ? 
+                          <>
+                            <Dropdown overlay={three} trigger={["click"]}>
+                            <span
+                              onClick={() => {
                                 handleWaitType(2);
                               }}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isQ3DropDown ? (
-                            <>
-                              <div className="absolute right-[4%] xl:top-[46.7%] top-[46%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditQ3(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                            </>
-                          ) : null}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </> : 
+                          <>
+                            <Dropdown overlay={queueStatus} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(2);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </>}
                         </td>
                       </>
                     ) : (
@@ -600,26 +692,29 @@ const QueueSettingsPage = () => {
                           />
                         </td>
                         <td className="text_16 py-6 ">
-                          <button
-                            type="submit"
-                            onClick={handleEditQ3}
-                            className="table_short_btn mr-[13px] "
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="submit"
-                            onClick={handleCancelQ3}
-                            className="table_short_white "
-                          >
-                            Cancel
-                          </button>
+                          <span className="flex items-center justify-center">
+                            <button
+                              type="submit"
+                              onClick={handleEditQ3}
+                              className="table_short_btn mr-[13px] "
+                            >
+                              {isLoadingEditQ3 ? <SpinnerWhite /> : "Save"}
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setIsEditQ3(true)}
+                              className="table_short_white "
+                            >
+                              Cancel
+                            </button>
+                          </span>
                         </td>
                       </>
                     )}
                   </tr>
 
                   {/* Q4 ROW */}
+
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
                     <td className="text_16  py-6 capitalize">
                       {isLoadingWaitType ? "Q4" : queueList[3]?.waitTypeName}
@@ -638,40 +733,34 @@ const QueueSettingsPage = () => {
                             ? "-"
                             : queueList[3]?.estimateTime + " mins"}
                         </td>
-                        <td className="text_16 py-6 underline">
-                          <span
-                             onClick={() => {
-                              setIsQ4DropDown(!isQ4DropDown);
-                              handleWaitType(3);
-                            }}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isQ4DropDown ? (
-                            <>
-                              <div className="absolute right-[4%] xl:top-[55.5%] top-[54%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditQ4(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                            </>
-                          ) : null}
+                        <td className="text_16 py-6 ">
+                          {/* CHECK FOR STATUS */}
+                          {queueList[3]?.status === "1" ? 
+                          <>
+                            <Dropdown overlay={four} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(3);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </> : 
+                          <>
+                            <Dropdown overlay={queueStatus} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(3);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </>}
+                        
                         </td>
                       </>
                     ) : (
@@ -710,20 +799,22 @@ const QueueSettingsPage = () => {
                           />
                         </td>
                         <td className="text_16 py-6 ">
-                          <button
-                            type="submit"
-                            onClick={handleEditQ4}
-                            className="table_short_btn mr-[13px] "
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="submit"
-                            onClick={handleCancelQ4}
-                            className="table_short_white "
-                          >
-                            Cancel
-                          </button>
+                          <span className="flex items-center justify-center">
+                            <button
+                              type="submit"
+                              onClick={handleEditQ4}
+                              className="table_short_btn mr-[13px] "
+                            >
+                              {isLoadingEditQ4 ? <SpinnerWhite /> : "Save"}
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setIsEditQ4(true)}
+                              className="table_short_white "
+                            >
+                              Cancel
+                            </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -748,40 +839,33 @@ const QueueSettingsPage = () => {
                             ? "-"
                             : queueList[4]?.estimateTime + " mins"}
                         </td>
-                        <td className="text_16 py-6 underline">
-                          <span
-                             onClick={() => {
-                              setIsQ5DropDown(!isQ5DropDown);
-                              handleWaitType(4);
-                            }}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isQ5DropDown ? (
-                            <>
-                              <div className="absolute right-[4%] xl:top-[64.2%] top-[62.5%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditQ5(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
-                            </>
-                          ) : null}
+                        <td className="text_16 py-6 ">
+                         {/* CHECK FOR STATUS */}
+                         {queueList[4]?.status === "1" ? 
+                          <>
+                            <Dropdown overlay={five} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(4);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </> : 
+                          <>
+                            <Dropdown overlay={queueStatus} trigger={["click"]}>
+                            <span
+                              onClick={() => {
+                                handleWaitType(4);
+                              }}
+                              className=" cursor-pointer text_16 underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                          </>}
                         </td>
                       </>
                     ) : (
@@ -820,20 +904,22 @@ const QueueSettingsPage = () => {
                           />
                         </td>
                         <td className="text_16 py-6 ">
-                          <button
-                            type="submit"
-                            onClick={handleEditQ5}
-                            className="table_short_btn mr-[13px] "
-                          >
-                            Save
-                          </button>
-                          <button
-                            type="submit"
-                            onClick={handleCancelQ5}
-                            className="table_short_white "
-                          >
-                            Cancel
-                          </button>
+                          <span className="flex items-center justify-center">
+                            <button
+                              type="submit"
+                              onClick={handleEditQ5}
+                              className="table_short_btn mr-[13px] "
+                            >
+                              {isLoadingEditQ5 ? <SpinnerWhite /> : "Save"}
+                            </button>
+                            <button
+                              type="submit"
+                              onClick={() => setIsEditQ5(true)}
+                              className="table_short_white "
+                            >
+                              Cancel
+                            </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -844,13 +930,54 @@ const QueueSettingsPage = () => {
           </div>
 
           <div>
-            <p className="mt-3 text_16 text-[#6B6968] font-normal">To edit the table above, please start from the bottom row (Q5)</p>
+            <p className="mt-3 text_16 text-[#6B6968] font-normal">
+              To edit the table above, please start from the bottom row (Q5)
+            </p>
           </div>
           <div>
             <p className="mt-2 text_16 text-[red] font-normal">{editError}</p>
           </div>
         </main>
       </Layout>
+
+      {/* SHOW CANCEL QUEUE MODAL */}
+      {showRemoveModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg p-[112px] w-[600px] relative">
+              <div className="">
+                <div className="flex justify-center items-center">
+                  <RemoveQueueModalIcon />
+                </div>
+                <div className=" text-center ">
+                  <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
+                    Are you sure?
+                  </p>
+                  <p className="text_18 text-[#000000] pb-[84px]">
+                    The queue will be deleted completely
+                  </p>
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={closeModal}
+                    type="submit"
+                    className="short_btn mr-[24px]"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={handleRemove}
+                    type="submit"
+                    className="short_btn_white"
+                  >
+                    {isLoadingRemove ? <SpinnerOrangeMedium /> : "Continue"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };
