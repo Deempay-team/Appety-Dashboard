@@ -38,6 +38,16 @@ export const formatDate = (undate) => {
   });
 };
 
+
+
+
+export const formatTime = (timeString) => {
+  const [hourString, minute] = toString(timeString).split(":");
+  const hour = +hourString % 24;
+  return (hour % 12 || 12) + ":" + minute + (hour < 12 ? "AM" : "PM");
+};
+
+
 // export const redirectTo = (roleName) => {
 //   let redirectTo;
 //   switch (roleName) {
@@ -55,15 +65,6 @@ export const formatDate = (undate) => {
 //   }
 //   return redirectTo;
 // };
-
-export const formatDateTime = (dateTime) => {
-  const date = new Date(dateTime).toDateString();
-  const time = new Date(dateTime).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-  return `${date} ${time}`;
-};
 
 export const formatMonthYear = (monthyear) => {
   const month = new Date(monthyear).toDateString("en-us", {

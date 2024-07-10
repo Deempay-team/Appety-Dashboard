@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import storage from "../utils/storage";
-import { FaUserCircle } from "react-icons/fa";
 import { ArrowDownIcon, ArrowUpIcon } from "../assests/icons/Icons";
 import { currentDate, currentTime } from "../utils/functions";
+import secrets from "../config/secrets";
 
 const HeaderPage = () => {
   const navigate = useNavigate();
+  const baseURL = secrets.baseURL;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
   const merchName = JSON.parse(storage.fetch("merchantDetails")).merchName;
   const logoUrl = JSON.parse(storage.fetch("merchantDetails")).logoUrl;
   const [changeIcon, setChangeIcon] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleLogout = () => {
     storage.clear();
@@ -23,29 +23,11 @@ const HeaderPage = () => {
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
           <div className="flex items-center">
-          <img
-              src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
+            <img
+              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
-              //style={{ borderRadius: "50px" }}
-              className=
-              // {`${
-              //   imageLoaded
-                  "visible rounded-full h-[50px] w-[50px]"
-                 // : "hidden rounded-full h-[50px] w-[50px]"
-              // }`}
-             //onLoad={() => setImageLoaded(true)}
+              className="visible rounded-full h-[50px] w-[50px]"
             />
-            {/* {!imageLoaded && (
-              <FaUserCircle
-                size={50}
-                style={{
-                  display: "flex",
-                  alignSelf: "center",
-                  opacity: 0.25,
-                  cursor: "pointer",
-                }}
-              />
-            )} */}
             <p className="font-semibold text-[32px] text-black pl-3 capitalize">
               {merchName}
             </p>
@@ -56,11 +38,12 @@ const HeaderPage = () => {
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
             </span>
-            <span  onClick={() => setChangeIcon(!changeIcon)} className="relative cursor-pointer  flex items-center gray2-bg opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium">
+            <span
+              onClick={() => setChangeIcon(!changeIcon)}
+              className="relative cursor-pointer  flex items-center gray2-bg opacity-90 rounded-[5px] ml-8 place-self-center py-[15px] px-[16px] text-black text-[12px] font-medium"
+            >
               <p className="text_16 text-[#000000]">{firstName}</p>
-              <p
-                className="cursor-pointer ml-4"
-              >
+              <p className="cursor-pointer ml-4">
                 {changeIcon ? <ArrowDownIcon /> : <ArrowUpIcon />}
               </p>
 

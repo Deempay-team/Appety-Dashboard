@@ -1,155 +1,470 @@
 import { useState, useEffect, useRef } from "react";
 import QRCode from "qrcode.react";
-import { Switch } from "antd";
+import { Switch, ConfigProvider } from "antd";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import moment from"moment";
 import exportAsImage from "../../../components/exportAsImage";
 import Layout from "../../../components/MerchantLayout";
 import { DownLoadIcon } from "../../../assests/icons/Icons";
-import { LinkSettingsTable } from "../../../components/LinkSettingsTable";
 import storage from "../../../utils/storage";
 import secrets from "../../../config/secrets";
+import { useEditWaitTime, useUpdateMerchant } from "../../../hooks/useMechant";
+
+import { RemoveQueueModalIcon } from "../../../assests/icons/Icons";
 import {
   SpinnerOrangeMedium,
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
+import Notify from "../../../components/Notification";
+import { Dropdown, Menu } from "antd";
 
 const column = ["Day", "Start Time", "End Time", "Action"];
 
 const LinkSettingsPage = () => {
   const exportRef = useRef();
   const baseURL = secrets.baseURL;
-  const [qrURL, setQrURL] = useState("https://pay.deempay.com/aypizza");
+  const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const linkUrl = JSON.parse(storage.fetch("merchantDetails")).linkUrl;
+  const switchIsOn = JSON.parse(storage.fetch("merchantDetails")).linkUrlStatus;
+  const orderUrl = JSON.parse(storage.fetch("merchantDetails")).preOrderUrl 
+  const [waitTimeId, setWaitTimeId] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [startTime, setstartTime] = useState("");
+  const [status, setStatus] = useState("1");
   const [isEditMonday, setIsEditMonday] = useState(true);
+  const [timeList, setTimeList] = useState([]);
+  const [isLoadingTime, setIsLoadingTime] = useState(false);
+  const [isLoadingMonday, setIsLoadingMonday] = useState(false);
+  const [isLoadingTuesday, setIsLoadingTuesday] = useState(false);
+  const [isLoadingWednesday, setIsLoadingWednesday] = useState(false);
+  const [isLoadingThursday, setIsLoadingThursday] = useState(false);
+  const [isLoadingFriday, setIsLoadingFriday] = useState(false);
+  const [isLoadingSaturday, setIsLoadingSaturday] = useState(false);
+  const [isLoadingSunday, setIsLoadingSunday] = useState(false);
   const [isEditTuesday, setIsEditTuesday] = useState(true);
   const [isEditWednesday, setIsEditWednesday] = useState(true);
   const [isEditThursday, setIsEditThursday] = useState(true);
   const [isEditFriday, setIsEditFriday] = useState(true);
   const [isEditSaturday, setIsEditSaturday] = useState(true);
   const [isEditSunday, setIsEditSunday] = useState(true);
-  const [isMonDropDown, setIsMonDropDown] = useState(false);
-  const [isTueDropDown, setIsTueDropDown] = useState(false);
-  const [isWedDropDown, setIsWedDropDown] = useState(false);
-  const [isThurDropDown, setIsThurDropDown] = useState(false);
-  const [isFriDropDown, setIsFriDropDown] = useState(false);
-  const [isSatDropDown, setIsSatDropDown] = useState(false);
-  const [isSunDropDown, setIsSunDropDown] = useState(false);
+  const [listIndex, setListIndex] = useState("0");
+  const [waitTimeList, setWaitTimeList] = useState([]);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [isLoadingRemove, setIsLoadingRemove] = useState(false);
+  const [linkUrlStatus, setLinkUrlStatus] = useState("");
+  const [preOrderUrl, setPreOrderUrl] = useState("");
+  const [isSwitchOn, setIsSwitchOn] = useState("");
+  const [isLoadingOrderUrl, setIsLoadingOrderUrl] = useState(false);
 
-  console.log("linkurl", linkUrl);
-
+  
   // FORM VALIDATION
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-    reset,
   } = useForm();
+
+  const openRemoveModal = (index) => {
+    setShowRemoveModal(true);
+    setStatus("0")
+  };
+
+  const monday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditMonday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const tuesday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditTuesday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        //open={false}
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const wednesday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditWednesday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const thursday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditThursday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const friday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditFriday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const saturday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditSaturday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  const sunday = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={() => setIsEditSunday(false)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[1px] border-[#e0e0e0]"></div>
+      <span
+        onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
+  //CALL TO UPDATE WAIT-TIME
+  const { data, mutate: fetchEditWaitTime } = useEditWaitTime({
+    merchId,
+    waitTimeId,
+    startTime,
+    status,
+    endTime,
+  });
+
+  //CALL TO UPDATE MERCHANT STATUS
+  const { data: updateMerchantData, mutate: fetchUpdateMerchant } = useUpdateMerchant({
+    merchId,
+    linkUrlStatus,
+    preOrderUrl,
+  });
+
+  //CALL QUERY WAIT-TIME API
+  useEffect(() => {
+    setIsLoadingTime(true);
+    axios
+      .get(`${baseURL}/api/v1/wait/time/query/${merchId}`)
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setIsLoadingTime(false);
+          const daysData = res.data.data;
+          setTimeList(daysData);
+        }
+      })
+      .catch(function (error) {
+        console.log("queryWaitType-error", error);
+      });
+  }, []);
+
+   //CALL QUERY WAIT-TIME API TO UPDATE STATE
+   const timeUpdate = () => {
+    axios
+      .get(`${baseURL}/api/v1/wait/time/query/${merchId}`)
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setIsLoadingTime(false);
+          const daysData = res.data.data;
+          setTimeList(daysData);
+        }
+      })
+      .catch(function (error) {
+        console.log("queryWaitType-error", error);
+      });
+  };
+
+    //CALL QUERY MERCHANT DETAILS API
+    const queryMerchantUpdate = () => {
+      axios
+        .get(`${baseURL}/api/v1/user/merchant/query/${merchId}`)
+        .then(function (res) {
+          if (res.data.code === "000000") {
+            storage.add(
+              "merchantDetails",
+              JSON.stringify({
+                merchStatus: res.data.data?.merchStatus,
+                merchName: res.data.data?.merchName,
+                merchPhone: res.data.data?.merchPhone,
+                contactName: res.data.data?.contactName,
+                linkUrl: res.data.data?.linkUrl,
+                linkUrlStatus: res.data.data?.linkUrlStatus,
+                logoUrl: res.data.data?.logoUrl,
+                preOrderUrl: res.data.data?.preOrderUrl,
+              })
+            );
+            isSwitchOn(res.data.data?.linkUrlStatus)
+          }
+        })
+        .catch(function (error) {
+          console.log("merchant-error", error);
+        });
+    };
+
+  
+  //RETURN UPDATE API DATA
+  useEffect(() => {
+    if (data) {
+      setIsLoadingMonday(false);
+      setIsLoadingTuesday(false);
+      setIsLoadingWednesday(false);
+      setIsLoadingThursday(false);
+      setIsLoadingFriday(false);
+      setIsLoadingSaturday(false);
+      setIsLoadingSunday(false);
+      setIsLoadingRemove(false);
+
+      setIsEditMonday(true);
+      setIsEditTuesday(true);
+      setIsEditWednesday(true);
+      setIsEditThursday(true);
+      setIsEditFriday(true);
+      setIsEditSaturday(true);
+      setIsEditSunday(true);
+      timeUpdate();
+      closeModal();
+      Notify(
+        "success",
+        "Your Queue has being updated Successfully!",
+      );
+      setWaitTimeId("")
+    }
+  }, [data]);
+
+    // CALL UPDATE API
+    useEffect(() => {
+      if (endTime && waitTimeId) {
+        fetchEditWaitTime();
+      }
+    }, [endTime, waitTimeId]);
+
+  const handleWaitTime = (index) => {
+    setWaitTimeList(timeList)
+    setListIndex(index);
+    setstartTime(timeList[index].startTime);
+    setEndTime(timeList[index].endTime);
+  };
+
+  //TO REMOVE WAIT-TIME
+  const handleRemove = () => {
+    setStatus("0");
+    setWaitTimeId(timeList[listIndex]?.waitTimeId);
+    setEndTime(timeList[listIndex]?.endTime);
+    setstartTime(timeList[listIndex]?.startTime);
+    setIsLoadingRemove(true);
+};
 
   const qrcode = (
     <QRCode
       id="qrCodeId"
       size={110}
-      value={`http://localhost:3000/user/${linkUrl}`}
+      value={`${baseURL}/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="M"
-      // imageSettings={{
-      //   src: logoUrl ? logoUrl : Logo,
-      //   excavate: true,
-      //   width: 40,
-      //   height: 40,
-      // }}
     />
   );
 
+  const qrcodeBig = (
+    <QRCode
+      id="qrCodeId"
+      size={700}
+      value={`${baseURL}/user/${linkUrl}`}
+      bgColor="white"
+      fqColor="black"
+      level="M"
+    />
+  );
+
+  useEffect(() => {
+    if(updateMerchantData) {
+      queryMerchantUpdate();
+      setIsLoadingOrderUrl(false)
+    }
+  }, [updateMerchantData])
+
+  useEffect(() => {
+    if(linkUrlStatus || preOrderUrl) {
+      fetchUpdateMerchant();
+      setIsLoadingOrderUrl(true)
+    }
+  }, [linkUrlStatus, preOrderUrl])
+
   const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
+    if (checked) {
+      setLinkUrlStatus("1")      
+    }else {
+      setLinkUrlStatus("0")
+    }    
   };
 
   const handleEditMon = () => {
-    setIsEditMonday(true);
-    setIsMonDropDown(false);
-  };
-
-  const handleCancelMon = () => {
-    setIsEditMonday(true);
-    setIsMonDropDown(false);
+    setWaitTimeId(timeList[0]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingMonday(true);
   };
 
   const handleEditTue = () => {
-    setIsEditTuesday(true);
-    setIsTueDropDown(false);
-  };
-
-  const handleCancelTue = () => {
-    setIsEditTuesday(true);
-    setIsTueDropDown(false);
+    setWaitTimeId(timeList[1]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingTuesday(true);
   };
 
   const handleEditWed = () => {
-    setIsEditWednesday(true);
-    setIsWedDropDown(false);
-  };
-
-  const handleCancelWed = () => {
-    setIsEditWednesday(true);
-    setIsWedDropDown(false);
+    setWaitTimeId(timeList[2]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingWednesday(true);
   };
 
   const handleEditThur = () => {
-    setIsEditThursday(true);
-    setIsThurDropDown(false);
-  };
-
-  const handleCancelThur = () => {
-    setIsEditThursday(true);
-    setIsThurDropDown(false);
+    setWaitTimeId(timeList[3]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingThursday(true);
   };
 
   const handleEditFri = () => {
-    setIsEditFriday(true);
-    setIsFriDropDown(false);
-  };
-
-  const handleCancelFri = () => {
-    setIsEditFriday(true);
-    setIsFriDropDown(false);
+    setWaitTimeId(timeList[4]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingFriday(true);
   };
 
   const handleEditSat = () => {
-    setIsEditSaturday(true);
-    setIsSatDropDown(false);
-  };
-
-  const handleCancelSat = () => {
-    setIsEditSaturday(true);
-    setIsSatDropDown(false);
+    setWaitTimeId(timeList[5]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingSaturday(true);
   };
 
   const handleEditSun = () => {
-    setIsEditSunday(true);
-    setIsSunDropDown(false);
+    setWaitTimeId(timeList[6]?.waitTimeId);
+    setStatus("1");
+    setIsLoadingSunday(true);
   };
 
-  const handleCancelSun = () => {
-    setIsEditSunday(true);
-    setIsSunDropDown(false);
+  const addBack = () => {
+    setStatus("1");
+    setWaitTimeId(timeList[listIndex]?.waitTimeId);
+    setEndTime(timeList[listIndex]?.endTime);
+    setstartTime(timeList[listIndex]?.startTime);
+  };
+
+  const timeStatus = (
+    <Menu className="grid items-center justify-center">
+      <span
+        onClick={addBack}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#000000]"
+      >
+        Add Back
+      </span>
+    </Menu>
+  );
+
+  const onSubmitPreOrder = (data) => {
+    const { preOrderUrl } = data;
+    if ( preOrderUrl) {
+      setPreOrderUrl(`https://${preOrderUrl}`);
+    }
   };
 
   const onSubmitHandler = (data) => {
-    console.log("data", data);
-
-    reset();
+    const { startTime, endTime } = data;
+    if (startTime) {
+      setstartTime(startTime);
+    }
+    if (endTime) {
+      setEndTime(endTime);
+    }
   };
 
+  useEffect(() => {
+    setValue("startTime", startTime);
+    setValue("endTime", endTime);
+  }, [startTime, endTime]);
+
+  const closeModal = () => {
+    setShowRemoveModal(false);
+    setStatus("1");
+  };
+  
   return (
     <>
       <Layout>
-        <main className="sm:ml-[370px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+        <main className="xl:ml-[370px] ml-[320px] sm:px-10 px-6 bg-[#F6F7F9] pb-12 h-fit">
           <h2 className="text_18 pb-4 pt-10">Queue Available Time</h2>
 
-          <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[10px]  ">
+          <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[10px] ">
             <form onSubmit={handleSubmit(onSubmitHandler)}>
               <table className=" w-full text-base text-center py-14  border-collapse ">
                 <thead className="text_16  font-normal bg-[#ffffff] ">
@@ -165,85 +480,91 @@ const LinkSettingsPage = () => {
                     <td className="text_16  py-6 capitalize">Monday</td>
                     {isEditMonday ? (
                       <>
-                        <td className="text_16 py-6 ">10:00</td>
-                        <td className="text_16 py-6 ">12:00</td>
+                        <td className="text_16 py-6 ">
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[0]?.startTime, 'HH:mm a').format('h:mm A')}
+                        </td>
+                        <td className="text_16 py-6 ">
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[0]?.endTime, 'HH:mm a').format('h:mm A')}
+                        </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsMonDropDown(!isMonDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isMonDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[0]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[29%] top-[28.5%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditMonday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      {/* {isLoadingEditQ1 ? <SpinnerWhite /> : "Edit"} */}
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={monday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(0);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(0);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            //onChange={hasTypedMoreThan4Letter}
-                            className={`input-short mx-auto ${
-                              errors.minPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("minPax", {
+                            {...register("startTime", {
                               required: "",
-                              pattern: {
-                                value: /^(?!(0))[0-9]+$/,
-                              },
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditMon}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingMonday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelMon}
+                            onClick={() => setIsEditMonday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -251,89 +572,94 @@ const LinkSettingsPage = () => {
 
                   {/* TUESDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Tuesday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Tuesday</td>
                     {isEditTuesday ? (
                       <>
                         <td className="text_16 py-6 ">
-                          9:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[1]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                          4:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[1]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsTueDropDown(!isTueDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isTueDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[1]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[38%] top-[37%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditTuesday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={tuesday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(1);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(1);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.maxPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("maxPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditTue}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingTuesday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelTue}
+                            onClick={() => setIsEditTuesday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -341,89 +667,94 @@ const LinkSettingsPage = () => {
 
                   {/* WEDNESDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Wednesday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Wednesday</td>
                     {isEditWednesday ? (
                       <>
                         <td className="text_16 py-6 ">
-                          12:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[2]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                          6:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[2]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsWedDropDown(!isWedDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isWedDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[2]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[38%] top-[37%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditWednesday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={wednesday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(2);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(2);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.maxPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("maxPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditWed}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingWednesday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelWed}
+                            onClick={() => setIsEditWednesday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -431,89 +762,94 @@ const LinkSettingsPage = () => {
 
                   {/* THURSDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Thursday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Thursday</td>
                     {isEditThursday ? (
                       <>
                         <td className="text_16 py-6 ">
-                          9:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[3]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                          9:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[3]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsThurDropDown(!isThurDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isThurDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[3]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[38%] top-[37%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditThursday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={thursday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(3);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(3);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.maxPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("maxPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditThur}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingThursday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelThur}
+                            onClick={() => setIsEditThursday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -521,89 +857,94 @@ const LinkSettingsPage = () => {
 
                   {/* FRIDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Friday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Friday</td>
                     {isEditFriday ? (
                       <>
                         <td className="text_16 py-6 ">
-                         7:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[4]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                         9:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[4]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsFriDropDown(!isFriDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isFriDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[4]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[46.7%] top-[46%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditFriday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={friday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(4);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(4);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.maxPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("maxPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditFri}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingFriday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelFri}
+                            onClick={() => setIsEditFriday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -611,89 +952,94 @@ const LinkSettingsPage = () => {
 
                   {/* SATURDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Saturday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Saturday</td>
                     {isEditSaturday ? (
                       <>
                         <td className="text_16 py-6 ">
-                          12:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[5]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                          1:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[5]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsSatDropDown(!isSatDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isSatDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[5]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[55.5%] top-[54%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditSaturday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={saturday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(5);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(5);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.minPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("minPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditSat}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingSaturday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelSat}
+                            onClick={() => setIsEditSaturday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
@@ -701,104 +1047,99 @@ const LinkSettingsPage = () => {
 
                   {/* SUNDAY ROW */}
                   <tr className="border-y border-[#d9d9d9] py-4  bg-[#ffffff]">
-                    <td className="text_16  py-6 capitalize">
-                      Sunday
-                    </td>
+                    <td className="text_16  py-6 capitalize">Sunday</td>
                     {isEditSunday ? (
                       <>
                         <td className="text_16 py-6 ">
-                          9:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[6]?.startTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 ">
-                          2:00
+                          {isLoadingTime
+                            ? "-"
+                            :  moment(timeList[6]?.endTime, 'HH:mm a').format('h:mm A')}
                         </td>
                         <td className="text_16 py-6 underline">
-                          <span
-                            onClick={() => setIsSunDropDown(!isSunDropDown)}
-                            className="cursor-pointer reltive"
-                          >
-                            More
-                          </span>
-                          {isSunDropDown ? (
+                          {/* CHECK FOR STATUS */}
+                          {timeList[6]?.status === "1" ? (
                             <>
-                              <div className="absolute right-[4%] xl:top-[64.2%] top-[62.5%] z-10 mt-2 w-[120px] origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                                <a href>
-                                  <div
-                                    onClick={() => setIsEditSunday(false)}
-                                    className="py-3 text-center border-b "
-                                  >
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                                      Edit
-                                    </p>
-                                  </div>
-                                </a>
-
-                                <a href>
-                                  <div className="py-3 text-center">
-                                    <p className="cursor-pointer block px-4 py-2 text_16 text-[#ff0000]">
-                                      Remove
-                                    </p>
-                                  </div>
-                                </a>
-                              </div>
+                              <Dropdown overlay={sunday} trigger={["click"]}>
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(6);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
                             </>
-                          ) : null}
+                          ) : (
+                            <>
+                              <Dropdown
+                                overlay={timeStatus}
+                                trigger={["click"]}
+                              >
+                                <span
+                                  onClick={() => {
+                                    handleWaitTime(6);
+                                  }}
+                                  className=" cursor-pointer text_16 underline"
+                                >
+                                  More
+                                </span>
+                              </Dropdown>
+                            </>
+                          )}
                         </td>
                       </>
                     ) : (
                       <>
                         <td className="">
                           <input
-                            type="text"
-                            className={`input-shorter mx-auto ${
-                              errors.minPax && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.startTime && "input_error"
                             }`}
-                            {...register("minPax", {
-                              required: "",
-                            })}
-                          />
-                        </td>
-                        <td className="">
-                          <input
-                            type="text"
-                            className={`input-shorter mx-auto ${
-                              errors.maxPax && "input_error"
-                            }`}
-                            {...register("maxPax", {
+                            {...register("startTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
                           <input
-                            type="text"
-                            className={`input-short mx-auto ${
-                              errors.estimateTime && "input_error"
+                            type="time"
+                            className={`input-time mx-auto ${
+                              errors.endTime && "input_error"
                             }`}
-                            {...register("estimateTime", {
+                            {...register("endTime", {
                               required: "",
                             })}
                           />
                         </td>
                         <td className="text_16 py-6 ">
+                        <span className="flex items-center justify-center">
                           <button
                             type="submit"
                             onClick={handleEditSun}
                             className="table_short_btn mr-[13px] "
                           >
-                            Save
+                            {isLoadingSunday ? <SpinnerWhite /> : "Save"}
                           </button>
                           <button
                             type="submit"
-                            onClick={handleCancelSun}
+                            onClick={() => setIsEditSunday(true)}
                             className="table_short_white "
                           >
                             Cancel
                           </button>
+                          </span>
                         </td>
                       </>
                     )}
                   </tr>
+
                 </tbody>
               </table>
             </form>
@@ -813,23 +1154,49 @@ const LinkSettingsPage = () => {
                 </p>
                 <div className="gray-bg flex items-center justify-between  md:w-[282px] w-[200px] rounded-[5px] p-5  ">
                   <h2 className="text_16 text-[#6b6968]">Switch link on/off</h2>
-                  <Switch onChange={onChange} />
+                <ConfigProvider
+                theme={{
+                  token: {
+                    // Seed Token
+                    colorPrimary: '#F99762',
+                    borderRadius: 2,
+            
+                    // Alias Token
+                    colorBgContainer: '#f6ffed',
+                  },
+                }}
+                >
+               {isSwitchOn || switchIsOn === "1" ? 
+                <Switch 
+                defaultChecked
+                onChange={onChange}
+                /> 
+              : 
+              <Switch 
+              onChange={onChange} 
+              />}
+                </ConfigProvider>
+
                 </div>
               </span>
               <span class="text-base font-normal">
-                <h1 className="text_18">Call Back URL</h1>
+                <h1 className="text_18">Preorder URL</h1>
                 <p className="text_12 mt-2 text-[#6b6968] mb-4">
-                  Customize your URL
+                  Customize URL for your Customers
                 </p>
-                <div className="flex">
-                  <button className="text-[#000] md:py-[22px] py-4 mr-2 rounded-[5px] gray-bg w-[148px] text_14 md:px-0 px-2 font-normal">
-                    Appety.com
+                <form onSubmit={handleSubmit(onSubmitPreOrder)} className="flex">
+                  <button className="text-[#000] md:py-[22px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
+                  https://
                   </button>
                   <input
-                    placeholder="Enter Call Back URL"
-                    className="bg-[#ffffff] border border-[#a6a5a4] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
+                  placeholder={orderUrl ? orderUrl : "Enter Preorder url"}
+                    className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
+                    {...register("preOrderUrl")}
                   />
-                </div>
+                  <button type="submit" className="bg-[#F99762] ml-2 px-3 rounded-[5px] text_16 text-[#ffffff]">
+                    {isLoadingOrderUrl ? <SpinnerWhite /> : "Save"}
+                  </button>
+                </form>
               </span>
             </div>
 
@@ -841,7 +1208,8 @@ const LinkSettingsPage = () => {
                   You can download the QR code below
                 </p>
                 <div className="flex">
-                  <section ref={exportRef}>{qrcode}</section>
+                  <section >{qrcode}</section>
+                  <section className="top-[-2000%] absolute" ref={exportRef}>{qrcodeBig}</section>
                   <div className="pt-[95px] pl-2">
                     <span
                       onClick={() => exportAsImage(exportRef.current, "Appety")}
@@ -856,6 +1224,45 @@ const LinkSettingsPage = () => {
           </div>
         </main>
       </Layout>
+
+      {/* SHOW CANCEL QUEUE MODAL  https://undraw.co/   */}
+      {showRemoveModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg p-[112px] w-[600px] relative">
+              <div className="">
+                <div className="flex justify-center items-center">
+                  <RemoveQueueModalIcon />
+                </div>
+                <div className=" text-center ">
+                  <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
+                    Are you sure?
+                  </p>
+                  <p className="text_18 text-[#000000] pb-[84px]">
+                    The Time will be deleted completely
+                  </p>
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={closeModal}
+                    type="submit"
+                    className="short_btn mr-[24px]"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={handleRemove}
+                    type="submit"
+                    className="short_btn_white"
+                  >
+                    {isLoadingRemove ? <SpinnerOrangeMedium /> : "Continue"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
     </>
   );
 };

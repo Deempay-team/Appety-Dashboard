@@ -113,7 +113,7 @@ console.log("file - 2", file);
   return (
     <>
       <Layout>
-        <main className="sm:ml-[370px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+        <main className="xl:ml-[370px] ml-[320px] sm:px-10 px-6 bg-[#F6F7F9] h-screen">
           <h2 className="text_18 pb-4 pt-10">Upload Logo</h2>
           <div class="text-[#6b6968] rounded-[15px]  bg-[#ffffff] sm:max-w-[579px] max-w-[386px]">
 

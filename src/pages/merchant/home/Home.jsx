@@ -72,11 +72,7 @@ export const MerchantHomePage = () => {
   const [isLoadingWaitCall, setIsLoadingWaitCall] = useState(false);
 
   //CALL TO UPDATE QUEUE
-  const {
-    isLoading: isQueueUpdate,
-    data: queueUpdateData,
-    mutate: fetchQueueUpdate,
-  } = useUpdateQueue({
+  const { data: queueUpdateData, mutate: fetchQueueUpdate } = useUpdateQueue({
     merchId,
     waitId: currentWaitId,
     status: updateStatus,
@@ -101,6 +97,7 @@ export const MerchantHomePage = () => {
               linkUrl: res.data.data?.linkUrl,
               linkUrlStatus: res.data.data?.linkUrlStatus,
               logoUrl: res.data.data?.logoUrl,
+              preOrderUrl: res.data.data?.preOrderUrl,
             })
           );
         }
@@ -281,7 +278,7 @@ export const MerchantHomePage = () => {
         "success",
         "Updated Succesfully!",
         "Your Queue has being updated!",
-        7
+        5
       );
 
       setStatusUpdateSuccess(true);
@@ -344,11 +341,12 @@ export const MerchantHomePage = () => {
 
   return (
     <>
+      {/* HEADER */}
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
           <div className="flex items-center">
             <img
-              src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
+              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
                 imageLoaded

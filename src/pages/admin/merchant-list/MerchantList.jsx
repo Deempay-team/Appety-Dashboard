@@ -10,7 +10,7 @@ export const AdminMerchantListPage = () => {
   return (
     <>
     <Layout>
-    <main className="sm:ml-[350px] ml-0 sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+    <main className="xl:ml-[370px] ml-[320px]  sm:px-10 px-6 bg-[#F6F7F9] h-screen">
     <div className="pb-4 pt-10 flex justify-between">
             <h2 className="text_18 ">Merchants</h2>
             <div>

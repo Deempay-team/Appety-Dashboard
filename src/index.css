@@ -55,6 +55,7 @@ body {
   }
 }
 
+
 @layer components {
   .text-col {
     @apply text-[#F99762];
@@ -110,6 +111,10 @@ body {
 
   .in_put {
     @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full px-4 dark:placeholder-[#8d8d8d] h-[52px];
+  }
+
+  .input-time {
+    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[3px] block w-[140px] px-4 dark:placeholder-[#8d8d8d] h-[40px];
   }
 
   .input-short {

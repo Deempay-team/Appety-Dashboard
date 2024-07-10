@@ -21,7 +21,7 @@ const MenuItem = ({ item }) => {
             className={
               isMatch(item.keyWord)
                 ? "flex items-center px-[27px] mt-6 text-[#ffffff] w-[282px] mx-auto cursor-pointer rounded-lg bg-[#F99762] py-[13px]"
-                : "flex items-center px-[70px] py-2 mt-6 text-gray-500 cursor-pointer "
+                : "flex items-center px-[45px] py-2 mt-6 text-gray-500 cursor-pointer xl:px-[70px]"
             }
              onClick={(node, event) =>checkInternet(item.route)}
           >

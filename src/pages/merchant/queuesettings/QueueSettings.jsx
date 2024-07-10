@@ -81,7 +81,6 @@ const QueueSettingsPage = () => {
       </span>
       <div class="border-[1px] border-[#e0e0e0]"></div>
       <span
-        //open={false}
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
       >
@@ -161,7 +160,6 @@ const QueueSettingsPage = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-    reset,
   } = useForm();
 
   //CALL QUERY WAITTYPE API
@@ -217,19 +215,21 @@ const QueueSettingsPage = () => {
       closeModal();
       Notify(
         "success",
-        "Your Queue has being updated!",
+        "Your Queue has being updated Successfully!",
       );
+      setWaitTypeName("")
     }
   }, [data]);
 
   const handleWaitType = (index) => {
     setWaitTypeList(queueList);
     setListIndex(index);
-    // setMaxPax(queueList[index].maxPax);
-    // setMinPax(queueList[index].minPax);
-    // setEstimateTime(queueList[index].estimateTime);
+    setMaxPax(queueList[index].maxPax);
+    setMinPax(queueList[index].minPax);
+    setEstimateTime(queueList[index].estimateTime);
   };
 
+  //TO REMOVE WAIT-TYPE
   const handleRemove = () => {
       setStatus("0");
       setWaitTypeId(queueList[listIndex]?.waitTypeId);
@@ -242,10 +242,10 @@ const QueueSettingsPage = () => {
 
   // CALL UPDATE API
   useEffect(() => {
-    if (minPax) {
+    if (minPax && waitTypeName) {
       fetchEditWaitType();
     }
-  }, [minPax]);
+  }, [minPax, waitTypeName]);
 
   const handleEditQ1 = () => {
     setWaitTypeId(queueList[0]?.waitTypeId);
@@ -254,7 +254,6 @@ const QueueSettingsPage = () => {
     setIsLoadingEditQ1(true);
   };
 
- 
   const handleEditQ2 = () => {
     setWaitTypeId(queueList[1]?.waitTypeId);
     setStatus("1");
@@ -291,12 +290,6 @@ const QueueSettingsPage = () => {
       setMinPax(queueList[listIndex]?.minPax);
       setEstimateTime(queueList[listIndex]?.estimateTime);
       setIsLoadingRemove(true);
-
-      console.log("Q-type", queueList[listIndex]?.waitTypeName);
-      console.log("minPax", queueList[listIndex]?.minPax);
-      console.log("Time", queueList[listIndex]?.estimateTime);
-      console.log("status", status);
-    // }
   };
 
   const queueStatus = (
@@ -312,51 +305,50 @@ const QueueSettingsPage = () => {
 
   const onSubmitHandler = (data) => {
     const { minPax, maxPax, estimateTime } = data;
-    console.log("data", data);
-    // if (maxPax <= minPax) {
-    //   return setEditError(
-    //     <section>Max Pax must be greater than Min Pax</section>
-    //   );
-    // }
-    // if (listIndex === 0) {
-    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-    //     return setEditError(
-    //       <section>
-    //         Max Pax should be greater than Min Pax in{" "}
-    //         {waitTypeList[listIndex + 1].waitTypeName}
-    //       </section>
-    //     );
-    //   }
-    // } else if (
-    //   listIndex > 0 &&
-    //   listIndex < waitTypeList[listIndex - 1].minPax
-    // ) {
-    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-    //     return setEditError(
-    //       <section>
-    //         Max Pax should be greater than Min Pax in{" "}
-    //         {waitTypeList[listIndex + 1].waitTypeName}
-    //       </section>
-    //     );
-    //   }
-    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-    //     return setEditError(
-    //       <section>
-    //         Min Pax should be less or equal to{" "}
-    //         {waitTypeList[listIndex - 1].waitTypeName}
-    //       </section>
-    //     );
-    //   }
-    // } else if (listIndex === setWaitTypeList.length - 1) {
-    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-    //     return setEditError(
-    //       <section>
-    //         Min Pax should not be greater than{" "}
-    //         {waitTypeList[listIndex - 1].waitTypeName}
-    //       </section>
-    //     );
-    //   }
-    // }
+   if (maxPax <= minPax) {
+      return setEditError(
+        <section>Max Pax must be greater than Min Pax</section>
+      );
+    }
+    if (listIndex === 0) {
+      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+        return setEditError(
+          <section>
+            Max Pax should be greater than Min Pax in{" "}
+            {waitTypeList[listIndex + 1].waitTypeName}
+          </section>
+        );
+      }
+    } else if (
+      listIndex > 0 &&
+      listIndex < waitTypeList[listIndex - 1].minPax
+    ) {
+      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+        return setEditError(
+          <section>
+            Max Pax should be greater than Min Pax in{" "}
+            {waitTypeList[listIndex + 1].waitTypeName}
+          </section>
+        );
+      }
+      if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+        return setEditError(
+          <section>
+            Min Pax should be less or equal to{" "}
+            {waitTypeList[listIndex - 1].waitTypeName}
+          </section>
+        );
+      }
+    } else if (listIndex === setWaitTypeList.length - 1) {
+      if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+        return setEditError(
+          <section>
+            Min Pax should not be greater than{" "}
+            {waitTypeList[listIndex - 1].waitTypeName}
+          </section>
+        );
+      }
+    }
 
     if (maxPax) {
       setMaxPax(maxPax);

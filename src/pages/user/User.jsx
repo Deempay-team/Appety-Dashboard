@@ -41,6 +41,7 @@ export const UserHomePage = () => {
   const [waitId, setWaitId] = useState("");
   const [waitStatus, setWaitStatus] = useState("");
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
+  const [preOrderUrl, setPreOrderUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [posPercent, setPosPercent] = useState(0);
   const [callTimer, setCallTime] = useState(0);
@@ -59,6 +60,7 @@ export const UserHomePage = () => {
           setMerchName(res.data?.data.merchName);
           setWaitTypeList(res.data?.data.waitType);
           setLinkUrlStatus(res.data?.data.linkUrlStatus);
+          setPreOrderUrl(res.data?.data.preOrderUrl);
         }
       })
       .catch(function (error) {
@@ -161,7 +163,6 @@ export const UserHomePage = () => {
     }
   }, [waitId]);
 
-
   // start timer function
   let timer = 0;
   const handleStartTimer = () => {
@@ -169,32 +170,33 @@ export const UserHomePage = () => {
       timer += 1;
       setCallTime(timer);
       axios
-      .get(
-        `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
-      )
-      .then(function (res) {
-        if (res.data.code === "000000") {
-          setWaitPosition(res?.data?.data?.waitPosition);
-          setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
-          setWaitStatus(res?.data?.data?.status);
-          setFillDataPage(false);
-          setQueueWaitPage(true);
-          setNotOpenPage(false);
-          var totalQueue = res?.data?.data?.totalNumberQueue;
-          var waitos = res?.data?.data?.waitPosition;
-          var percentPos =
-            ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
-            100;
-          setPosPercent(percentPos);
+        .get(
+          `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
+        )
+        .then(function (res) {
+          if (res.data.code === "000000") {
+            setWaitPosition(res?.data?.data?.waitPosition);
+            setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
+            setWaitStatus(res?.data?.data?.status);
+            setFillDataPage(false);
+            setQueueWaitPage(true);
+            setNotOpenPage(false);
+            var totalQueue = res?.data?.data?.totalNumberQueue;
+            var waitos = res?.data?.data?.waitPosition;
+            var percentPos =
+              ((parseInt(totalQueue) - parseInt(waitos) + 1) /
+                parseInt(totalQueue)) *
+              100;
+            setPosPercent(percentPos);
 
-          if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
+            if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
 
-          if (res?.data?.data?.waitCall === "1") setProgressBar(false)
-        }
-      })
-      .catch(function (error) {
-        console.log("log-error", error);
-      });
+            if (res?.data?.data?.waitCall === "1") setProgressBar(false);
+          }
+        })
+        .catch(function (error) {
+          console.log("log-error", error);
+        });
       //handleTest();
     }, callInterval);
   };
@@ -226,7 +228,7 @@ export const UserHomePage = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
-              src={"http://159.223.37.225/api/v1/user/logo/" + logoUrl}
+              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
                 imageLoaded
@@ -377,7 +379,7 @@ export const UserHomePage = () => {
                 <div className="mt-6">
                   <input
                     type="email"
-                    placeholder="Enter Your Email"
+                    placeholder="Enter Your Email (Optional)"
                     className={`in_put bg-[#ffffff] ${
                       errors.email && "input_error"
                     }`}
@@ -434,13 +436,13 @@ export const UserHomePage = () => {
               </div>
             ) : (
               <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
-              <div className="flex items-center justify-center text-base">
-                <TickIcon />
-                <p className="text-center text-[#ffffff] pl-2 text-sm">
-                  Your table is ready
-                </p>
+                <div className="flex items-center justify-center text-base">
+                  <TickIcon />
+                  <p className="text-center text-[#ffffff] pl-2 text-sm">
+                    Your table is ready
+                  </p>
+                </div>
               </div>
-            </div>
             )}
 
             <div className="sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] mt-6 ">
@@ -486,7 +488,7 @@ export const UserHomePage = () => {
             </div>
 
             <div class=" sm:max-w-md max-w-[366px]  items-center mx-auto mt-10">
-              <Link to="#">
+              <Link to={preOrderUrl}  target="_blank">
                 <button type="submit" className="submit_btn">
                   Pre Order
                 </button>
@@ -518,7 +520,7 @@ export const UserHomePage = () => {
       {/* FOOTER */}
       <div className="mt-10 pb-8 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
         <div>
-          <Link to="#">
+          <Link to="#"  target="_blank">
             <p className="text-base">Terms and Conditions</p>
           </Link>
         </div>
