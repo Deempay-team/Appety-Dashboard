@@ -86,23 +86,23 @@ body {
   }
 
   .text_14 {
-    @apply text-[#000000] sm:text-sm text-xs font-normal;
+    @apply text-[#000000] xl:text-sm text-xs font-normal;
   }
 
   .text_16 {
-    @apply text-[#000000] sm:text-base text-sm font-normal leading-4;
+    @apply text-[#000000] xl:text-base text-sm font-normal leading-4;
   }
 
   .text_18 {
-    @apply text-[#000000] sm:text-lg text-base font-normal;
+    @apply text-[#000000] xl:text-lg text-base font-normal;
   }
 
   .text_20 {
-    @apply text-[#000000] sm:text-xl text-lg font-normal leading-5;
+    @apply text-[#000000] xl:text-xl text-lg font-normal leading-5;
   }
 
   .text_24 {
-    @apply text-[#000000] sm:text-2xl text-xl font-normal leading-6;
+    @apply text-[#000000] xl:text-2xl text-xl font-normal leading-6;
   }
 
   .input_label {
@@ -114,15 +114,15 @@ body {
   }
 
   .input-time {
-    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[3px] block w-[140px] px-4 dark:placeholder-[#8d8d8d] h-[40px];
+    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px] px-4 dark:placeholder-[#8d8d8d] h-[40px];
   }
 
   .input-short {
-    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[3px] block w-[90px] px-4 dark:placeholder-[#8d8d8d] h-[40px];
+    @apply bg-[#ffffff] border border-[#6B6968] text-center text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[90px] mx-auto dark:placeholder-[#8d8d8d] h-[40px];
   }
 
   .input-shorter {
-    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[3px] block max-w-10 px-2 dark:placeholder-[#8d8d8d] h-[40px];
+    @apply bg-[#ffffff] border border-[#6B6968] text-center text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block max-w-10 px-2 dark:placeholder-[#8d8d8d] h-[40px];
   }
 
   .in_pt {

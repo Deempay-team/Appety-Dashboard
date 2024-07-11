@@ -28,12 +28,12 @@ const HeaderPage = () => {
               alt="User avatar"
               className="visible rounded-full h-[50px] w-[50px]"
             />
-            <p className="font-semibold text-[32px] text-black pl-3 capitalize">
+            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
               {merchName}
             </p>
           </div>
           <div className="flex ">
-            <span className="lg:flex hidden gray2-bg opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">
+            <span className="flex gray2-bg opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">
               <p className="">{currentDate}</p>
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>

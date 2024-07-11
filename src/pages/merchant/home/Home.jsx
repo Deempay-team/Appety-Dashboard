@@ -152,18 +152,18 @@ export const MerchantHomePage = () => {
         `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
       )
       .then(function (res) {
-        if (res.data.code === "000000") {
-          const formattedQueue = res.data.data.map((q) => {
+        if (res?.data?.code === "000000") {
+          const formattedQueue = res?.data?.data.map((q) => {
             return {
               customerIdentificationNo: q.cusId,
               customerName: q.cusName,
               customerPhone: q.cusPhone,
               PaxNumber: q.paxNo,
-              status: q.status,
+              customerStatus: q.status,
               waitNumber: q.waitNo,
-              waitTime: q.estimatedWaitTime,
+              waitTime: q.estimateWaitTime + " mins",
               waitPostion: q.waitPosition,
-              queueType: q.WaitTypeName,
+              queueType: q.waitTypeName,
               dateCreated: formatDate(q.createTime),
             };
           });
@@ -339,6 +339,10 @@ export const MerchantHomePage = () => {
     setShowCancelModal(false);
   };
 
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   return (
     <>
       {/* HEADER */}
@@ -367,13 +371,13 @@ export const MerchantHomePage = () => {
               />
             )}
 
-            <p className="font-semibold md:text-[32px] text-base text-black pl-3 capitalize">
+            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
               {merchName}
             </p>
           </div>
 
           <div className="flex ">
-            <span className="lg:flex hidden mr-[96PX] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
+            <span className="flex  xl:mr-[96px] mr-[30px] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
               <p className="text_16 text-[#ffffff]">{waitTypeName}</p>
             </span>
             <CSVLink
@@ -383,7 +387,7 @@ export const MerchantHomePage = () => {
             ></CSVLink>
             <span
               onClick={exportQueueDetails}
-              className="lg:flex hidden mr-10 items-center justify-center py-3 bg-[#F99762] w-[250px] rounded-[5px] cursor-pointer"
+              className="flex mr-10 items-center justify-center py-3 bg-[#F99762] w-[250px] rounded-[5px] cursor-pointer"
             >
               {isExporting ? (
                 <SpinnerWhite />
@@ -396,7 +400,7 @@ export const MerchantHomePage = () => {
                 </>
               )}
             </span>
-            <span className="lg:flex hidden bg-[#D9D9D9] opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">
+            <span className="xl:flex hidden bg-[#D9D9D9] opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">
               <p className="">{currentDate}</p>
               <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
               <p className="">{currentTime}</p>
@@ -440,12 +444,12 @@ export const MerchantHomePage = () => {
       {/* BODY */}
       <div className="flex min-h-screen items-start fixed">
         {/* LEFT SIDE */}
-        <div class="sticky top-0  w-[380px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
+        <div class="sticky top-0  xl:w-[380px] w-[280px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
                 <p className="text_24">Waiting in Queue</p>
-                <span className="ml-[66px] text-[#ffffff] rounded-full h-[50px] w-[50px] text_24  bg-[#FAA87C] items-center flex justify-center ">
+                <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[50px] h-[30px] xl:w-[50px] w-[30px] text_24  bg-[#FAA87C] items-center flex justify-center ">
                   {waitSize}
                 </span>
               </span>
@@ -457,7 +461,7 @@ export const MerchantHomePage = () => {
               <>
                 {isLoadingWait ? (
                   <>
-                    <div className="w-[362px] ">
+                    <div className="w-[] ">
                       <span className="flex pt-[20rem] items-center justify-center ">
                         {" "}
                         <SpinnerOrange />

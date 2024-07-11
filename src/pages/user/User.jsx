@@ -17,8 +17,9 @@ export const UserHomePage = () => {
   const { linkUrl } = useParams();
   const baseURL = secrets.baseURL;
   const [fillDataPage, setFillDataPage] = useState(true);
-  const [queueWaitPage, setQueueWaitPage] = useState(false);
-  const [notOpenPage, setNotOpenPage] = useState(false);
+  // const [queueWaitPage, setQueueWaitPage] = useState(false);
+  // const [notOpenPage, setNotOpenPage] = useState(false);
+  const [isOpenPage, setIsOpenPage] = useState(true);
   const [isEmail, setIsEmail] = useState(false);
   const [progressBar, setProgressBar] = useState(true);
   const [cusPhone, setCusPhone] = useState("");
@@ -67,6 +68,17 @@ export const UserHomePage = () => {
         console.log("log-error", error);
       });
   }, []);
+
+//CHECK IF THE MERCHANT IS OPEN OR NOT
+useEffect(() => {
+  if (linkUrlStatus) {
+    if (linkUrlStatus !== "1") {
+    
+      //setFillDataPage(false)
+      setIsOpenPage(false);
+    }
+  }
+}, [linkUrlStatus]);
 
   const {
     register,
@@ -143,8 +155,8 @@ export const UserHomePage = () => {
       setPersonNo(data?.data?.paxNo);
       setWaitStatus(data?.data?.status);
       setFillDataPage(false);
-      setQueueWaitPage(true);
-      setNotOpenPage(false);
+      //setQueueWaitPage(true);
+      //setNotOpenPage(false);
       setWaitId(data?.data?.waitId);
 
       var totalQueue = data?.data?.totalNumberQueue;
@@ -179,8 +191,8 @@ export const UserHomePage = () => {
             setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
             setWaitStatus(res?.data?.data?.status);
             setFillDataPage(false);
-            setQueueWaitPage(true);
-            setNotOpenPage(false);
+           // setQueueWaitPage(true);
+            //setNotOpenPage(false);
             var totalQueue = res?.data?.data?.totalNumberQueue;
             var waitos = res?.data?.data?.waitPosition;
             var percentPos =
@@ -201,17 +213,6 @@ export const UserHomePage = () => {
     }, callInterval);
   };
 
-  //CHECK IF THE MERCHANT IS OPEN OR NOT
-  useEffect(() => {
-    if (linkUrlStatus) {
-      if (linkUrlStatus !== "1") {
-        setQueueWaitPage(false);
-        setNotOpenPage(true);
-        setFillDataPage(false);
-      }
-    }
-  }, [linkUrlStatus]);
-
   //SUBMIT USER DATA
   const onSubmitHandler = (data) => {
     const { email, cusPhone, cusName, paxNo } = data;
@@ -219,6 +220,7 @@ export const UserHomePage = () => {
     setCusPhone(cusPhone);
     setCusName(cusName);
     setPaxNo(paxNo);
+    //setCusPhone(`65${cusPhone}`);
   };
 
   return (
@@ -262,8 +264,10 @@ export const UserHomePage = () => {
         </div>
       </div>
 
-      {/* FORM FILL-IN SIDE */}
-      {fillDataPage ? (
+      {isOpenPage ? 
+      <>
+        {/* FORM FILL-IN SIDE */}
+        {fillDataPage ? (
         <div className="bg-[#F6F7F9] ">
           <div className=" max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
             <h1 className="text-2xl text-black font-semibold mb-[4px] mt-10">
@@ -300,6 +304,17 @@ export const UserHomePage = () => {
                   className={`in_put bg-[#ffffff] ${
                     errors.cusPhone && "input_error"
                   }`}
+                  // {...register("cusPhone", {
+                  //   required: "Phone number is required",
+                  //   minLength: {
+                  //     value: 11,
+                  //     message: "minimum allowed number is 8",
+                  //   },
+                  //   maxLength: {
+                  //     value: 11,
+                  //     message: "maximum allowed number is 8",
+                  //   },
+                  // })}
                   {...register("cusPhone", {
                     required: "Phone Number is required",
                   })}
@@ -424,103 +439,100 @@ export const UserHomePage = () => {
             </form>
           </div>
         </div>
-      ) : null}
-
-      {/* WAIT QUEUE SIDE */}
-      {queueWaitPage ? (
+      ) : (
         <>
-          <div className="bg-[#F6F7F9]">
-            <div className=" max-w-md items-center mx-auto grid  bg-[#f6f7f9] sm:px-0 px-6"></div>
+        {/* WAIT QUEUE SIDE */}
+        <div className="bg-[#F6F7F9]">
+          <div className=" max-w-md items-center mx-auto grid  bg-[#f6f7f9] sm:px-0 px-6"></div>
 
-            {progressBar ? (
-              <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] pb-6 pt-3 px-6">
-                <p className="text-center text-[#000000] font-normal">
-                  Group before you
-                </p>
+          {progressBar ? (
+            <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] pb-6 pt-3 px-6">
+              <p className="text-center text-[#000000] font-normal">
+                Group before you
+              </p>
+              <div
+                className="h-2 w-full bg-[#F99762] rounded mt-4 relative"
+                style={{ width: "100%" }}
+              >
                 <div
-                  className="h-2 w-full bg-[#F99762] rounded mt-4 relative"
-                  style={{ width: "100%" }}
+                  style={{ width: `${posPercent + "%"}` }}
+                  className={"h-full bg-[#FDDCCB] rounded"}
+                ></div>
+                <spa
+                  style={{ left: `${posPercent - 4 + "%"}` }}
+                  className="absolute text-[#000000] font-semibold top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
                 >
-                  <div
-                    style={{ width: `${posPercent + "%"}` }}
-                    className={"h-full bg-[#FDDCCB] rounded"}
-                  ></div>
-                  <spa
-                    style={{ left: `${posPercent - 4 + "%"}` }}
-                    className="absolute text-[#000000] font-semibold top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
-                  >
-                    {waitPostion}
-                  </spa>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
-                <div className="flex items-center justify-center text-base">
-                  <TickIcon />
-                  <p className="text-center text-[#ffffff] pl-2 text-sm">
-                    Your table is ready
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div className="sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] mt-6 ">
-              <h2 className="text-center mt-8 text-base text-[#6B6968] font-normal">
-                Queue Number
-              </h2>
-              <h3 className="text-center text-[56px] text-[#000000] font-semibold">
-                {waitNo}
-              </h3>
-              <div class="rounded-b-[5px] border-t-[1px] border-[#e0e0e0] py-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
-                <span class="text-base font-normal text-[#8a8a89]">
-                  Estimated Time
-                </span>
-                <span class="text-lg font-medium text-[#000000]">
-                  {estimateTime + " mins"}
-                </span>
+                  {waitPostion}
+                </spa>
               </div>
             </div>
-            <div class=" rounded-[5px]  bg-[#ffffff] sm:max-w-md max-w-[366px]  items-center mx-auto mt-6">
-              <div className="py-5 px-6 flex justify-between">
-                <span class="text-base font-normal text-[#8a8a89]">Name</span>
-                <span class="text-lg font-medium text-[#000000] capitalize">
-                  {userName}
-                </span>
-              </div>
-
-              <div class="mx-6 border-[0.1px] border-[#e0e0e0]"></div>
-              <div className="py-5 px-6 flex justify-between">
-                <span class="text-base font-normal text-[#8a8a89]">Pax</span>
-                <span class="text-lg font-medium">{personNo}</span>
+          ) : (
+            <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
+              <div className="flex items-center justify-center text-base">
+                <TickIcon />
+                <p className="text-center text-[#ffffff] pl-2 text-sm">
+                  Your table is ready
+                </p>
               </div>
             </div>
+          )}
 
-            <div className="mt-6 sm:max-w-md max-w-[366px] rounded-lg items-center mx-auto grid  bg-[#ffffff] py-8 px-10">
-              <p className="text-center text-[#000000] font-semibold text-lg ">
-                Do Not Close This Page
-              </p>
-              <p className="text-center text-sm mt-[14px]">
-                Queue number will be updated here, if you accidentally you close
-                this page, rescan QR code and enter the same hone number to
-                obtain your queue number back.
-              </p>
-            </div>
-
-            <div class=" sm:max-w-md max-w-[366px]  items-center mx-auto mt-10">
-              <Link to={preOrderUrl}  target="_blank">
-                <button type="submit" className="submit_btn">
-                  Pre Order
-                </button>
-              </Link>
+          <div className="sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#ffffff] mt-6 ">
+            <h2 className="text-center mt-8 text-base text-[#6B6968] font-normal">
+              Queue Number
+            </h2>
+            <h3 className="text-center text-[56px] text-[#000000] font-semibold">
+              {waitNo}
+            </h3>
+            <div class="rounded-b-[5px] border-t-[1px] border-[#e0e0e0] py-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
+              <span class="text-base font-normal text-[#8a8a89]">
+                Estimated Time
+              </span>
+              <span class="text-lg font-medium text-[#000000]">
+                {estimateTime + " mins"}
+              </span>
             </div>
           </div>
-        </>
-      ) : null}
+          <div class=" rounded-[5px]  bg-[#ffffff] sm:max-w-md max-w-[366px]  items-center mx-auto mt-6">
+            <div className="py-5 px-6 flex justify-between">
+              <span class="text-base font-normal text-[#8a8a89]">Name</span>
+              <span class="text-lg font-medium text-[#000000] capitalize">
+                {userName}
+              </span>
+            </div>
 
-      {/* OFFLINE SIDE */}
-      {notOpenPage ? (
-        <>
-          <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
+            <div class="mx-6 border-[0.1px] border-[#e0e0e0]"></div>
+            <div className="py-5 px-6 flex justify-between">
+              <span class="text-base font-normal text-[#8a8a89]">Pax</span>
+              <span class="text-lg font-medium">{personNo}</span>
+            </div>
+          </div>
+
+          <div className="mt-6 sm:max-w-md max-w-[366px] rounded-lg items-center mx-auto grid  bg-[#ffffff] py-8 px-10">
+            <p className="text-center text-[#000000] font-semibold text-lg ">
+              Do Not Close This Page
+            </p>
+            <p className="text-center text-sm mt-[14px]">
+              Queue number will be updated here, if you accidentally you close
+              this page, rescan QR code and enter the same hone number to
+              obtain your queue number back.
+            </p>
+          </div>
+
+          <div class=" sm:max-w-md max-w-[366px]  items-center mx-auto mt-10">
+            <Link to={preOrderUrl}  target="_blank">
+              <button type="submit" className="submit_btn">
+                Pre Order
+              </button>
+            </Link>
+          </div>
+        </div>
+      </>
+      )}
+      </>
+       : 
+       <>
+         <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
             <div>
               <span className="mt-[184px] flex items-center justify-center">
                 <NotOpenIcon />
@@ -533,8 +545,8 @@ export const UserHomePage = () => {
               </h3>
             </div>
           </div>
-        </>
-      ) : null}
+       </>
+       }
 
       {/* FOOTER */}
       <div className="mt-10 pb-8 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
