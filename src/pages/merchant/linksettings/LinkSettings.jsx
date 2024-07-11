@@ -1193,9 +1193,9 @@ const LinkSettingsPage = () => {
                     className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
                     {...register("preOrderUrl")}
                   />
-                  <button type="submit" className="bg-[#F99762] ml-2 px-3 rounded-[5px] text_16 text-[#ffffff]">
+                  {/* <button type="submit" className="bg-[#F99762] ml-2 px-3 rounded-[5px] text_16 text-[#ffffff]">
                     {isLoadingOrderUrl ? <SpinnerWhite /> : "Save"}
-                  </button>
+                  </button> */}
                 </form>
               </span>
             </div>
@@ -1225,7 +1225,7 @@ const LinkSettingsPage = () => {
         </main>
       </Layout>
 
-      {/* SHOW CANCEL QUEUE MODAL  https://undraw.co/   */}
+      {/* SHOW CANCEL QUEUE MODAL */}
       {showRemoveModal ? (
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">

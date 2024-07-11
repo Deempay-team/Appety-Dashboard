@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 //import "antd/dist/antd.min.css";
-import 'react-image-crop/dist/ReactCrop.css'
 import { QueryClient, QueryClientProvider } from "react-query";
 import storage from "./utils/storage";
 import { useAuth } from "./hooks/useAuth";
@@ -12,7 +11,7 @@ import { ResetPasswordPage } from "./pages/password/ResetPassword";
 import { ForgotPasswordPage } from "./pages/password/ForgotPassword";
 import { SignUpPage } from "./pages/signup";
 import PrivateRoute from "./routes/PrivateRoute";
-import HomePage from "./pages/Home";
+//import HomePage from "./pages/Home";
 import { NotFoundPage } from "./pages/not-found";
 import { UserHomePage } from "./pages/user";
 import { MerchantHomePage } from "./pages/merchant/home/Home";
