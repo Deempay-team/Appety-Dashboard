@@ -51,7 +51,7 @@ export const LoginPage = () => {
           userId: userDetails?.userId,
           firstName: userDetails?.firstName,
           lastName: userDetails?.lastName,
-          //avatar: userDetails?.userHeader,
+          role: userDetails?.role,
           status: userDetails?.status,
           phoneNo: userDetails?.phoneNo,
         })

@@ -45,7 +45,6 @@ const App = () => {
               element={<AdminMerchantListPage />}
               exact
             />
-            <Route path="/dashboard/tv" element={<TvPage />} exact />
             <Route path="/dashboard/merchant" element={<MerchantHomePage />} exact />
             <Route path="/dashboard/merchant/settings/link" element={<LinkSettingsPage />} exact />
             <Route path="/dashboard/merchant/settings/image" element={<ImageSettingsPage />} exact />
@@ -56,6 +55,7 @@ const App = () => {
           <Route path="/login" exact element={<LoginPage />} />
           <Route path="/password/reset" exact element={<ResetPasswordPage />} />
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
+          <Route path="/display-tv" element={<TvPage />} exact />
           <Route path="/signup" element={<SignUpPage />} exact />
           <Route path="/verify-account/:userEmail?" element={<VerifyPage />} exact />
           <Route path="*" element={<NotFoundPage />} />

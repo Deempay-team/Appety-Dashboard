@@ -6,15 +6,15 @@ import { BackArrowIcon } from "../assests/icons/Icons";
 import storage from "../utils/storage";
 
 const Sidebar = () => {
-  //const adminStatus = JSON.parse(storage.fetch("RegisterDetails")).status;
-  const adminStatus = JSON.parse(storage.fetch("userDetails")).status;
+  let adminStatus = "23";
+  //const adminStatus = JSON.parse(storage.fetch("userDetails")).role;
   //console.log("merchantStatus-", merchantStatus);
   const [menuItems, setMenuItems] = useState([]);
   const [isMerchant, setIsMerchant] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
     
 useEffect(() => {
-  if (adminStatus === "1") {
+  if (adminStatus === "ADMIN") {
     setMenuItems(merchantLinks);
     setIsMerchant(true);
     setIsAdmin(false);
