@@ -10,7 +10,11 @@ import { DownLoadIcon } from "../../../assests/icons/Icons";
 import storage from "../../../utils/storage";
 import secrets from "../../../config/secrets";
 import { useEditWaitTime, useUpdateMerchant } from "../../../hooks/useMechant";
-import { RemoveQueueModalIcon } from "../../../assests/icons/Icons";
+import {
+  RemoveQueueModalIcon,
+  CopiedIcon,
+  CopyIcon,
+} from "../../../assests/icons/Icons";
 import {
   SpinnerOrangeMedium,
   SpinnerWhite,
@@ -59,7 +63,10 @@ const LinkSettingsPage = () => {
   const [preOrderUrl, setPreOrderUrl] = useState("");
   const [isSwitchOn, setIsSwitchOn] = useState("");
   const [isLoadingOrderUrl, setIsLoadingOrderUrl] = useState(false);
+  const [isLoadingVideoUrl, setIsLoadingVideoUrl] = useState(false);
   const [isTimeFetch, setIsTimeFetch] = useState(true);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [copied, setCopied] = useState(true);
 
   // FORM VALIDATION
   const {
@@ -82,7 +89,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -100,7 +107,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         //open={false}
         onClick={openRemoveModal}
@@ -119,7 +126,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -137,7 +144,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -155,7 +162,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -173,7 +180,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -191,7 +198,7 @@ const LinkSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -362,11 +369,11 @@ const LinkSettingsPage = () => {
   const qrcodeBig = (
     <QRCode
       id="qrCodeId"
-      size={700}
+      size={450}
       value={`${baseURL}/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
-      level="M"
+      level="H"
     />
   );
 
@@ -448,7 +455,7 @@ const LinkSettingsPage = () => {
     <Menu className="grid items-center justify-center">
       <span
         onClick={addBack}
-        className="cursor-pointer block mx-auto py-4 text_16 text-[#000000]"
+        className="cursor-pointer block px-4 py-4 text_16 text-[#000000]"
       >
         Add Back
       </span>
@@ -509,6 +516,19 @@ const LinkSettingsPage = () => {
     setStatus("1");
   };
 
+  //COPY TEXT TO CLIPBOARD
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(orderUrl)
+      .then(() => {
+        setCopied(false);
+        setTimeout(() => {
+          setCopied(true);
+        }, 2000);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const timeInput = () => {
     inputRef.current.click();
   };
@@ -538,28 +558,60 @@ const LinkSettingsPage = () => {
                       ))}
                     </thead>
                     <tbody className=" ">
-
                       {/* MONDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Monday</td>
+                        {timeList[0].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">Monday</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Monday
+                            </td>
+                          </>
+                        )}
                         {isEditMonday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[0]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[0]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[0].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[0]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[0]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[0]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[0]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[0]?.status === "1" ? (
@@ -588,7 +640,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(0);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text-[#d0cfcf] text_16 underline"
                                     >
                                       More
                                     </span>
@@ -652,25 +704,60 @@ const LinkSettingsPage = () => {
 
                       {/* TUESDAY ROW */}
                       <tr className="py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Tuesday</td>
+                        {timeList[1].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">
+                              Tuesday
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Tuesday
+                            </td>
+                          </>
+                        )}
                         {isEditTuesday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[1]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[1]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[1].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[1]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[1]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[1]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[1]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[1]?.status === "1" ? (
@@ -699,7 +786,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(1);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -756,25 +843,60 @@ const LinkSettingsPage = () => {
 
                       {/* WEDNESDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Wednesday</td>
+                        {timeList[2].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">
+                              Wednesday
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Wednesday
+                            </td>
+                          </>
+                        )}
                         {isEditWednesday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[2]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[2]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[2].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[2]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[2]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[2]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[2]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[2]?.status === "1" ? (
@@ -803,7 +925,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(2);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text-[#d0cfcf] text_16 underline"
                                     >
                                       More
                                     </span>
@@ -864,25 +986,60 @@ const LinkSettingsPage = () => {
 
                       {/* THURSDAY ROW */}
                       <tr className="py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Thursday</td>
+                        {timeList[3].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">
+                              Thursday
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Thursday
+                            </td>
+                          </>
+                        )}
                         {isEditThursday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[3]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[3]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[3].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[3]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[3]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[3]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[3]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[3]?.status === "1" ? (
@@ -911,7 +1068,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(3);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -972,25 +1129,58 @@ const LinkSettingsPage = () => {
 
                       {/* FRIDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Friday</td>
+                        {timeList[4].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">Friday</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Friday
+                            </td>
+                          </>
+                        )}
                         {isEditFriday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[4]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[4]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[4].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[4]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[4]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[4]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[4]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[4]?.status === "1" ? (
@@ -1019,7 +1209,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(4);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -1076,25 +1266,60 @@ const LinkSettingsPage = () => {
 
                       {/* SATURDAY ROW */}
                       <tr className=" py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Saturday</td>
+                        {timeList[5].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">
+                              Saturday
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Saturday
+                            </td>
+                          </>
+                        )}
                         {isEditSaturday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[5]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[5]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[5].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[5]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[5]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[5]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[5]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[5]?.status === "1" ? (
@@ -1123,7 +1348,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(5);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -1184,25 +1409,58 @@ const LinkSettingsPage = () => {
 
                       {/* SUNDAY ROW */}
                       <tr className="border-t-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">Sunday</td>
+                        {timeList[6].status === "1" ? (
+                          <>
+                            <td className="text_16  py-6 capitalize">Sunday</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-6 capitalize">
+                              Sunday
+                            </td>
+                          </>
+                        )}
                         {isEditSunday ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[6]?.startTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingTime
-                                ? "-"
-                                : moment(
-                                    timeList[6]?.endTime,
-                                    "HH:mm a"
-                                  ).format("h:mm A")}
-                            </td>
+                            {timeList[6].status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[6]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[6]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 py-6 text-[#d0cfcf] ">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[6]?.startTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                                <td className="text_16 py-6 text-[#d0cfcf]">
+                                  {isLoadingTime
+                                    ? "-"
+                                    : moment(
+                                        timeList[6]?.endTime,
+                                        "HH:mm a"
+                                      ).format("h:mm A")}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 underline">
                               {/* CHECK FOR STATUS */}
                               {timeList[6]?.status === "1" ? (
@@ -1231,7 +1489,7 @@ const LinkSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitTime(6);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -1285,7 +1543,6 @@ const LinkSettingsPage = () => {
                           </>
                         )}
                       </tr>
-
                     </tbody>
                   </table>
                 </form>
@@ -1305,11 +1562,8 @@ const LinkSettingsPage = () => {
                       <ConfigProvider
                         theme={{
                           token: {
-                            // Seed Token
                             colorPrimary: "#F99762",
                             borderRadius: 2,
-
-                            // Alias Token
                             colorBgContainer: "#f6ffed",
                           },
                         }}
@@ -1331,23 +1585,26 @@ const LinkSettingsPage = () => {
                       onSubmit={handleSubmit(onSubmitPreOrder)}
                       className="flex"
                     >
-                      <button className="text-[#000] md:py-[22px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
+                      <button className="text-[#000] md:py-[20px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
                         https://
                       </button>
                       <input
                         placeholder={orderUrl ? orderUrl : "Enter Preorder url"}
-                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
+                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#f99762] focus:border-[#F99762] h-[64px]"
                         {...register("preOrderUrl")}
                       />
-                      {/* <button type="submit" className="bg-[#F99762] ml-2 px-3 rounded-[5px] text_16 text-[#ffffff]">
-          {isLoadingOrderUrl ? <SpinnerWhite /> : "Save"}
-        </button> */}
+                      <button
+                        type="submit"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000]"
+                      >
+                        {isLoadingOrderUrl ? <SpinnerOrangeMedium /> : "Save"}
+                      </button>
                     </form>
                   </span>
                 </div>
 
                 <div class="mx-6 border-[0.5px] border-[#e0e0e0]"></div>
-                <div className="py-10 px-10 flex">
+                <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
                   <span class="text-base font-normal">
                     <h1 className="text_18">QR Code</h1>
                     <p className="text_12 mt-2 text-[#6b6968] mb-4">
@@ -1372,6 +1629,50 @@ const LinkSettingsPage = () => {
                         </span>
                       </div>
                     </div>
+                  </span>
+                  <span class="text-base font-normal">
+                    <h1 className="text_18">Video Add URL</h1>
+                    <p className="text_12 mt-2 text-[#6b6968] mb-4">
+                      Input your video URL to view on the monitor
+                    </p>
+                    <form
+                      onSubmit={handleSubmit(onSubmitPreOrder)}
+                      className="flex"
+                    >
+                      <button className="text-[#000] md:py-[20px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
+                        https://
+                      </button>
+                      <input
+                        placeholder={videoUrl ? videoUrl : "Enter Video url"}
+                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
+                        {...register("videoUrl")}
+                      />
+                      <button
+                        type="submit"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000]"
+                      >
+                        {isLoadingVideoUrl ? <SpinnerOrangeMedium /> : "Save"}
+                      </button>
+                    </form>
+
+                    <span class="flex  space-x-2 items-center mt-5">
+                      <p class="text_16_500 flex text-[#000000]">{orderUrl}</p>
+                      {copied ? (
+                        <span
+                          class="  cursor-pointer"
+                          onClick={handleCopy}
+                        >
+                          <CopyIcon />
+                        </span>
+                      ) : (
+                        <span
+                          class=" cursor-pointer"
+                          onClick={handleCopy}
+                        >
+                          <CopiedIcon />
+                        </span>
+                      )}
+                    </span>
                   </span>
                 </div>
               </div>

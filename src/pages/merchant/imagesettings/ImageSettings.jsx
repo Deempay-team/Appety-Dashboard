@@ -22,18 +22,18 @@ const ImageSettingsPage = () => {
     axios
       .get(`${baseURL}/api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           storage.add(
             "merchantDetails",
             JSON.stringify({
-              merchStatus: res.data.data?.merchStatus,
-              merchName: res.data.data?.merchName,
-              merchPhone: res.data.data?.merchPhone,
-              contactName: res.data.data?.contactName,
-              linkUrl: res.data.data?.linkUrl,
-              linkUrlStatus: res.data.data?.linkUrlStatus,
+              merchStatus: res?.data?.data?.merchStatus,
+              merchName: res?.data?.data?.merchName,
+              merchPhone: res?.data?.data?.merchPhone,
+              contactName: res?.data?.data?.contactName,
+              linkUrl: res?.data?.data?.linkUrl,
+              linkUrlStatus: res?.data?.data?.linkUrlStatus,
               logoUrl: res.data.data?.logoUrl,
-              preOrderUrl: res.data.data?.preOrderUrl,
+              preOrderUrl: res?.data?.data?.preOrderUrl,
             })
           );
         }
@@ -43,7 +43,6 @@ const ImageSettingsPage = () => {
       });
   };
 
-  ////////////////////////////////////////////
   const formData = new FormData();
   formData.append("image", file);
 

@@ -21,7 +21,7 @@ export const TvPage = () => {
       value={qrURL}
       bgColor="white"
       fqColor="black"
-      level="M"
+      level="H"
       // imageSettings={{
       //   src: logoUrl ? logoUrl : Logo,
       //   excavate: true,

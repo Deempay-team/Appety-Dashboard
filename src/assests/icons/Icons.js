@@ -316,6 +316,43 @@ export const OpenIcon = () => {
   );
 };
 
+export const CopyIcon = () => {
+  return (
+    <svg width="12" height="12" fill="none">
+      <path
+        d="M3.334 4.667a1.333 1.333 0 0 1 1.333-1.334h5.334a1.333 1.333 0 0 1 1.333 1.334V10a1.333 1.333 0 0 1-1.333 1.333H4.667A1.333 1.333 0 0 1 3.334 10V4.667Z"
+        stroke="#000"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M8.667 3.333V2A1.333 1.333 0 0 0 7.334.667H2A1.333 1.333 0 0 0 .667 2v5.333A1.333 1.333 0 0 0 2 8.667h1.334"
+        stroke="#000"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const CopiedIcon = () => {
+  return (
+    <svg
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-3.5 h-3.5"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.5 12.75l6 6 9-13.5"
+      />
+    </svg>
+  );
+};
+
 export const RemoveQueueModalIcon = () => {
   return (
     <svg

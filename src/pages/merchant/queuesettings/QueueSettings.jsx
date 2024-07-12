@@ -66,7 +66,7 @@ const QueueSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -84,7 +84,7 @@ const QueueSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -102,7 +102,7 @@ const QueueSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -120,7 +120,7 @@ const QueueSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -138,7 +138,7 @@ const QueueSettingsPage = () => {
       >
         Edit
       </span>
-      <div class="border-[0.5px] border-[#e0e0e0]"></div>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
         onClick={openRemoveModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
@@ -251,8 +251,6 @@ const QueueSettingsPage = () => {
     }
   }, [minPax, maxPax, estimateTime]);
 
-  useEffect(() => {}, []);
-
   const handleEditQ1 = () => {
     setWaitTypeId(queueList[0]?.waitTypeId);
     setStatus("1");
@@ -297,7 +295,7 @@ const QueueSettingsPage = () => {
     <Menu className="grid items-center justify-center">
       <span
         onClick={addBack}
-        className="cursor-pointer block mx-auto py-4 text_16 text-[#000000]"
+        className="cursor-pointer block px-4 py-4 text_16 text-[#000000]"
       >
         Add Back
       </span>
@@ -306,7 +304,6 @@ const QueueSettingsPage = () => {
 
   const onSubmitHandler = (data) => {
     const { minPax, maxPax, estimateTime } = data;
-    console.log("DATA", data);
 
     if (maxPax <= minPax) {
       return setEditError(
@@ -400,7 +397,7 @@ const QueueSettingsPage = () => {
 
   return (
     <>
-      <Layout className="bg-[red]">
+      <Layout className="">
         <main className="xl:ml-[370px] ml-[320px] px-10 pt-10 bg-[#F6F7F9] h-screen">
           {isQueueFetch ? (
             <>
@@ -423,24 +420,62 @@ const QueueSettingsPage = () => {
                     <tbody className=" ">
                       {/* Q1 ROW */}
                       <tr className="border-y-[0.5px] border-[#D9D9D9] py-8  bg-[#ffffff]">
-                        <td className="text_16  py-8 capitalize">
-                          {isLoadingWaitType
-                            ? "Q1"
-                            : queueList[0]?.waitTypeName}
-                        </td>
+                        {queueList[0]?.status === "1" ? (
+                          <>
+                            <td className="text_16  py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q1"
+                                : queueList[0]?.waitTypeName}
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q1"
+                                : queueList[0]?.waitTypeName}
+                            </td>
+                          </>
+                        )}
                         {isEditQ1 ? (
                           <>
-                            <td className="text_16 py-6 ">
-                              {isLoadingWaitType ? "-" : queueList[0]?.minPax}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingWaitType ? "-" : queueList[0]?.maxPax}
-                            </td>
-                            <td className="text_16 py-6 ">
-                              {isLoadingWaitType
-                                ? "-"
-                                : queueList[0]?.estimateTime + " mins"}
-                            </td>
+                            {queueList[0]?.status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.minPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.maxPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.minPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.maxPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[0]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 ">
                               {/* CHECK FOR STATUS */}
                               {queueList[0]?.status === "1" ? (
@@ -466,7 +501,7 @@ const QueueSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitType(0);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -480,7 +515,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //  placeholder={queueList[0]?.minPax}
                                 className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -495,7 +529,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                // placeholder={queueList[0]?.maxPax}
                                 className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
@@ -539,26 +572,62 @@ const QueueSettingsPage = () => {
 
                       {/* Q2 ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-8 capitalize">
-                          {" "}
-                          {isLoadingWaitType
-                            ? "Q2"
-                            : queueList[1]?.waitTypeName}
-                        </td>
+                        {queueList[1]?.status === "1" ? (
+                          <>
+                            <td className="text_16  py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q2"
+                                : queueList[1]?.waitTypeName}
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q2"
+                                : queueList[1]?.waitTypeName}
+                            </td>
+                          </>
+                        )}
                         {isEditQ2 ? (
                           <>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[1]?.minPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[1]?.maxPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {" "}
-                              {isLoadingWaitType
-                                ? "-"
-                                : queueList[1]?.estimateTime + " mins"}
-                            </td>
+                            {queueList[1]?.status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.minPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.maxPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.minPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.maxPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[1]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 ">
                               {/* CHECK FOR STATUS */}
                               {queueList[1]?.status === "1" ? (
@@ -587,7 +656,7 @@ const QueueSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitType(1);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -601,7 +670,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                // placeholder={queueList[1]?.minPax}
                                 className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -613,7 +681,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                // placeholder={queueList[1]?.maxPax}
                                 className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
@@ -625,7 +692,6 @@ const QueueSettingsPage = () => {
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
-                                // placeholder={queueList[1]?.estimateTime}
                                 className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
@@ -658,25 +724,62 @@ const QueueSettingsPage = () => {
 
                       {/* Q3 ROW */}
                       <tr className=" py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">
-                          {isLoadingWaitType
-                            ? "Q3"
-                            : queueList[2]?.waitTypeName}
-                        </td>
+                        {queueList[2]?.status === "1" ? (
+                          <>
+                            <td className="text_16  py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q3"
+                                : queueList[2]?.waitTypeName}
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q3"
+                                : queueList[2]?.waitTypeName}
+                            </td>
+                          </>
+                        )}
                         {isEditQ3 ? (
                           <>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[2]?.minPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[2]?.maxPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {" "}
-                              {isLoadingWaitType
-                                ? "-"
-                                : queueList[2]?.estimateTime + " mins"}
-                            </td>
+                            {queueList[2]?.status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.minPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.maxPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.minPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.maxPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[2]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 ">
                               {/* CHECK FOR STATUS */}
                               {queueList[2]?.status === "1" ? (
@@ -702,7 +805,7 @@ const QueueSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitType(2);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -716,7 +819,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //placeholder={queueList[2]?.minPax}
                                 className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -728,7 +830,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //placeholder={queueList[2]?.maxPax}
                                 className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
@@ -773,25 +874,62 @@ const QueueSettingsPage = () => {
 
                       {/* Q4 ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">
-                          {isLoadingWaitType
-                            ? "Q4"
-                            : queueList[3]?.waitTypeName}
-                        </td>
+                        {queueList[3]?.status === "1" ? (
+                          <>
+                            <td className="text_16  py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q4"
+                                : queueList[3]?.waitTypeName}
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q4"
+                                : queueList[3]?.waitTypeName}
+                            </td>
+                          </>
+                        )}
                         {isEditQ4 ? (
                           <>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[3]?.minPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[3]?.maxPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {" "}
-                              {isLoadingWaitType
-                                ? "-"
-                                : queueList[3]?.estimateTime + " mins"}
-                            </td>
+                            {queueList[3]?.status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.minPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.maxPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.minPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.maxPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[3]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-6 ">
                               {/* CHECK FOR STATUS */}
                               {queueList[3]?.status === "1" ? (
@@ -817,7 +955,7 @@ const QueueSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitType(3);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -831,7 +969,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //placeholder={queueList[3]?.minPax}
                                 className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -843,7 +980,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //placeholder={queueList[3]?.maxPax}
                                 className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
@@ -855,7 +991,6 @@ const QueueSettingsPage = () => {
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
-                                // placeholder={queueList[3]?.estimateTime}
                                 className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
@@ -888,25 +1023,62 @@ const QueueSettingsPage = () => {
 
                       {/* Q5 ROW */}
                       <tr className="py-4  bg-[#ffffff]">
-                        <td className="text_16  py-6 capitalize">
-                          {isLoadingWaitType
-                            ? "Q5"
-                            : queueList[4]?.waitTypeName}
-                        </td>
+                        {queueList[4]?.status === "1" ? (
+                          <>
+                            <td className="text_16  py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q5"
+                                : queueList[4]?.waitTypeName}
+                            </td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="text_16 text-[#d0cfcf] py-8 capitalize">
+                              {isLoadingWaitType
+                                ? "Q5"
+                                : queueList[4]?.waitTypeName}
+                            </td>
+                          </>
+                        )}
                         {isEditQ5 ? (
                           <>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[4]?.minPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {isLoadingWaitType ? "-" : queueList[4]?.maxPax}
-                            </td>
-                            <td className="text_16 py-8 ">
-                              {" "}
-                              {isLoadingWaitType
-                                ? "-"
-                                : queueList[4]?.estimateTime + " mins"}
-                            </td>
+                            {queueList[4]?.status === "1" ? (
+                              <>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.minPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.maxPax}
+                                </td>
+                                <td className="text_16 py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            ) : (
+                              <>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.minPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.maxPax}
+                                </td>
+                                <td className="text_16 text-[#d0cfcf] py-6 ">
+                                  {isLoadingWaitType
+                                    ? "-"
+                                    : queueList[4]?.estimateTime + " mins"}
+                                </td>
+                              </>
+                            )}
                             <td className="text_16 py-8 ">
                               {/* CHECK FOR STATUS */}
                               {queueList[4]?.status === "1" ? (
@@ -932,7 +1104,7 @@ const QueueSettingsPage = () => {
                                       onClick={() => {
                                         handleWaitType(4);
                                       }}
-                                      className=" cursor-pointer text_16 underline"
+                                      className=" cursor-pointer text_16 text-[#d0cfcf] underline"
                                     >
                                       More
                                     </span>
@@ -946,7 +1118,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                // placeholder={queueList[4]?.minPax}
                                 className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -958,7 +1129,6 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                //placeholder={queueList[4]?.maxPax}
                                 className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
@@ -970,7 +1140,6 @@ const QueueSettingsPage = () => {
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
-                                //placeholder={queueList[4]?.estimateTime}
                                 className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
@@ -1006,10 +1175,10 @@ const QueueSettingsPage = () => {
               </div>
 
               <div>
-            <p className="mt-4 text_16 text-[#6B6968] font-normal">
-              To edit the table above, please start from the bottom row (Q5)
-            </p>
-          </div>
+                <p className="mt-4 text_16 text-[#6B6968] font-normal">
+                  To edit the table above, please start from the bottom row (Q5)
+                </p>
+              </div>
 
               <div>
                 <p className="mt-2 text_16 text-[red] font-normal">
