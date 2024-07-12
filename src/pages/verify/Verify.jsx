@@ -6,9 +6,11 @@ import { Modal } from "antd";
 import storage from "../../utils/storage";
 import { SpinnerWhite } from "../../components/spinner/Spinner";
 import { EmailImage } from "../../assests/images";
+import secrets from "../../config/secrets";
 
 export const VerifyPage = () => {
   const navigate = useNavigate();
+  const baseURL = secrets.baseURL;
   const { userEmail } = useParams();
   const email = JSON.parse(storage.fetch("EmailDetails")).email;
   const pathFrom = JSON.parse(storage.fetch("RegisterDetails")).pathFrom;
@@ -23,7 +25,7 @@ export const VerifyPage = () => {
     if (pathFrom === "/password/reset") {
       axios
         .get(
-          `http://159.223.37.225/account_verification/resend?email=${email}&method=PASSWORD`,
+          `${baseURL}account_verification/resend?email=${email}&method=PASSWORD`,
           {}
         )
         .then(function (response) {
@@ -38,7 +40,7 @@ export const VerifyPage = () => {
       //CALL REGISTER RESEND CODE
       axios
         .get(
-          `http://159.223.37.225/account_verification/resend?email=${email}&method=REGISTER`,
+          `${baseURL}account_verification/resend?email=${email}&method=REGISTER`,
           {}
         )
         .then(function (response) {

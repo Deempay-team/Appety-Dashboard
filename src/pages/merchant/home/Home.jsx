@@ -82,7 +82,7 @@ export const MerchantHomePage = () => {
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {
     axios
-      .get(`${baseURL}/api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setMerchName(res.data.data?.merchName);
@@ -111,7 +111,7 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     setIsLoadingWaitType(true);
     axios
-      .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
+      .get(`${baseURL}api/v1/wait/summary/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);
@@ -130,7 +130,7 @@ export const MerchantHomePage = () => {
     //setIsLoadingWaitType(true);
     if (isButtonWaitTye || statusUpdateSuccess) {
       axios
-        .get(`${baseURL}/api/v1/wait/summary/${merchId}`)
+        .get(`${baseURL}api/v1/wait/summary/${merchId}`)
         .then(function (res) {
           if (res.data.code === "000000") {
             setIsLoadingWaitType(false);
@@ -149,7 +149,7 @@ export const MerchantHomePage = () => {
     setIsExporting(true);
     axios
       .get(
-        `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
+        `${baseURL}api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
       )
       .then(function (res) {
         if (res?.data?.code === "000000") {
@@ -187,7 +187,7 @@ export const MerchantHomePage = () => {
       callApi();
       axios
         .get(
-          `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res.data.code === "000000") {
@@ -219,7 +219,7 @@ export const MerchantHomePage = () => {
     if (waitTypeId) {
       axios
         .get(
-          `${baseURL}/api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res.data.code === "000000") {
@@ -350,7 +350,7 @@ export const MerchantHomePage = () => {
         <div className="flex justify-between">
           <div className="flex items-center">
             <img
-              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
+              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
                 imageLoaded

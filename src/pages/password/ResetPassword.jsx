@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 import { CloseIcon, OpenIcon } from "../../assests/icons/Icons";
 import { SpinnerWhite } from "../../components/spinner/Spinner";
 import storage from "../../utils/storage";
+import secrets from "../../config/secrets";
 
 export const ResetPasswordPage = () => {
+  const baseURL = secrets.baseURL;
   const navigate = useNavigate();
   const location = useLocation();
   const email = JSON.parse(storage.fetch("EmailDetails")).email;
@@ -37,7 +39,7 @@ export const ResetPasswordPage = () => {
   const sendCode = () => {
     axios
       .get(
-        `http://159.223.37.225/account_verification/resend?email=${email}&method=PASSWORD`,
+        `${baseURL}account_verification/resend?email=${email}&method=PASSWORD`,
         {}
       )
       .then(function (response) {

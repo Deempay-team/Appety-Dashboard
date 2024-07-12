@@ -171,7 +171,7 @@ const QueueSettingsPage = () => {
   useEffect(() => {
     setIsLoadingWaitType(true);
     axios
-      .get(`${baseURL}/api/v1/wait/type/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/type/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);
@@ -188,7 +188,7 @@ const QueueSettingsPage = () => {
   // CALL QUERY WAITTYPE API TO UPDATE STATE
   const queryUpdate = () => {
     axios
-      .get(`${baseURL}/api/v1/wait/type/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/type/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);

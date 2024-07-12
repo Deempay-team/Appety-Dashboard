@@ -229,7 +229,7 @@ const LinkSettingsPage = () => {
   useEffect(() => {
     setIsLoadingTime(true);
     axios
-      .get(`${baseURL}/api/v1/wait/time/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsTimeFetch(false);
@@ -246,7 +246,7 @@ const LinkSettingsPage = () => {
   //CALL QUERY WAIT-TIME API TO UPDATE STATE
   const timeUpdate = () => {
     axios
-      .get(`${baseURL}/api/v1/wait/time/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingTime(false);
@@ -262,7 +262,7 @@ const LinkSettingsPage = () => {
   //CALL QUERY MERCHANT DETAILS API
   const queryMerchantUpdate = () => {
     axios
-      .get(`${baseURL}/api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           storage.add(
@@ -359,7 +359,7 @@ const LinkSettingsPage = () => {
     <QRCode
       id="qrCodeId"
       size={110}
-      value={`${baseURL}/user/${linkUrl}`}
+      value={`${baseURL}user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="M"
@@ -370,7 +370,7 @@ const LinkSettingsPage = () => {
     <QRCode
       id="qrCodeId"
       size={450}
-      value={`${baseURL}/user/${linkUrl}`}
+      value={`${baseURL}user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="H"

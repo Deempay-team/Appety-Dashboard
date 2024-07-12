@@ -6,8 +6,8 @@ import { BackArrowIcon } from "../assests/icons/Icons";
 import storage from "../utils/storage";
 
 const Sidebar = () => {
-  let adminStatus = "23";
-  //const adminStatus = JSON.parse(storage.fetch("userDetails")).role;
+  //let adminStatus = "23";
+  const adminStatus = JSON.parse(storage.fetch("userDetails")).role;
   //console.log("merchantStatus-", merchantStatus);
   const [menuItems, setMenuItems] = useState([]);
   const [isMerchant, setIsMerchant] = useState(false);

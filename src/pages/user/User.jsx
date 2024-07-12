@@ -53,7 +53,7 @@ export const UserHomePage = () => {
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {
     axios
-      .get(`${baseURL}/api/v1/link/fetch/${linkUrl}`)
+      .get(`${baseURL}api/v1/link/fetch/${linkUrl}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setMerchId(res.data?.data.merchId);
@@ -183,7 +183,7 @@ useEffect(() => {
       setCallTime(timer);
       axios
         .get(
-          `${baseURL}/api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
+          `${baseURL}api/v1/link/fetch/wait/status/?waitId=${waitId}&merchId=${merchId}`
         )
         .then(function (res) {
           if (res.data.code === "000000") {
@@ -230,7 +230,7 @@ useEffect(() => {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
-              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
+              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
                 imageLoaded

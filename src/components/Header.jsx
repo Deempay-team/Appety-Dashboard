@@ -26,7 +26,7 @@ const HeaderPage = () => {
         <div className="flex justify-between">
           <div className="flex items-center">
           <img
-              src={`${baseURL}/api/v1/user/logo/${logoUrl}`}
+              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
                 imageLoaded
