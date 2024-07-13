@@ -66,7 +66,7 @@ export const ResetPasswordPage = () => {
           setIsVerified(false);
           console.log("SUCCESS");
         } if (response.data.code === "PR0034") {
-            //  Notify("error", "Your token is invalid!");
+             Notify("error", "Your token is invalid!");
             console.log("Error");
         }
       })
@@ -121,8 +121,7 @@ export const ResetPasswordPage = () => {
                   />
                   <h2 className="text_16 p-3">
                     An email was sent to {" "}
-                    {email}
-                    {/* <span className="text-[#f99762]">{email == null ? oldEmail : email}</span> */}
+                    <span className="text-[#f99762]">{email == null ? oldEmail : email}</span>
                   </h2>
                   <p lassName="text_14 pb-1 ">
                     Please confirm your email by clicking the link we sent to
