@@ -121,6 +121,7 @@ export const ResetPasswordPage = () => {
                   />
                   <h2 className="text_16 p-3">
                     An email was sent to {" "}
+                    {email}
                     {/* <span className="text-[#f99762]">{email == null ? oldEmail : email}</span> */}
                   </h2>
                   <p lassName="text_14 pb-1 ">
