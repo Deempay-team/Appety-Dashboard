@@ -63,7 +63,7 @@ export const ResetPasswordPage = () => {
       .then(function (response) {
         if (response.data.code === "000000") {
           setIsLoadingPage(false)
-          // setIsVerified(false);
+          setIsVerified(false);
           console.log("SUCCESS");
         } if (response.data.code === "PR0034") {
             //  Notify("error", "Your token is invalid!");
