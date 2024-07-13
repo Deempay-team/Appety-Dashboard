@@ -16,7 +16,7 @@ export const ResetPasswordPage = () => {
   const { email, token } = useParams();
   const [isVerified, setIsVerified] = useState(true);
   const [isResending, setIsResending] = useState(false);
-  const [isLoadingPage, setIsLoadingPage] = useState(true);
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
 
@@ -61,6 +61,7 @@ export const ResetPasswordPage = () => {
   //     .get(`${baseURL}account_verification/email/${token}`, {})
   //     .then(function (response) {
   //       if (response.data.code === "000000") {
+  //         setIsLoadingPage(false)
   //         setIsVerified(false);
   //       }
   //     })
