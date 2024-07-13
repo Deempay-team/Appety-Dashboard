@@ -19,6 +19,10 @@ export const ResetPasswordPage = () => {
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
 
+
+  console.log("email", email);
+  console.log("token", token);
+
   // Form Validation
   const {
     register,
@@ -69,7 +73,7 @@ export const ResetPasswordPage = () => {
     setIsResending(true);
     axios
       .get(
-        `${baseURL}account_verification/resend?email=${oldEmail}&method=PASSWORD`,
+        `${baseURL}account_verification/resend?email=${email}&method=PASSWORD`,
         {}
       )
       .then(function (response) {
