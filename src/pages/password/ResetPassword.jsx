@@ -8,6 +8,7 @@ import secrets from "../../config/secrets";
 import useForget from "../../hooks/useForget";
 import { EmailImage } from "../../assests/images";
 import storage from "../../utils/storage";
+import Notify from "../../components/Notification";
 
 export const ResetPasswordPage = () => {
   const baseURL = secrets.baseURL;
@@ -19,9 +20,6 @@ export const ResetPasswordPage = () => {
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
-
-  console.log("email", email);
-  console.log("token", token);
 
   // Form Validation
   const {
@@ -63,6 +61,9 @@ export const ResetPasswordPage = () => {
   //       if (response.data.code === "000000") {
   //         setIsLoadingPage(false)
   //         setIsVerified(false);
+  //       } if (response.data.code === "PR0034") {
+  //           //  Notify("error", "Your token is invalid!");
+  //           console.log("Error");
   //       }
   //     })
   //     .catch(function (error) {
@@ -71,20 +72,20 @@ export const ResetPasswordPage = () => {
   // }, []);
 
   const sendCode = () => {
-    setIsResending(true);
-    axios
-      .get(
-        `${baseURL}account_verification/resend?email=${email}&method=PASSWORD`,
-        {}
-      )
-      .then(function (response) {
-        if (response.data.code === "000000") {
-          setIsResending(false);
-        }
-      })
-      .catch(function (error) {
-        console.log("err", error);
-      });
+    // setIsResending(true);
+    // axios
+    //   .get(
+    //     `${baseURL}account_verification/resend?email=${email == null ? oldEmail : email}&method=PASSWORD`,
+    //     {}
+    //   )
+    //   .then(function (response) {
+    //     if (response.data.code === "000000") {
+    //       setIsResending(false);
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("err", error);
+    //   });
   };
 
   const onSubmitHandler = (data) => {
@@ -115,8 +116,8 @@ export const ResetPasswordPage = () => {
                     alt="email"
                   />
                   <h2 className="text_16 p-3">
-                    An email was sent to {" "} {oldEmail}
-                    <span className="text-[#f99762]">{email == null ? oldEmail : email}</span>
+                    An email was sent to {" "}
+                    {/* <span className="text-[#f99762]">{email == null ? oldEmail : email}</span> */}
                   </h2>
                   <p lassName="text_14 pb-1 ">
                     Please confirm your email by clicking the link we sent to
@@ -127,7 +128,6 @@ export const ResetPasswordPage = () => {
                   <button
                     onClick={sendCode}
                     className="submit_btn"
-                    disabled={isResending}
                   >
                     {isResending ? <SpinnerWhite /> : "Resend Verification"}
                   </button>
@@ -169,11 +169,11 @@ export const ResetPasswordPage = () => {
                     )}
                     <span onClick={() => setShow(!show)}>
                       {show ? (
-                        <span className="absolute right-[4%] top-[35%] cursor-pointer">
+                        <span className="absolute right-[4%] top-[61%] cursor-pointer">
                           <OpenIcon />
                         </span>
                       ) : (
-                        <span className="absolute right-[4%] top-[35%] cursor-pointer">
+                        <span className="absolute right-[4%] top-[61%] cursor-pointer">
                           <CloseIcon />
                         </span>
                       )}
