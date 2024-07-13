@@ -21,6 +21,9 @@ export const ResetPasswordPage = () => {
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
 
+  console.log("email", email);
+  console.log("token", token);
+
   // Form Validation
   const {
     register,
