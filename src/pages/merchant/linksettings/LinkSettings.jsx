@@ -359,7 +359,7 @@ const LinkSettingsPage = () => {
     <QRCode
       id="qrCodeId"
       size={110}
-      value={`${baseURL}user/${linkUrl}`}
+      value={`https://queue.appety.com.sg/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="M"
@@ -370,7 +370,7 @@ const LinkSettingsPage = () => {
     <QRCode
       id="qrCodeId"
       size={450}
-      value={`${baseURL}user/${linkUrl}`}
+      value={`https://queue.appety.com.sg/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="H"

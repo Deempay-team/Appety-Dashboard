@@ -52,7 +52,7 @@ export const TvPage = () => {
     <QRCode
       id="qrCodeId"
       size={265}
-      value={`${baseURL}user/${linkUrl}`}
+      value={`https://queue.appety.com.sg/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
       level="H"
