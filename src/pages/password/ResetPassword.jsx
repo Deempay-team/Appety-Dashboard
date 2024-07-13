@@ -57,22 +57,23 @@ export const ResetPasswordPage = () => {
   }, [data]);
 
   //VERIFY EMAIL CODE
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseURL}account_verification/email/${token}`, {})
-  //     .then(function (response) {
-  //       if (response.data.code === "000000") {
-  //         setIsLoadingPage(false)
-  //         setIsVerified(false);
-  //       } if (response.data.code === "PR0034") {
-  //           //  Notify("error", "Your token is invalid!");
-  //           console.log("Error");
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log("err", error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${baseURL}account_verification/email/${token}`, {})
+      .then(function (response) {
+        if (response.data.code === "000000") {
+          setIsLoadingPage(false)
+          // setIsVerified(false);
+          console.log("SUCCESS");
+        } if (response.data.code === "PR0034") {
+            //  Notify("error", "Your token is invalid!");
+            console.log("Error");
+        }
+      })
+      .catch(function (error) {
+        console.log("err", error);
+      });
+  }, []);
 
   const sendCode = () => {
     // setIsResending(true);
