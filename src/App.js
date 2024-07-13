@@ -10,6 +10,7 @@ import { AdminHomePage } from "./pages/admin/home";
 import { ResetPasswordPage } from "./pages/password/ResetPassword";
 import { ForgotPasswordPage } from "./pages/password/ForgotPassword";
 import { SignUpPage } from "./pages/signup";
+import { SignUpVerifyPage } from "./pages/signup";
 import PrivateRoute from "./routes/PrivateRoute";
 //import HomePage from "./pages/Home";
 import { NotFoundPage } from "./pages/not-found";
@@ -53,10 +54,11 @@ const App = () => {
           <Route path="/user/:linkUrl" element={<UserHomePage />} exact />
           <Route path="/" exact element={<LoginPage />} />
           <Route path="/login" exact element={<LoginPage />} />
-          <Route path="/password/reset" exact element={<ResetPasswordPage />} />
+          <Route path="/password/reset/:email?/:token?" exact element={<ResetPasswordPage />} />
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
           <Route path="/display-tv/:monitorUrl" element={<TvPage />} exact />
           <Route path="/signup" element={<SignUpPage />} exact />
+          <Route path="/signup/verify/:email?/:token?" element={<SignUpVerifyPage />} exact />
           <Route path="/verify-account/:userEmail?" element={<VerifyPage />} exact />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

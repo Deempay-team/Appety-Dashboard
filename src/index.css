@@ -117,7 +117,7 @@ body {
   }
 
   .input-time {
-    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px]  px-4 focus:border-[#F99762] dark:placeholder-[#F99762] h-[40px];
+    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px]  px-4 focus:border-[#F99762] dark:border-[#f997] dark:placeholder-[#F99762] h-[40px];
   }
 
   .input-short {
@@ -137,7 +137,7 @@ body {
   }
 
   .submit_btn {
-    @apply text-base leading-4 text-[#ffffff] h-[52px]  rounded-lg bg-[#F99762] hover:bg-[#ed996c]  w-full;
+    @apply text-base leading-4 text-[#ffffff] h-[50px]  rounded-lg bg-[#F99762] hover:bg-[#ed996c]  w-full;
   }
 
   .short_btn {

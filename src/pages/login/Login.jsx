@@ -157,7 +157,7 @@ export const LoginPage = () => {
             <div className="input_label pt-6 md:pb-[100px] pb-11">
               <Link
                 to="/password/forgot"
-                className=" text-[#1F222A] text_14 hover:text-indigo-500"
+                className=" text-[#1F222A] text_14 hover:text-[#f99762]"
               >
                 Forgot password?
               </Link>

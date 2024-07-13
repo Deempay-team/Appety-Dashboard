@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SpinnerWhite } from "../../components/spinner/Spinner";
 import storage from "../../utils/storage";
@@ -9,7 +9,6 @@ import { AppetyLogoBig, CloseIcon, OpenIcon } from "../../assests/icons/Icons";
 
 export const SignUpPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,7 +18,6 @@ export const SignUpPage = () => {
   const [role, setRole] = useState("ADMIN");
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
-  const pathFrom = location.pathname;
 
   // Form Validation
   const {
@@ -75,7 +73,7 @@ export const SignUpPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      navigate("/verify-account");
+      navigate("/signup/verify/");
       const { data: RegisterDetails } = data;
       storage.add(
         "RegisterDetails",
@@ -85,7 +83,6 @@ export const SignUpPage = () => {
           lastName: RegisterDetails?.lastName,
           email: RegisterDetails?.email,
           status: RegisterDetails?.status,
-          pathFrom,
         })
       );
     } else if (data?.code === "U00002") {
@@ -117,8 +114,6 @@ export const SignUpPage = () => {
     setPhoneNo(phoneNo);
     setAddress(address);
     setBusinessName(businessName);
-
-    storage.add("EmailDetails", JSON.stringify(email));
   };
 
   return (

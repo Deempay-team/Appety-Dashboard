@@ -524,7 +524,7 @@ const LinkSettingsPage = () => {
         setCopied(false);
         setTimeout(() => {
           setCopied(true);
-        }, 2000);
+        }, 1500);
       })
       .catch((error) => console.log(error));
   };
@@ -1595,7 +1595,7 @@ const LinkSettingsPage = () => {
                       />
                       <button
                         type="submit"
-                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000]"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
                       >
                         {isLoadingOrderUrl ? <SpinnerOrangeMedium /> : "Save"}
                       </button>
@@ -1649,14 +1649,14 @@ const LinkSettingsPage = () => {
                       />
                       <button
                         type="submit"
-                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000]"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
                       >
                         {isLoadingVideoUrl ? <SpinnerOrangeMedium /> : "Save"}
                       </button>
                     </form>
 
                     <span class="flex  space-x-2 items-center mt-5">
-                      <p class="text_16_500 flex text-[#000000]">{orderUrl}</p>
+                      <p class="text_16_500 flex text-[#000000]">Video Url:<span className="text-[#f99762] pl-2 underline">{orderUrl}</span></p>
                       {copied ? (
                         <span
                           class="  cursor-pointer"
