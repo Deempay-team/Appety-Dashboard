@@ -30,7 +30,7 @@ export const ForgotPasswordPage = () => {
           {}
         )
         .then(function (response) {
-          if (response.data.code === "000000") {
+          if (response?.data?.code === "000000") {
             setIsLoadingForgot(false);
             navigate("/password/reset");
             reset();

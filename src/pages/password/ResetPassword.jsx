@@ -42,7 +42,7 @@ export const ResetPasswordPage = () => {
       navigate("/login");
       reset();
     }
-    if (data.code === "PR0034") {
+    if (data?.code === "PR0034") {
       Notify("error", "Your token is invalid, please resend again!");
       navigate("/password/forgot");
     }
