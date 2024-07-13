@@ -70,7 +70,7 @@ export const ResetPasswordPage = () => {
                 name="password"
                 placeholder="Enter New Password"
                 type={show ? "text" : "password"}
-                className={`in_put ${errors.password && "input_error"}`}
+                className={`input_password ${errors.password && "input_error"}`}
                 {...register("password", {
                   required: "password is required",
                   pattern: {

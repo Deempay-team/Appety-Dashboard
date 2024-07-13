@@ -70,7 +70,7 @@ export const ForgotPasswordPage = () => {
                   name="email"
                   placeholder="Enter your Email"
                   type="email"
-                  className={`in_put ${errors.email && "input_error"}`}
+                  className={`input_password ${errors.email && "input_error"}`}
                   {...register("email", {
                     required: "Email is required",
                   })}

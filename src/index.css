@@ -116,6 +116,11 @@ body {
     @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] px-4 dark:placeholder-[#bdbdbd] h-[52px];
   }
 
+  
+  .input_password {
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] px-4 dark:placeholder-[#bdbdbd] h-[52px];
+  }
+
   .input-time {
     @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px]  px-4 focus:border-[#F99762] dark:border-[#f99762] dark:placeholder-[#bdbdbdg] h-[40px];
   }
