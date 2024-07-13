@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { CloseIcon, OpenIcon } from "../../assests/icons/Icons";
-import { SpinnerWhite } from "../../components/spinner/Spinner";
+import { SpinnerWhite, SpinnerOrange } from "../../components/spinner/Spinner";
 import secrets from "../../config/secrets";
 import useForget from "../../hooks/useForget";
 import { EmailImage } from "../../assests/images";
@@ -16,9 +16,9 @@ export const ResetPasswordPage = () => {
   const { email, token } = useParams();
   const [isVerified, setIsVerified] = useState(true);
   const [isResending, setIsResending] = useState(false);
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
-
 
   console.log("email", email);
   console.log("token", token);
@@ -56,18 +56,18 @@ export const ResetPasswordPage = () => {
   }, [data]);
 
   //VERIFY EMAIL CODE
-  useEffect(() => {
-    axios
-      .get(`${baseURL}account_verification/email/${token}`, {})
-      .then(function (response) {
-        if (response.data.code === "000000") {
-          setIsVerified(false);
-        }
-      })
-      .catch(function (error) {
-        console.log("err", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${baseURL}account_verification/email/${token}`, {})
+  //     .then(function (response) {
+  //       if (response.data.code === "000000") {
+  //         setIsVerified(false);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("err", error);
+  //     });
+  // }, []);
 
   const sendCode = () => {
     setIsResending(true);
@@ -93,7 +93,15 @@ export const ResetPasswordPage = () => {
 
   return (
     <>
-      {isVerified ? (
+    {isLoadingPage ? (
+      <>
+       <span className="flex items-center justify-center content-center pb-30 h-screen ">
+                <SpinnerOrange />
+              </span>
+      </>
+      ) : (
+      <>
+        {isVerified ? (
         <>
           <div className="bg-[#F6F7F9] flex min-h-screen overflow-hidden flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg bg-[#ffffff] rounded md:p-10 p-6">
@@ -107,7 +115,7 @@ export const ResetPasswordPage = () => {
                   />
                   <h2 className="text_16 p-3">
                     An email was sent to {" "} {oldEmail}
-                    <span className="text-[#f99762]">{email}</span>
+                    <span className="text-[#f99762]">{email == null ? oldEmail : email}</span>
                   </h2>
                   <p lassName="text_14 pb-1 ">
                     Please confirm your email by clicking the link we sent to
@@ -138,11 +146,11 @@ export const ResetPasswordPage = () => {
                 className="space-y-6"
               >
                 <div className="relative">
-                  {/* <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                 <label htmlFor="email" className="input_label">
                   Password
                 </label>
-              </div> */}
+              </div>
                   <div className="mt-2">
                     <input
                       name="password"
@@ -180,6 +188,8 @@ export const ResetPasswordPage = () => {
             </div>
           </div>
         </>
+      )}
+      </>
       )}
     </>
   );
