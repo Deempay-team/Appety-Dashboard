@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import {  useNavigate, useParams } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SpinnerWhite } from "../../components/spinner/Spinner";
-import { EmailImage } from "../../assests/images";
 import axios from "axios";
 import secrets from "../../config/secrets";
 import storage from "../../utils/storage";
@@ -58,9 +57,6 @@ export const ForgotPasswordPage = () => {
    
       <div className="flex min-h-screen overflow-hidden bg-[#F6F7F9] flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          {/* <h2 className="mt-10 text-center text_24 font-semibold ">
-            Wait, so you forgot
-          </h2> */}
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm rounded md:p-5 p-4 bg-[#ffffff] ">
@@ -85,22 +81,6 @@ export const ForgotPasswordPage = () => {
                   </p>
                 )}
               </div>
-              {/* <div className="mt-2">
-                <input
-                  name="email"
-                  placeholder="Enter your Email"
-                  type="email"
-                  className={`in_put ${errors.email && "input_error"}`}
-                  {...register("email", {
-                    required: "Email is required",
-                  })}
-                />
-                {errors.email && (
-                  <p className=" mt-1 text-sm text-[red]">
-                    {errors.email.message}
-                  </p>
-                )}
-              </div> */}
             </div>
             <div>
               <button type="submit" className="submit_btn">

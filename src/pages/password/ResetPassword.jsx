@@ -14,8 +14,6 @@ export const ResetPasswordPage = () => {
   const navigate = useNavigate();
   const oldEmail = JSON.parse(storage.fetch("EmailDetails")).email;
   const { email, token } = useParams();
-  // const email = phoneNo.split("=")[1];
-  // const token = phoneNo.split("=")[0];
   const [isVerified, setIsVerified] = useState(true);
   const [isResending, setIsResending] = useState(false);
   const [show, setShow] = useState(false);
@@ -71,7 +69,7 @@ export const ResetPasswordPage = () => {
     setIsResending(true);
     axios
       .get(
-        `${baseURL}account_verification/resend?email=${email == null ? oldEmail : email}&method=PASSWORD`,
+        `${baseURL}account_verification/resend?email=${oldEmail}&method=PASSWORD`,
         {}
       )
       .then(function (response) {
