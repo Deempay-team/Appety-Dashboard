@@ -65,7 +65,7 @@ const LinkSettingsPage = () => {
   const [isLoadingOrderUrl, setIsLoadingOrderUrl] = useState(false);
   const [isLoadingVideoUrl, setIsLoadingVideoUrl] = useState(false);
   const [isTimeFetch, setIsTimeFetch] = useState(true);
-  const [videoUrl, setVideoUrl] = useState("");
+  const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [copied, setCopied] = useState(true);
 
   // FORM VALIDATION
@@ -1643,9 +1643,9 @@ const LinkSettingsPage = () => {
                         https://
                       </button>
                       <input
-                        placeholder={videoUrl ? videoUrl : "Enter Video url"}
+                        placeholder={adsVideoUrl ? adsVideoUrl : "Enter Video url"}
                         className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
-                        {...register("videoUrl")}
+                        {...register("adsVideoUrl")}
                       />
                       <button
                         type="submit"

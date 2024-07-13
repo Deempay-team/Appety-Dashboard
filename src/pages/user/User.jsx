@@ -551,7 +551,7 @@ useEffect(() => {
       {/* FOOTER */}
       <div className="mt-10 pb-8 sm:px-0 px-6 flex  max-w-md items-center mx-auto justify-between text-[#000000]">
         <div>
-          <Link to="#"  target="_blank">
+          <Link to="https://www.appety.sg/privacy_policy.html"  target="_blank">
             <p className="text-base">Terms and Conditions</p>
           </Link>
         </div>
