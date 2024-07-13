@@ -74,20 +74,20 @@ export const ResetPasswordPage = () => {
   }, []);
 
   const sendCode = () => {
-    // setIsResending(true);
-    // axios
-    //   .get(
-    //     `${baseURL}account_verification/resend?email=${email == null ? oldEmail : email}&method=PASSWORD`,
-    //     {}
-    //   )
-    //   .then(function (response) {
-    //     if (response.data.code === "000000") {
-    //       setIsResending(false);
-    //     }
-    //   })
-    //   .catch(function (error) {
-    //     console.log("err", error);
-    //   });
+    setIsResending(true);
+    axios
+      .get(
+        `${baseURL}account_verification/resend?email=${oldEmail}&method=PASSWORD`,
+        {}
+      )
+      .then(function (response) {
+        if (response.data.code === "000000") {
+          setIsResending(false);
+        }
+      })
+      .catch(function (error) {
+        console.log("err", error);
+      });
   };
 
   const onSubmitHandler = (data) => {
@@ -121,7 +121,7 @@ export const ResetPasswordPage = () => {
                   />
                   <h2 className="text_16 p-3">
                     An email was sent to {" "}
-                    <span className="text-[#f99762]">{email == null ? oldEmail : email}</span>
+                    <span className="text-[#f99762]">{oldEmail}</span>
                   </h2>
                   <p lassName="text_14 pb-1 ">
                     Please confirm your email by clicking the link we sent to
