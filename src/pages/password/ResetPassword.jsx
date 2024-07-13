@@ -21,9 +21,6 @@ export const ResetPasswordPage = () => {
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
 
-  console.log("email", email);
-  console.log("token", token);
-
   // Form Validation
   const {
     register,
@@ -51,7 +48,8 @@ export const ResetPasswordPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      navigate("/login");
+      //navigate("/login");
+      console.log("SUCCESS  ALSO");
       reset();
     }
   }, [data]);
@@ -66,7 +64,7 @@ export const ResetPasswordPage = () => {
           setIsVerified(false);
           console.log("SUCCESS");
         } if (response.data.code === "PR0034") {
-             Notify("error", "Your token is invalid!");
+             Notify("error", "Your token is invalid, please resend again!");
             console.log("Error");
         }
       })
@@ -95,6 +93,8 @@ export const ResetPasswordPage = () => {
   const onSubmitHandler = (data) => {
     const { password } = data;
     setPassword(password);
+
+    console.log("password", data);
   };
 
   return (
