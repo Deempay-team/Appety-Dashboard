@@ -118,7 +118,7 @@ const ImageSettingsPage = () => {
             </div>
             <div class=" border-[0.5px] border-[#D9D9D9]"></div>
             <div className="py-10 px-10 flex justify-center ">
-              <button className="short_btn">
+              <button onClick={uploadImg} className="short_btn">
                 {isImageUploading ? <SpinnerWhite /> : "Upload"}
               </button>
               <button className="short_btn_white ml-6">Cancel</button>

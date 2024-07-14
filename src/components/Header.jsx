@@ -1,19 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import storage from "../utils/storage";
 import { FaUserCircle } from "react-icons/fa";
 import { ArrowDownIcon, ArrowUpIcon } from "../assests/icons/Icons";
 import { currentDate, currentTime } from "../utils/functions";
+import axios from "axios";
 import secrets from "../config/secrets";
 
 const HeaderPage = () => {
   const navigate = useNavigate();
   const baseURL = secrets.baseURL;
+  const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
-  const merchName = JSON.parse(storage.fetch("merchantDetails")).merchName;
-  const logoUrl = JSON.parse(storage.fetch("merchantDetails")).logoUrl;
+  const [merchName, setMerchName] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [changeIcon, setChangeIcon] = useState(false);
+
+  //CALL QUERY MERCHANT DETAILS API
+  useEffect(() => {
+    axios
+      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+      .then(function (res) {
+        if (res.data.code === "000000") {
+          setMerchName(res.data.data?.merchName);
+          setLogoUrl(res.data.data?.logoUrl);
+        }
+      })
+      .catch(function (error) {
+        console.log("merchant-error", error);
+      });
+  }, []);
 
   const handleLogout = () => {
     storage.clear();
@@ -25,7 +42,7 @@ const HeaderPage = () => {
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
           <div className="flex items-center">
-          <img
+            <img
               src={`${baseURL}api/v1/user/logo/${logoUrl}`}
               alt="User avatar"
               className={`${
