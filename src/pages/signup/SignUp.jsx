@@ -6,9 +6,13 @@ import storage from "../../utils/storage";
 import useRegister from "../../hooks/useSignUp";
 import { Modal } from "antd";
 import { AppetyLogoBig, CloseIcon, OpenIcon } from "../../assests/icons/Icons";
+import { EmailImage } from "../../assests/images";
+import secrets from "../../config/secrets";
+import axios from "axios";
 
 export const SignUpPage = () => {
   const navigate = useNavigate();
+  const baseURL = secrets.baseURL;
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [lastName, setLastName] = useState("");
@@ -19,7 +23,7 @@ export const SignUpPage = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [isRegister, setIsRegister] = useState(true);
-
+  const [isLoadingResend, setIsLoadingResend] = useState(false);
 
   // Form Validation
   const {
@@ -75,7 +79,7 @@ export const SignUpPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      //navigate("/signup/verify/");
+      setIsRegister(false);
       const { data: RegisterDetails } = data;
       storage.add(
         "RegisterDetails",
@@ -97,6 +101,24 @@ export const SignUpPage = () => {
       reset();
     }
   }, [data]);
+
+    //CALL REGISTER RESEND CODE
+  const resendCode = () => {
+    setIsLoadingResend(true);
+      axios
+        .get(
+          `${baseURL}account_verification/resend?email=${email}&method=REGISTER`,
+          {}
+        )
+        .then(function (response) {
+          if (response.data.code === "000000") {
+            setIsLoadingResend(false);
+          } 
+        })
+        .catch(function (error) {
+          console.log("err", error);
+        });
+  };
 
   const onSubmitHandler = (data) => {
     const {
@@ -120,7 +142,9 @@ export const SignUpPage = () => {
 
   return (
     <>
-      <div className="signup-image md:grid-cols-2 grid-cols-1 overflow-hidden md:flex grid ">
+     {isRegister ? (
+      <>
+       <div className="signup-image md:grid-cols-2 grid-cols-1 overflow-hidden md:flex grid ">
         <div className=" w-full md:pt-[250px] pt-10 md:pl-16 pl-4 ">
           <div className="flex items-center ">
             <AppetyLogoBig />
@@ -293,6 +317,42 @@ export const SignUpPage = () => {
           </p>
         </div>
       </div>
+      </>
+      ) : (
+      <>
+       <div className="bg-[#F6F7F9] flex min-h-screen overflow-hidden flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-lg bg-[#ffffff] rounded md:p-10 p-6">
+          <div className="space-y-6">
+            <div className="text-center">
+              <h1 className="text_24 pb-5">Confirm your email address</h1>
+              <img
+                className="mx-auto h-20 w-auto"
+                src={EmailImage}
+                alt="email"
+              />
+              <h2 className="text_16 p-3">
+                An email was sent to{" "}
+                <span className="text-[#f99762]">{email}</span>
+              </h2>
+              <p lassName="text_14 pb-3 ">
+                Please confirm your email by clicking the link we sent to your
+                email inbox
+              </p>
+            </div>
+            <div>
+              <button
+                onClick={resendCode}
+                className="submit_btn"
+                disabled={isLoadingResend}
+              >
+                {isLoadingResend ? <SpinnerWhite /> : "Resend Verification"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </>
+      )}
     </>
   );
 };
