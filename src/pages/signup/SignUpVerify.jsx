@@ -19,39 +19,39 @@ export const SignUpVerifyPage = () => {
   };
 
  //CALL REGISTER RESEND CODE
-  useEffect(() => {
-      axios
-        .get(
-          `${baseURL}account_verification/email/${token}`,
-          {}
-        )
-        .then(function (response) {
-          if (response.data.code === "000000") {
-            registeredUser()
-          } 
-        })
-        .catch(function (error) {
-          console.log("err", error);
-        });
-  }, [])
+  // useEffect(() => {
+  //     axios
+  //       .get(
+  //         `${baseURL}account_verification/email/${token}`,
+  //         {}
+  //       )
+  //       .then(function (response) {
+  //         if (response.data.code === "000000") {
+  //           registeredUser()
+  //         } 
+  //       })
+  //       .catch(function (error) {
+  //         console.log("err", error);
+  //       });
+  // }, [])
 
   //CALL REGISTER RESEND CODE
-  const resendCode = () => {
-    setIsLoadingResend(true);
-      axios
-        .get(
-          `${baseURL}account_verification/resend?email=${oldEmail}&method=REGISTER`,
-          {}
-        )
-        .then(function (response) {
-          if (response.data.code === "000000") {
-            setIsLoadingResend(false);
-          } 
-        })
-        .catch(function (error) {
-          console.log("err", error);
-        });
-  };
+  // const resendCode = () => {
+  //   setIsLoadingResend(true);
+  //     axios
+  //       .get(
+  //         `${baseURL}account_verification/resend?email=${oldEmail}&method=REGISTER`,
+  //         {}
+  //       )
+  //       .then(function (response) {
+  //         if (response.data.code === "000000") {
+  //           setIsLoadingResend(false);
+  //         } 
+  //       })
+  //       .catch(function (error) {
+  //         console.log("err", error);
+  //       });
+  // };
 
   return (
     <>
@@ -65,18 +65,18 @@ export const SignUpVerifyPage = () => {
                 src={EmailImage}
                 alt="email"
               />
-              <h2 className="text_16 p-3">
+              {/* <h2 className="text_16 p-3">
                 An email was sent to{" "}
                 <span className="text-[#f99762]">{oldEmail}</span>
-              </h2>
-              <p lassName="text_14 pb-1 ">
+              </h2> */}
+              <p lassName="text_14 pb-3 ">
                 Please confirm your email by clicking the link we sent to your
                 email inbox
               </p>
             </div>
             <div>
               <button
-                onClick={resendCode}
+              //  onClick={resendCode}
                 className="submit_btn"
                 disabled={isLoadingResend}
               >

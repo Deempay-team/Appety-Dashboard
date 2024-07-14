@@ -18,6 +18,8 @@ export const SignUpPage = () => {
   const [role, setRole] = useState("ADMIN");
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
+  const [isRegister, setIsRegister] = useState(true);
+
 
   // Form Validation
   const {
@@ -73,7 +75,7 @@ export const SignUpPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      navigate("/signup/verify/");
+      //navigate("/signup/verify/");
       const { data: RegisterDetails } = data;
       storage.add(
         "RegisterDetails",
