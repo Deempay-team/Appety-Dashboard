@@ -11,7 +11,6 @@ import axios from "axios";
 import { CSVLink } from "react-csv";
 import { FaUserCircle } from "react-icons/fa";
 import { currentDate, currentTime, formatDate } from "../../../utils/functions";
-import { addSpace } from "../../../utils/functions";
 import { useUpdateQueue } from "../../../hooks/useMechant";
 import {
   SpinnerOrange,
@@ -201,11 +200,10 @@ export const MerchantHomePage = () => {
             setCurrentWait(res.data.data[0]?.waitNo ?? "-");
 
             if (res.data.data[0]?.waitCall === "1") {
-              setCurrentStatus("Called");
+              setCurrentStatus("CALLED");
             } else {
               setCurrentStatus(res.data.data[0]?.status ?? "-");
             }
-
             setStatusUpdateSuccess(false);
           }
         })
@@ -339,10 +337,7 @@ export const MerchantHomePage = () => {
     setShowCancelModal(false);
   };
 
-  function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
+ 
   return (
     <>
       {/* HEADER */}
@@ -496,7 +491,7 @@ export const MerchantHomePage = () => {
                                       to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to the restaurant`}
                                       target="_blank"
                                     >
-                                      {addSpace(list.cusPhone)}
+                                      {list.cusPhone}
                                     </Link>
                                   </p>
                                 </div>
@@ -516,7 +511,7 @@ export const MerchantHomePage = () => {
                                   </p>
                                   <p className="text_16 text-[#000000] capitalize ">
                                     {list.waitCall === "1"
-                                      ? "Called"
+                                      ? "CALLED"
                                       : list.status}
                                   </p>
                                 </div>
@@ -758,7 +753,7 @@ export const MerchantHomePage = () => {
                           to={`https://api.whatsapp.com/send?phone=${currentPhone}&text=Hello ${currentName} your table is ready, please proceed to the restaurant`}
                           target="_blank"
                         >
-                          {addSpace(currentPhone)}
+                          {currentPhone}
                         </Link>
                       </p>
                     </div>
@@ -800,14 +795,12 @@ export const MerchantHomePage = () => {
                 <button onClick={handleCheckIn} className="short_btn">
                   {isCheckInQueue ? <SpinnerWhite /> : "Check - In"}
                 </button>
-
                 <button
                   onClick={handleCancelQueue}
                   className="short_btn_white ml-6"
                 >
                   {isCancellingQueue ? <SpinnerOrangeMedium /> : "Cancel"}
                 </button>
-
                 <button onClick={handleCall} className="short_btn_green ml-6 ">
                   {isLoadingWaitCall ? <SpinnerWhite /> : " Call"}
                 </button>
@@ -892,7 +885,7 @@ export const MerchantHomePage = () => {
                                       to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to the restaurant`}
                                       target="_blank"
                                     >
-                                      {addSpace(list.cusPhone)}
+                                      {list.cusPhone}
                                     </Link>
                                   </p>
                                 </div>
@@ -986,7 +979,7 @@ export const MerchantHomePage = () => {
                           to={`https://api.whatsapp.com/send?phone=${cancelQueueList?.cusPhone}&text=Hello ${cancelQueueList?.cusName} your table is ready, please proceed to the restaurant`}
                           target="_blank"
                         >
-                          {addSpace(cancelQueueList?.cusPhone)}
+                          {cancelQueueList?.cusPhone}
                         </Link>
                       </p>
                     </div>
