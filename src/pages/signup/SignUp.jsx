@@ -89,7 +89,7 @@ export const SignUpPage = () => {
       Modal.success({
         title: "Email already registered!",
         content:
-          "Login to access your account or use a different email if you want to create a new account.",
+          "Login to access your account or use a different email if you still want to create a new account.",
         onOk: () => existingUser(),
       });
       reset();
@@ -118,7 +118,7 @@ export const SignUpPage = () => {
 
   return (
     <>
-      <div className="signup-image md:grid-cols-2 grid-cols-1 overflow-hidden md:flex grid h-screen">
+      <div className="signup-image md:grid-cols-2 grid-cols-1 overflow-hidden md:flex grid ">
         <div className=" w-full md:pt-[250px] pt-10 md:pl-16 pl-4 ">
           <div className="flex items-center ">
             <AppetyLogoBig />
@@ -136,7 +136,7 @@ export const SignUpPage = () => {
           </p>
         </div>
 
-        <div className="mr-16  mb-9 md:mt-[102px] mt-7 rounded-[10px] bg-[#ffffff] md:pt-[64px] pt-10 px-10 md:w-[750px] w-full md:h-[760px] h-[880px]">
+        <div className="mr-16  mb-20 md:mt-[102px] mt-7 rounded-[10px] bg-[#ffffff] md:pt-[64px] pt-10 px-10 md:w-[750px] w-full md:h-[830px] h-[880px]">
           <div>
             <h3 className="text_24 font-medium text-[#000000]">Hello There,</h3>
             <p className=" pt-4 text-[#6B6968]">Create Your Account</p>
@@ -222,13 +222,11 @@ export const SignUpPage = () => {
                 </p>
               )}
             </div>
-
-            <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid mb-11">
-              <div className="mt-8">
+            <div className="mt-8">
                 <input
                   placeholder="Enter Phone Number"
                   type="number"
-                  className={`in_put ${errors.phoneNo && "input_error"}`}
+                  className={`in_put put ${errors.phoneNo && "input_error"}`}
                   {...register("phoneNo", {
                     required: "Phone Number is required",
                   })}
@@ -246,7 +244,13 @@ export const SignUpPage = () => {
                     placeholder="Enter Password"
                     className={`in_put ${errors.password && "input_error"}`}
                     {...register("password", {
-                      required: "Password is required",
+                      required: "password is required",
+                      pattern: {
+                        value:
+                          /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z!@#\$%\^\&*\)\(+=._-\d]{6,}$/,
+                        message:
+                          "Your password should contain at least a number and a letter and minimum of 6 characters",
+                      },
                     })}
                   />
                   {errors.password && (
@@ -257,19 +261,18 @@ export const SignUpPage = () => {
                 </div>
                 <span onClick={() => setShow(!show)}>
                   {show ? (
-                    <span className="absolute cursor-pointer right-[5%] top-[60%] ">
+                    <span className="absolute cursor-pointer right-[14px] top-[18px] ">
                       <OpenIcon />
                     </span>
                   ) : (
-                    <span className="absolute cursor-pointer right-[5%] top-[60%] ">
+                    <span className="absolute cursor-pointer right-[14px] top-[18px] ">
                       <CloseIcon />
                     </span>
                   )}
                 </span>
               </div>
-            </div>
 
-            <div>
+            <div className="pt-8">
               <button
                 type="submit"
                 className="submit_btn"

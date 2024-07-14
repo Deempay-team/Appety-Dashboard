@@ -15,7 +15,7 @@ export const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [apiResponseError, setApiResponseError] = useState("");
   const { login } = useAuth();
-  
+
   // CALL LOGIN API
   const {
     isLoading: isLoggingIn,
@@ -38,7 +38,7 @@ export const LoginPage = () => {
     if (email && password) {
       loginUser();
     }
-  }, [email, password])
+  }, [email, password]);
 
   useEffect(() => {
     if (data?.code === "000000") {
@@ -70,7 +70,7 @@ export const LoginPage = () => {
         10
       );
     }
-   // reset();
+    // reset();
   }, [data]);
 
   // SUBMMIT FORM
@@ -143,11 +143,11 @@ export const LoginPage = () => {
               </div>
               <span onClick={() => setShow(!show)}>
                 {show ? (
-                  <span className="absolute cursor-pointer right-[4%] top-[35%] ">
+                  <span className="absolute cursor-pointer right-[14px] top-[18px] ">
                     <OpenIcon />
                   </span>
                 ) : (
-                  <span className="absolute cursor-pointer right-[4%] top-[35%] ">
+                  <span className="absolute cursor-pointer right-[14px] top-[18px] ">
                     <CloseIcon />
                   </span>
                 )}
@@ -161,19 +161,17 @@ export const LoginPage = () => {
               >
                 Forgot password?
               </Link>
-            </div>
-            <div>
+            </div >
               <button
                 type="submit"
-                className="submit_btn"
+                className="submit_btn "
                 disabled={isLoggingIn}
               >
                 {isLoggingIn ? <SpinnerWhite /> : "Login"}
               </button>
-            </div>
           </form>
 
-          <p className="mt-6 mb-[70px] text-center text-sm ">
+          <p className="mt-5  mb-[0px] text-center text-sm ">
             Don't have an account?{" "}
             <Link to="/signup">
               <span className="text_16 text-[#f99762]">Sign Up</span>

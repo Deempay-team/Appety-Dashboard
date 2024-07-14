@@ -8,10 +8,9 @@ import secrets from "../../config/secrets";
 
 export const SignUpVerifyPage = () => {
   const navigate = useNavigate();
+  const oldEmail = JSON.parse(storage.fetch("RegisterDetails")).email;
   const baseURL = secrets.baseURL;
   const { email, token  } = useParams();
-  // const email = phoneNo.split("=")[1];
-  // const token = phoneNo.split("=")[0];
   const [isLoadingResend, setIsLoadingResend] = useState(false);
 
   const registeredUser = () => {
@@ -41,7 +40,7 @@ export const SignUpVerifyPage = () => {
     setIsLoadingResend(true);
       axios
         .get(
-          `${baseURL}account_verification/resend?email=${email}&method=REGISTER`,
+          `${baseURL}account_verification/resend?email=${oldEmail}&method=REGISTER`,
           {}
         )
         .then(function (response) {
@@ -66,11 +65,11 @@ export const SignUpVerifyPage = () => {
                 src={EmailImage}
                 alt="email"
               />
-              <h2 className="text_16 p-1 invisible">
+              <h2 className="text_16 p-3">
                 An email was sent to{" "}
-                <span className="text-[#f99762]">{email}</span>
+                <span className="text-[#f99762]">{oldEmail}</span>
               </h2>
-              <p lassName="text_14 pb-3 ">
+              <p lassName="text_14 pb-1 ">
                 Please confirm your email by clicking the link we sent to your
                 email inbox
               </p>

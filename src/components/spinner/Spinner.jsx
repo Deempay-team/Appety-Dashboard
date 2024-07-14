@@ -10,7 +10,7 @@ export const SpinnerOrange = () => {
 
 export const SpinnerWhite = () => {
   return (
-    <div class="text-center justify-center w-6 h-6 border-[3px] border-[#ffffff] mx-auto rounded-full loader"></div>
+    <div class="text-center justify-center w-5 h-5 border-[3px] border-[#ffffff] mx-auto rounded-full loader"></div>
   );
 };
 

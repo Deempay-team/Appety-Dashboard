@@ -53,6 +53,13 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #FDDCCB;
   }
+
+
+.put::-webkit-outer-spin-button,
+.put::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 }
 
 
@@ -113,28 +120,28 @@ body {
   }
 
   .in_put {
-    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] px-4 dark:placeholder-[#bdbdbd] h-[52px];
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] outline-none px-4 dark:placeholder-[#bdbdbd] h-[52px];
   }
 
   
   .input_password {
-    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] px-4 dark:placeholder-[#bdbdbd] h-[52px];
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] px-4 dark:placeholder-[#bdbdbd] h-[52px] outline-none ;
   }
 
   .input-time {
-    @apply bg-[#ffffff] border border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px]  px-4 focus:border-[#F99762] dark:border-[#f99762] dark:placeholder-[#bdbdbdg] h-[40px];
+    @apply bg-[#ffffff] border  outline-none border-[#6B6968] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[140px]  px-4 focus:border-[#F99762] dark:border-[#f99762] dark:placeholder-[#bdbdbdg] h-[40px];
   }
 
   .input-short {
-    @apply bg-[#ffffff] border border-[#6B6968] text-center  text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[90px] focus:border-[#F99762] mx-auto dark:placeholder-[#F99762] h-[40px];
+    @apply bg-[#ffffff] border  outline-none border-[#6B6968] text-center  text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block w-[90px] focus:border-[#F99762] mx-auto dark:placeholder-[#F99762] h-[40px];
   }
 
   .input-shorter {
-    @apply bg-[#ffffff] border border-[#6B6968] text-center hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block max-w-10 px-2 dark:placeholder-[#F99762] h-[40px];
+    @apply bg-[#ffffff] border  outline-none border-[#6B6968] text-center hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-[5px] block max-w-10 px-2 dark:placeholder-[#F99762] h-[40px];
   }
 
   .in_pt {
-    @apply bg-[#f7f7f7] border-[none]  text-[#000000] hover:border-[#F99762]  text-sm   dark:bg-[#f7f7f7] focus:border-[#F99762]   dark:text-[#000000]  dark:border-[#1a71ff];
+    @apply bg-[#f7f7f7] border-[none]  outline-none  text-[#000000] hover:border-[#F99762]  text-sm   dark:bg-[#f7f7f7] focus:border-[#F99762]   dark:text-[#000000]  dark:border-[#1a71ff];
   }
 
   .input_error {
