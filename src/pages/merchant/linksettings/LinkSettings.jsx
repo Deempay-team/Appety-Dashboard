@@ -39,6 +39,7 @@ const LinkSettingsPage = () => {
   const [startTime, setstartTime] = useState("");
   const [endTimeOld, setEndTimeOld] = useState("");
   const [startTimeOld, setstartTimeOld] = useState("");
+  const [dayFull, setDayFull] = useState("");
   const [status, setStatus] = useState("1");
   const [isEditMonday, setIsEditMonday] = useState(true);
   const [timeList, setTimeList] = useState([]);
@@ -60,6 +61,7 @@ const LinkSettingsPage = () => {
   const [waitTimeList, setWaitTimeList] = useState([]);
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [isLoadingRemove, setIsLoadingRemove] = useState(false);
+  const [isLoadingAdd, setIsLoadingAdd] = useState(false);
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
   const [preOrderUrl, setPreOrderUrl] = useState("");
   const [isSwitchOn, setIsSwitchOn] = useState("");
@@ -76,6 +78,7 @@ const LinkSettingsPage = () => {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm();
 
@@ -304,6 +307,7 @@ const LinkSettingsPage = () => {
       setIsLoadingSaturday(false);
       setIsLoadingSunday(false);
       setIsLoadingRemove(false);
+      setIsLoadingAdd(false);
 
       setIsEditMonday(true);
       setIsEditTuesday(true);
@@ -412,43 +416,50 @@ const LinkSettingsPage = () => {
   const handleEditMon = () => {
     setWaitTimeId(timeList[0]?.waitTimeId);
     setStatus("1");
-    setIsLoadingMonday(true);
+    setDayFull("MONDAY")
+   // setIsLoadingMonday(true);
   };
 
   const handleEditTue = () => {
     setWaitTimeId(timeList[1]?.waitTimeId);
     setStatus("1");
-    setIsLoadingTuesday(true);
+    setDayFull("TUESDAY")
+   // setIsLoadingTuesday(true);
   };
 
   const handleEditWed = () => {
     setWaitTimeId(timeList[2]?.waitTimeId);
     setStatus("1");
-    setIsLoadingWednesday(true);
+    setDayFull("WEDNESDAY")
+   // setIsLoadingWednesday(true);
   };
 
   const handleEditThur = () => {
     setWaitTimeId(timeList[3]?.waitTimeId);
     setStatus("1");
-    setIsLoadingThursday(true);
+   // setIsLoadingThursday(true);
+   setDayFull("THURSDAY")
   };
 
   const handleEditFri = () => {
     setWaitTimeId(timeList[4]?.waitTimeId);
     setStatus("1");
-    setIsLoadingFriday(true);
+    setDayFull("FRIDAY")
+   // setIsLoadingFriday(true);
   };
 
   const handleEditSat = () => {
     setWaitTimeId(timeList[5]?.waitTimeId);
     setStatus("1");
-    setIsLoadingSaturday(true);
+    setDayFull("SATURDAY")
+    //setIsLoadingSaturday(true);
   };
 
   const handleEditSun = () => {
     setWaitTimeId(timeList[6]?.waitTimeId);
     setStatus("1");
-    setIsLoadingSunday(true);
+    setDayFull("SUNDAY")
+   // setIsLoadingSunday(true);
   };
 
   const addBack = () => {
@@ -456,6 +467,7 @@ const LinkSettingsPage = () => {
     setWaitTimeId(timeList[listIndex]?.waitTimeId);
     setEndTime(timeList[listIndex]?.endTime);
     setstartTime(timeList[listIndex]?.startTime);
+    setIsLoadingAdd(true);
   };
 
   const timeStatus = (
@@ -464,7 +476,7 @@ const LinkSettingsPage = () => {
         onClick={addBack}
         className="cursor-pointer block px-4 py-4 text_16 text-[#000000]"
       >
-        Add Back
+        {isLoadingAdd ? <SpinnerOrangeMedium /> : "Add Back"}
       </span>
     </Menu>
   );
@@ -479,8 +491,7 @@ const LinkSettingsPage = () => {
       setAdsVideoUrl(`https://${adsVideoUrl}`);
       setIsLoadingVideoUrl(true)
     }
-
-    console.log("data", data);
+    reset();
   };
 
   const onSubmitHandler = (data) => {
@@ -492,32 +503,32 @@ const LinkSettingsPage = () => {
       setEndTime(endTime);
     }
 
-    // switch (dayFull) {
-    //   case "MONDAY":
-    //     setIsLoadingMonday(true);
-    //     break;
-    //   case "TUESDAY":
-    //     setIsLoadingTuesday(true);
-    //     break;
-    //   case "WEDNESDAY":
-    //     setIsLoadingWednesday(true);
-    //     break;
-    //   case "THURSDAY":
-    //     setIsLoadingThursday(true);
-    //     break;
-    //   case "FRIDAY":
-    //     setIsLoadingFriday(true);
-    //     break;
-    //     case "SATURDAY":
-    //       setIsLoadingSaturday(true);
-    //       break;
-    //     case "SUNDAY":
-    //       setIsLoadingSunday(true);
-    //       break;
-    //   default:
-    //     setIsLoadingMonday(true);
-    //     break;
-    // }
+    switch (dayFull) {
+      case "MONDAY":
+        setIsLoadingMonday(true);
+        break;
+      case "TUESDAY":
+        setIsLoadingTuesday(true);
+        break;
+      case "WEDNESDAY":
+        setIsLoadingWednesday(true);
+        break;
+      case "THURSDAY":
+        setIsLoadingThursday(true);
+        break;
+      case "FRIDAY":
+        setIsLoadingFriday(true);
+        break;
+        case "SATURDAY":
+          setIsLoadingSaturday(true);
+          break;
+        case "SUNDAY":
+          setIsLoadingSunday(true);
+          break;
+      default:
+        setIsLoadingMonday(true);
+        break;
+    }
   };
 
   useEffect(() => {

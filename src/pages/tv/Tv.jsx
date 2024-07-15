@@ -20,6 +20,7 @@ export const TvPage = () => {
   const [merchId, setMerchId] = useState("");
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
+  const [playing, setPlaying] = useState(true);
   const [summaryList, setSummaryList] = useState([]);
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
 
@@ -158,6 +159,7 @@ export const TvPage = () => {
                   width="640"
                   //height="100vh"
                   height="720px"
+                  playing={playing}
                 />
               </div>
             </div>
