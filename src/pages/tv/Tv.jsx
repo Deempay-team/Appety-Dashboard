@@ -15,9 +15,7 @@ export const TvPage = () => {
   const { monitorUrl } = useParams();
   const baseURL = secrets.baseURL;
   const [linkUrl, setLinkUrl] = useState("");
-  const [adsVideoUrl, setAdsVideoUrl] = useState(
-    "https://www.youtube.com/watch?v=LXb3EKWsInQ"
-  );
+  const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [merchId, setMerchId] = useState("");
   const [merchName, setMerchName] = useState("");
@@ -37,7 +35,7 @@ export const TvPage = () => {
           setLogoUrl(tvData?.logoUrl);
           setMerchName(tvData?.merchName);
           setLinkUrl(tvData?.linkUrl);
-          // setAdsVideoUrl(tvData?.adsVideoUrl);
+          setAdsVideoUrl(tvData?.adsVideoUrl);
           setSummaryList(tvData?.summary);
 
           console.log("tvData?", tvData);

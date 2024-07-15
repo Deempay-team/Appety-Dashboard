@@ -19,6 +19,7 @@ import {
   SpinnerOrangeMedium,
   SpinnerWhite,
   SpinnerOrange,
+  SpinnerMediumWhite,
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
 import { Dropdown, Menu } from "antd";
@@ -32,7 +33,7 @@ const LinkSettingsPage = () => {
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const linkUrl = JSON.parse(storage.fetch("merchantDetails")).linkUrl;
   const switchIsOn = JSON.parse(storage.fetch("merchantDetails")).linkUrlStatus;
-  const orderUrl = JSON.parse(storage.fetch("merchantDetails")).preOrderUrl;
+  const monitorUrl = JSON.parse(storage.fetch("merchantDetails")).monitorUrl;
   const [waitTimeId, setWaitTimeId] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setstartTime] = useState("");
@@ -67,6 +68,8 @@ const LinkSettingsPage = () => {
   const [isTimeFetch, setIsTimeFetch] = useState(true);
   const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [copied, setCopied] = useState(true);
+
+  // monitorUrl: res?.data?.data?.monitorUrl,
 
   // FORM VALIDATION
   const {
@@ -223,6 +226,7 @@ const LinkSettingsPage = () => {
       merchId,
       linkUrlStatus,
       preOrderUrl,
+      adsVideoUrl,
     });
 
   //CALL QUERY WAIT-TIME API
@@ -248,9 +252,9 @@ const LinkSettingsPage = () => {
     axios
       .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           setIsLoadingTime(false);
-          const daysData = res.data.data;
+          const daysData = res?.data?.data;
           setTimeList(daysData);
         }
       })
@@ -264,21 +268,24 @@ const LinkSettingsPage = () => {
     axios
       .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           storage.add(
             "merchantDetails",
             JSON.stringify({
-              merchStatus: res.data.data?.merchStatus,
-              merchName: res.data.data?.merchName,
-              merchPhone: res.data.data?.merchPhone,
-              contactName: res.data.data?.contactName,
-              linkUrl: res.data.data?.linkUrl,
-              linkUrlStatus: res.data.data?.linkUrlStatus,
-              logoUrl: res.data.data?.logoUrl,
-              preOrderUrl: res.data.data?.preOrderUrl,
+              merchStatus: res?.data?.data?.merchStatus,
+              merchName: res?.data?.data?.merchName,
+              merchPhone: res?.data?.data?.merchPhone,
+              contactName: res?.data?.data?.contactName,
+              linkUrl: res?.data?.data?.linkUrl,
+              linkUrlStatus: res?.data?.data?.linkUrlStatus,
+              logoUrl: res?.data?.data?.logoUrl,
+              preOrderUrl: res?.data?.data?.preOrderUrl,
+              monitorUrl: res?.data?.data?.monitorUrl,
             })
           );
-          isSwitchOn(res.data.data?.linkUrlStatus);
+          isSwitchOn(res?.data?.data?.linkUrlStatus);
+
+          console.log("merchant-error", res.data);
         }
       })
       .catch(function (error) {
@@ -382,17 +389,17 @@ const LinkSettingsPage = () => {
     if (updateMerchantData) {
       queryMerchantUpdate();
       setIsLoadingOrderUrl(false);
+      setIsLoadingVideoUrl(false)
       Notify("success", "Your Status has being updated Successfully!");
     }
   }, [updateMerchantData]);
 
   //API TO TURN OFF LINK AUTOMATICALLY
   useEffect(() => {
-    if (linkUrlStatus || preOrderUrl) {
+    if (linkUrlStatus || preOrderUrl || adsVideoUrl) {
       fetchUpdateMerchant();
-      setIsLoadingOrderUrl(true);
     }
-  }, [linkUrlStatus, preOrderUrl]);
+  }, [linkUrlStatus, preOrderUrl, adsVideoUrl]);
 
   const onChange = (checked) => {
     if (checked) {
@@ -463,10 +470,17 @@ const LinkSettingsPage = () => {
   );
 
   const onSubmitPreOrder = (data) => {
-    const { preOrderUrl } = data;
+    const { preOrderUrl, adsVideoUrl } = data;
     if (preOrderUrl) {
       setPreOrderUrl(`https://${preOrderUrl}`);
+      setIsLoadingOrderUrl(true);
     }
+    if (adsVideoUrl) {
+      setAdsVideoUrl(`https://${adsVideoUrl}`);
+      setIsLoadingVideoUrl(true)
+    }
+
+    console.log("data", data);
   };
 
   const onSubmitHandler = (data) => {
@@ -519,7 +533,7 @@ const LinkSettingsPage = () => {
   //COPY TEXT TO CLIPBOARD
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(orderUrl)
+      .writeText(`https://queue.appety.com.sg/display-tv/${monitorUrl}`)
       .then(() => {
         setCopied(false);
         setTimeout(() => {
@@ -1589,19 +1603,85 @@ const LinkSettingsPage = () => {
                         https://
                       </button>
                       <input
-                        placeholder={orderUrl ? orderUrl : "Enter Preorder url"}
-                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#f99762] focus:border-[#F99762] h-[64px]"
+                        //placeholder={orderUrl ? orderUrl : "Enter Preorder url"}
+                        placeholder= "Enter Preorder url"
+                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762]  focus:border-[#F99762] outline-none text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#f99762] h-[64px]"
                         {...register("preOrderUrl")}
                       />
                       <button
                         type="submit"
                         className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
                       >
-                        {isLoadingOrderUrl ? <SpinnerOrangeMedium /> : "Save"}
+                        {isLoadingOrderUrl ? <SpinnerMediumWhite /> : "Save"}
                       </button>
                     </form>
                   </span>
                 </div>
+
+                <div class="mx-6 border-[0.5px] border-[#e0e0e0] "></div>
+                <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
+                <span class="text-base font-normal">
+                    <h1 className="text_18">Monitor Link</h1>
+                    <p className="text_12 mt-2 text-[#6b6968] mb-4">
+                      This will play on the monitor
+                    </p>
+                    <form
+                      onSubmit={handleSubmit(onSubmitPreOrder)}
+                      className="flex"
+                    >
+                      <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
+                      {`https://queue.appety.com.sg/display-tv/${monitorUrl}`}
+                      </button>
+                 
+                      <button
+                        type="submit"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] "
+                      >
+                         {copied ? (
+                        <span
+                          class="  cursor-pointer"
+                          onClick={handleCopy}
+                        >
+                          <CopyIcon />
+                        </span>
+                      ) : (
+                        <span
+                          class=" cursor-pointer"
+                          onClick={handleCopy}
+                        >
+                          <CopiedIcon />
+                        </span>
+                      )}
+                      </button>
+                    </form>
+                  </span>
+                  <span class="text-base font-normal">
+                    <h1 className="text_18">Video Add URL</h1>
+                    <p className="text_12 mt-2 text-[#6b6968] mb-4">
+                      This will play on the monitor
+                    </p>
+                    <form
+                      onSubmit={handleSubmit(onSubmitPreOrder)}
+                      className="flex"
+                    >
+                      <button className="text-[#000] md:py-[20px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
+                        https://
+                      </button>
+                      <input
+                        placeholder="Enter Video url"
+                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762]  focus:border-[#F99762] outline-none text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
+                        {...register("adsVideoUrl")}
+                      />
+                      <button
+                        type="submit"
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
+                      >
+                        {isLoadingVideoUrl ? <SpinnerMediumWhite /> : "Save"}
+                      </button>
+                    </form>
+                  </span>
+                </div>
+
 
                 <div class="mx-6 border-[0.5px] border-[#e0e0e0]"></div>
                 <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
@@ -1630,50 +1710,7 @@ const LinkSettingsPage = () => {
                       </div>
                     </div>
                   </span>
-                  <span class="text-base font-normal">
-                    <h1 className="text_18">Video Add URL</h1>
-                    <p className="text_12 mt-2 text-[#6b6968] mb-4">
-                      Input your video URL to view on the monitor
-                    </p>
-                    <form
-                      onSubmit={handleSubmit(onSubmitPreOrder)}
-                      className="flex"
-                    >
-                      <button className="text-[#000] md:py-[20px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">
-                        https://
-                      </button>
-                      <input
-                        placeholder={adsVideoUrl ? adsVideoUrl : "Enter Video url"}
-                        className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762] text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#8d8d8d] h-[64px]"
-                        {...register("adsVideoUrl")}
-                      />
-                      <button
-                        type="submit"
-                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
-                      >
-                        {isLoadingVideoUrl ? <SpinnerOrangeMedium /> : "Save"}
-                      </button>
-                    </form>
-
-                    <span class="flex  space-x-2 items-center mt-5">
-                      <p class="text_16_500 flex text-[#000000]">Video Url:<span className="text-[#f99762] pl-2 underline">{orderUrl}</span></p>
-                      {copied ? (
-                        <span
-                          class="  cursor-pointer"
-                          onClick={handleCopy}
-                        >
-                          <CopyIcon />
-                        </span>
-                      ) : (
-                        <span
-                          class=" cursor-pointer"
-                          onClick={handleCopy}
-                        >
-                          <CopiedIcon />
-                        </span>
-                      )}
-                    </span>
-                  </span>
+                 
                 </div>
               </div>
             </>

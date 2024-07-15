@@ -83,20 +83,21 @@ export const MerchantHomePage = () => {
     axios
       .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           setMerchName(res.data.data?.merchName);
           setLogoUrl(res.data.data?.logoUrl);
           storage.add(
             "merchantDetails",
             JSON.stringify({
-              merchStatus: res.data.data?.merchStatus,
-              merchName: res.data.data?.merchName,
-              merchPhone: res.data.data?.merchPhone,
-              contactName: res.data.data?.contactName,
-              linkUrl: res.data.data?.linkUrl,
-              linkUrlStatus: res.data.data?.linkUrlStatus,
-              logoUrl: res.data.data?.logoUrl,
-              preOrderUrl: res.data.data?.preOrderUrl,
+              merchStatus: res?.data?.data?.merchStatus,
+              merchName: res?.data?.data?.merchName,
+              merchPhone: res?.data?.data?.merchPhone,
+              contactName: res?.data?.data?.contactName,
+              linkUrl: res?.data?.data?.linkUrl,
+              linkUrlStatus: res?.data?.data?.linkUrlStatus,
+              logoUrl: res?.data?.data?.logoUrl,
+              preOrderUrl: res?.data?.data?.preOrderUrl,
+              monitorUrl: res?.data?.data?.monitorUrl,
             })
           );
         }
@@ -112,11 +113,11 @@ export const MerchantHomePage = () => {
     axios
       .get(`${baseURL}api/v1/wait/summary/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           setIsLoadingWaitType(false);
-          setQueueType(res.data.data);
-          setWaitTypeId(res.data.data[0].waitTypeId);
-          setWaitTypeName(res.data.data[0].waitTypeName);
+          setQueueType(res?.data?.data);
+          setWaitTypeId(res?.data?.data[0].waitTypeId);
+          setWaitTypeName(res?.data?.data[0].waitTypeName);
         }
       })
       .catch(function (error) {
@@ -131,9 +132,9 @@ export const MerchantHomePage = () => {
       axios
         .get(`${baseURL}api/v1/wait/summary/${merchId}`)
         .then(function (res) {
-          if (res.data.code === "000000") {
+          if (res?.data?.code === "000000") {
             setIsLoadingWaitType(false);
-            setQueueType(res.data.data);
+            setQueueType(res?.data?.data);
             setIsButtonWaitTye(false);
           }
         })
@@ -189,20 +190,20 @@ export const MerchantHomePage = () => {
           `${baseURL}api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
-          if (res.data.code === "000000") {
+          if (res?.data?.code === "000000") {
             setIsLoadingWait(false);
-            setQueueList(res.data.data);
-            setWaitSize(res.data.data.length);
-            setCurrentName(res.data.data[0]?.cusName ?? "-");
-            setCurrentPax(res.data.data[0]?.paxNo ?? "-");
-            setCurrentPhone(res.data.data[0]?.cusPhone ?? "-");
-            setCurrentWaitId(res.data.data[0]?.waitId ?? "-");
-            setCurrentWait(res.data.data[0]?.waitNo ?? "-");
+            setQueueList(res?.data?.data);
+            setWaitSize(res?.data?.data.length);
+            setCurrentName(res?.data?.data[0]?.cusName ?? "-");
+            setCurrentPax(res?.data?.data[0]?.paxNo ?? "-");
+            setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
+            setCurrentWaitId(res?.data?.data[0]?.waitId ?? "-");
+            setCurrentWait(res?.data?.data[0]?.waitNo ?? "-");
 
-            if (res.data.data[0]?.waitCall === "1") {
+            if (res?.data?.data[0]?.waitCall === "1") {
               setCurrentStatus("CALLED");
             } else {
-              setCurrentStatus(res.data.data[0]?.status ?? "-");
+              setCurrentStatus(res?.data?.data[0]?.status ?? "-");
             }
             setStatusUpdateSuccess(false);
           }
@@ -220,9 +221,9 @@ export const MerchantHomePage = () => {
           `${baseURL}api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
-          if (res.data.code === "000000") {
+          if (res?.data?.code === "000000") {
             setIsLoadingServed(false);
-            setServedList(res.data.data);
+            setServedList(res?.data?.data);
           }
         })
         .catch(function (error) {
