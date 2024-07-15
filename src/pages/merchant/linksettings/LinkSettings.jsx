@@ -238,10 +238,10 @@ const LinkSettingsPage = () => {
     axios
       .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
+        if (res?.data?.code === "000000") {
           setIsTimeFetch(false);
           setIsLoadingTime(false);
-          const daysData = res.data.data;
+          const daysData = res?.data?.data;
           setTimeList(daysData);
         }
       })
@@ -353,8 +353,8 @@ const LinkSettingsPage = () => {
   const handleWaitTime = (index) => {
     setWaitTimeList(timeList);
     setListIndex(index);
-    setstartTimeOld(timeList[index].startTime);
-    setEndTimeOld(timeList[index].endTime);
+    setstartTimeOld(timeList[index]?.startTime);
+    setEndTimeOld(timeList[index]?.endTime);
   };
 
   //TO REMOVE WAIT-TIME
@@ -585,7 +585,7 @@ const LinkSettingsPage = () => {
                     <tbody className=" ">
                       {/* MONDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        {timeList[0].status === "1" ? (
+                        {timeList[0]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">Monday</td>
                           </>
@@ -598,7 +598,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditMonday ? (
                           <>
-                            {timeList[0].status === "1" ? (
+                            {timeList[0]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -729,7 +729,7 @@ const LinkSettingsPage = () => {
 
                       {/* TUESDAY ROW */}
                       <tr className="py-4  bg-[#ffffff]">
-                        {timeList[1].status === "1" ? (
+                        {timeList[1]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">
                               Tuesday
@@ -744,7 +744,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditTuesday ? (
                           <>
-                            {timeList[1].status === "1" ? (
+                            {timeList[1]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -868,7 +868,7 @@ const LinkSettingsPage = () => {
 
                       {/* WEDNESDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        {timeList[2].status === "1" ? (
+                        {timeList[2]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">
                               Wednesday
@@ -883,7 +883,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditWednesday ? (
                           <>
-                            {timeList[2].status === "1" ? (
+                            {timeList[2]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -1011,7 +1011,7 @@ const LinkSettingsPage = () => {
 
                       {/* THURSDAY ROW */}
                       <tr className="py-4  bg-[#ffffff]">
-                        {timeList[3].status === "1" ? (
+                        {timeList[3]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">
                               Thursday
@@ -1026,7 +1026,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditThursday ? (
                           <>
-                            {timeList[3].status === "1" ? (
+                            {timeList[3]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -1154,7 +1154,7 @@ const LinkSettingsPage = () => {
 
                       {/* FRIDAY ROW */}
                       <tr className="border-y-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        {timeList[4].status === "1" ? (
+                        {timeList[4]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">Friday</td>
                           </>
@@ -1167,7 +1167,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditFriday ? (
                           <>
-                            {timeList[4].status === "1" ? (
+                            {timeList[4]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -1291,7 +1291,7 @@ const LinkSettingsPage = () => {
 
                       {/* SATURDAY ROW */}
                       <tr className=" py-4  bg-[#ffffff]">
-                        {timeList[5].status === "1" ? (
+                        {timeList[5]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">
                               Saturday
@@ -1306,7 +1306,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditSaturday ? (
                           <>
-                            {timeList[5].status === "1" ? (
+                            {timeList[5]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime
@@ -1434,7 +1434,7 @@ const LinkSettingsPage = () => {
 
                       {/* SUNDAY ROW */}
                       <tr className="border-t-[0.5px] border-[#d9d9d9] py-4  bg-[#ffffff]">
-                        {timeList[6].status === "1" ? (
+                        {timeList[6]?.status === "1" ? (
                           <>
                             <td className="text_16  py-6 capitalize">Sunday</td>
                           </>
@@ -1447,7 +1447,7 @@ const LinkSettingsPage = () => {
                         )}
                         {isEditSunday ? (
                           <>
-                            {timeList[6].status === "1" ? (
+                            {timeList[6]?.status === "1" ? (
                               <>
                                 <td className="text_16 py-6 ">
                                   {isLoadingTime

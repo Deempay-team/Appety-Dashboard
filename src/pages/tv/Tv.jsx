@@ -17,7 +17,6 @@ export const TvPage = () => {
   const [linkUrl, setLinkUrl] = useState("");
   const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [merchId, setMerchId] = useState("");
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [playing, setPlaying] = useState(true);

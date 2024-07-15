@@ -16,9 +16,8 @@ import secrets from "../../config/secrets";
 export const UserHomePage = () => {
   const { linkUrl } = useParams();
   const baseURL = secrets.baseURL;
+  const audioSound = new Audio("../../assests/sounds/success-sounds.mp3");
   const [fillDataPage, setFillDataPage] = useState(true);
-  // const [queueWaitPage, setQueueWaitPage] = useState(false);
-  // const [notOpenPage, setNotOpenPage] = useState(false);
   const [isOpenPage, setIsOpenPage] = useState(true);
   const [isEmail, setIsEmail] = useState(false);
   const [progressBar, setProgressBar] = useState(true);
@@ -203,7 +202,10 @@ useEffect(() => {
 
             if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
 
-            if (res?.data?.data?.waitCall === "1") setProgressBar(false);
+            if (res?.data?.data?.waitCall === "1") {
+              setProgressBar(false);
+             // audioSound.play();
+            }
           }
         })
         .catch(function (error) {
@@ -222,6 +224,10 @@ useEffect(() => {
     setPaxNo(paxNo);
     //setCusPhone(`65${cusPhone}`);
   };
+
+  const testClick = () => {
+    audioSound.play();
+  }
 
   return (
     <div className="bg-[#F6F7F9]">
@@ -269,6 +275,12 @@ useEffect(() => {
         {/* FORM FILL-IN SIDE */}
         {fillDataPage ? (
         <div className="bg-[#F6F7F9] ">
+
+          {/* <button onClick={testClick}>
+            test00
+          </button> */}
+
+
           <div className=" max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
             <h1 className="text-2xl text-black font-semibold mb-[4px] mt-10">
               Hello There,

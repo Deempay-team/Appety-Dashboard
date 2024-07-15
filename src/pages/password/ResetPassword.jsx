@@ -88,11 +88,11 @@ export const ResetPasswordPage = () => {
               )}
               <span onClick={() => setShow(!show)}>
                 {show ? (
-                  <span className="absolute right-[14px] top-[18px] cursor-pointer">
+                  <span className="absolute right-[14px] top-[53px] cursor-pointer">
                     <OpenIcon />
                   </span>
                 ) : (
-                  <span className="absolute right-[14px] top-[18px] cursor-pointer">
+                  <span className="absolute right-[14px] top-[53px] cursor-pointer">
                     <CloseIcon />
                   </span>
                 )}

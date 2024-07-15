@@ -439,8 +439,9 @@ export const MerchantHomePage = () => {
 
       {/* BODY */}
       <div className="flex min-h-screen items-start fixed">
+
         {/* LEFT SIDE */}
-        <div class="sticky top-0  xl:w-[380px] w-[280px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
+        <div class="sticky top-0  w-[380px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
@@ -559,8 +560,8 @@ export const MerchantHomePage = () => {
         </div>
 
         {/* CENTER */}
-        <div className="flex-1  h-screen overflow-y-auto bg-[#F6F7F9]">
-          <main className="px-10 py-8">
+        <div className="flex-1 2xl:px-[200px] px-10 h-screen overflow-y-auto bg-[#F6F7F9]">
+          <main className="  py-8">
             <div className="mt-1 mb-8 ">
               <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[5px] ">
                 <table className=" w-full text-base text-center  border-collapse ">
@@ -811,7 +812,7 @@ export const MerchantHomePage = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="sticky top-0  w-[395px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
+        <div className="sticky top-0 w-[380px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
           <div className="flow-root border-b border-[#d9d9d9]">
             <span className="flex  items-center justify-center py-6 ">
               {isServed ? (
