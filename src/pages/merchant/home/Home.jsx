@@ -272,7 +272,6 @@ export const MerchantHomePage = () => {
       setIsLoadingCancelModal(false);
       setWaitCall("0");
       setIsLoadingWaitCall(false);
-      // show notification
       Notify(
         "success",
         "Updated Succesfully!",
@@ -338,7 +337,6 @@ export const MerchantHomePage = () => {
     setShowCancelModal(false);
   };
 
- 
   return (
     <>
       {/* HEADER */}
@@ -964,7 +962,6 @@ export const MerchantHomePage = () => {
               >
                 <CloseModalIcon />
               </span>
-
               <div className="">
                 <div class="py-6  text-[#6b6968]  w-full border-b border-[#d9d9d9]">
                   <div className="pb-8 grid gap-8 grid-cols-2	">
@@ -986,7 +983,6 @@ export const MerchantHomePage = () => {
                       </p>
                     </div>
                   </div>
-
                   <div className="pb-8 grid gap-8 grid-cols-2">
                     <div>
                       <p className="text_14 text-[#6b6968] capitalize ">Pax</p>
@@ -1003,7 +999,6 @@ export const MerchantHomePage = () => {
                       </p>
                     </div>
                   </div>
-
                   <div className="grid grid-cols-2 gap-8 pb-3">
                     <div>
                       <p className="text_14 text-[#6b6968] capitalize ">
@@ -1021,7 +1016,6 @@ export const MerchantHomePage = () => {
                     </div>
                   </div>
                 </div>
-
                 <button
                   onClick={cancelQueueModal}
                   type="submit"
