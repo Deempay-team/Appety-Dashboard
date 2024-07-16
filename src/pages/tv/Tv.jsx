@@ -4,7 +4,6 @@ import axios from "axios";
 import QRCode from "qrcode.react";
 import { FaUserCircle } from "react-icons/fa";
 import { currentDate, currentTime } from "../../utils/functions";
-import storage from "../../utils/storage";
 import secrets from "../../config/secrets";
 import ReactPlayer from "react-player";
 import { SpinnerOrange } from "../../components/spinner/Spinner";
@@ -19,7 +18,7 @@ export const TvPage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
-  const [playing, setPlaying] = useState(true);
+ // const [playing, setPlaying] = useState(true);
   const [summaryList, setSummaryList] = useState([]);
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
 
@@ -31,12 +30,13 @@ export const TvPage = () => {
         if (res?.data?.code === "000000") {
           setIsMonitorFetch(false);
           const tvData = res?.data?.data;
-          // setMerchId(tvData?.merchId);
           setLogoUrl(tvData?.logoUrl);
           setMerchName(tvData?.merchName);
           setLinkUrl(tvData?.linkUrl);
           setAdsVideoUrl(tvData?.adsVideoUrl);
           setSummaryList(tvData?.summary);
+
+
 
           console.log("tvData?", tvData);
         }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { currentDate, currentTime } from "../../utils/functions";
-import { SpinnerWhite } from "../../components/spinner/Spinner";
+import { SpinnerWhite, SpinnerOrange } from "../../components/spinner/Spinner";
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
 import {
@@ -46,6 +46,7 @@ export const UserHomePage = () => {
   const [posPercent, setPosPercent] = useState(0);
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
+  const [isUserFetch, setIsUserFetch] = useState(true);
 
   const audio = new Audio(ringer);
   audio.loop = true
@@ -55,7 +56,6 @@ export const UserHomePage = () => {
     audio.play();
   }
 
-
   var timeOutId;
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
@@ -63,13 +63,15 @@ export const UserHomePage = () => {
     axios
       .get(`${baseURL}api/v1/link/fetch/${linkUrl}`)
       .then(function (res) {
-        if (res.data.code === "000000") {
-          setMerchId(res.data?.data.merchId);
-          setLogoUrl(res.data?.data.logoUrl);
-          setMerchName(res.data?.data.merchName);
-          setWaitTypeList(res.data?.data.waitType);
-          setLinkUrlStatus(res.data?.data.linkUrlStatus);
-          setPreOrderUrl(res.data?.data.preOrderUrl);
+        if (res?.data?.code === "000000") {
+          setMerchId(res?.data?.data?.merchId);
+          setLogoUrl(res?.data?.data?.logoUrl);
+          setMerchName(res?.data?.data?.merchName);
+          setWaitTypeList(res?.data?.data?.waitType);
+          setLinkUrlStatus(res?.data?.data?.linkUrlStatus);
+          setPreOrderUrl(res?.data?.data?.preOrderUrl);
+
+          setIsUserFetch(false);
         }
       })
       .catch(function (error) {
@@ -163,8 +165,6 @@ useEffect(() => {
       setPersonNo(data?.data?.paxNo);
       setWaitStatus(data?.data?.status);
       setFillDataPage(false);
-      //setQueueWaitPage(true);
-      //setNotOpenPage(false);
       setWaitId(data?.data?.waitId);
 
       var totalQueue = data?.data?.totalNumberQueue;
@@ -199,8 +199,6 @@ useEffect(() => {
             setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
             setWaitStatus(res?.data?.data?.status);
             setFillDataPage(false);
-           // setQueueWaitPage(true);
-            //setNotOpenPage(false);
             var totalQueue = res?.data?.data?.totalNumberQueue;
             var waitos = res?.data?.data?.waitPosition;
             var percentPos =
@@ -228,17 +226,23 @@ useEffect(() => {
   const onSubmitHandler = (data) => {
     const { email, cusPhone, cusName, paxNo } = data;
     setEmail(email);
-    setCusPhone(cusPhone);
+    //setCusPhone(cusPhone);
     setCusName(cusName);
     setPaxNo(paxNo);
-    //setCusPhone(`65${cusPhone}`);
+    setCusPhone(`65${cusPhone}`);
   };
 
- 
   return (
+
     <div className="bg-[#F6F7F9]">
-      {/* HEADER */}
-      <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
+      {isUserFetch ? 
+       <span className="flex items-center justify-center content-center pt-5 h-screen ">
+       <SpinnerOrange />
+     </span>
+       : 
+      <>
+       {/* HEADER */}
+       <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
@@ -314,24 +318,24 @@ useEffect(() => {
               <div className="mt-10">
                 <input
                   type="number"
-                  placeholder="Enter Your Phone Number"
+                  placeholder="Enter Your Phone Number "
                   className={`in_put bg-[#ffffff] ${
                     errors.cusPhone && "input_error"
                   }`}
-                  // {...register("cusPhone", {
-                  //   required: "Phone number is required",
-                  //   minLength: {
-                  //     value: 11,
-                  //     message: "minimum allowed number is 8",
-                  //   },
-                  //   maxLength: {
-                  //     value: 11,
-                  //     message: "maximum allowed number is 8",
-                  //   },
-                  // })}
                   {...register("cusPhone", {
-                    required: "Phone Number is required",
+                    required: "Phone number is required",
+                    minLength: {
+                      value: 8,
+                      message: "minimum allowed number is 8",
+                    },
+                    maxLength: {
+                      value: 8,
+                      message: "maximum allowed number is 8",
+                    },
                   })}
+                  // {...register("cusPhone", {
+                  //   required: "Phone Number is required",
+                  // })}
                 />
                 {errors.cusPhone && (
                   <p className=" mt-1 text-sm text-[red]">
@@ -339,10 +343,6 @@ useEffect(() => {
                   </p>
                 )}
               </div>
-
-
-
-
 
               {/*
                <div class="relative h-11 w-full min-w-[200px]">
@@ -355,11 +355,6 @@ useEffect(() => {
           </label>
         </div> 
         */}
-
-
-
-
-
 
               <div className="mt-10">
                 <input
@@ -576,6 +571,10 @@ useEffect(() => {
           <AppetyLogoSmall />
         </div>
       </div>
+      </>
+      }
+     
+
     </div>
   );
 };
