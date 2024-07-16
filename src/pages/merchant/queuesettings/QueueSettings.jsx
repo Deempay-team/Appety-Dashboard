@@ -52,6 +52,7 @@ const QueueSettingsPage = () => {
   const [minPaxOld, setMinPaxOld] = useState("");
   const [maxPaxOld, setMaxPaxOld] = useState("");
   const [estimateTimeOld, setEstimateTimeOld] = useState("");
+  const [isLoadingAdd, setIsLoadingAdd] = useState(false);
 
   const openRemoveModal = (index) => {
     setShowRemoveModal(true);
@@ -211,6 +212,7 @@ const QueueSettingsPage = () => {
       setIsLoadingEditQ4(false);
       setIsLoadingEditQ5(false);
       setIsLoadingRemove(false);
+      setIsLoadingAdd(false);
 
       setIsEditQ1(true);
       setIsEditQ2(true);
@@ -288,7 +290,8 @@ const QueueSettingsPage = () => {
     setMaxPax(queueList[listIndex]?.maxPax);
     setMinPax(queueList[listIndex]?.minPax);
     setEstimateTime(queueList[listIndex]?.estimateTime);
-    setIsLoadingRemove(true);
+    //setIsLoadingRemove(true);
+    setIsLoadingAdd(true);
   };
 
   const queueStatus = (
@@ -297,7 +300,7 @@ const QueueSettingsPage = () => {
         onClick={addBack}
         className="cursor-pointer block px-4 py-4 text_16 text-[#000000]"
       >
-        Add Back
+       {isLoadingAdd ? <SpinnerOrangeMedium /> : "Add Back"}
       </span>
     </Menu>
   );
@@ -305,52 +308,51 @@ const QueueSettingsPage = () => {
   const onSubmitHandler = (data) => {
     const { minPax, maxPax, estimateTime } = data;
 
-    if (maxPax <= minPax) {
-      return setEditError(
-        <section>Max Pax must be greater than Min Pax</section>
-      );
-    }
-    if (listIndex === 0) {
-      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-        return setEditError(
-          <section>
-            Max Pax should be greater than Min Pax in{" "}
-            {waitTypeList[listIndex + 1].waitTypeName}
-          </section>
-        );
-      }
-    } else if (
-      listIndex > 0 &&
-      listIndex < waitTypeList[listIndex - 1].minPax
-    ) {
-      if (maxPax >= waitTypeList[listIndex + 1].minPax) {
-        return setEditError(
-          <section>
-            Max Pax should be greater than Min Pax in{" "}
-            {waitTypeList[listIndex + 1].waitTypeName}
-          </section>
-        );
-      }
-      if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-        return setEditError(
-          <section>
-            Min Pax should be less or equal to{" "}
-            {waitTypeList[listIndex - 1].waitTypeName}
-          </section>
-        );
-      }
-    } else if (listIndex === setWaitTypeList.length - 1) {
-      if (minPax <= waitTypeList[listIndex - 1].maxPax) {
-        return setEditError(
-          <section>
-            Min Pax should not be greater than{" "}
-            {waitTypeList[listIndex - 1].waitTypeName}
-          </section>
-        );
-      }
-    }
+    // if (maxPax <= minPax) {
+    //   return setEditError(
+    //     <section>Max Pax must be greater than Min Pax</section>
+    //   );
+    // }
+    // if (listIndex === 0) {
+    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+    //     return setEditError(
+    //       <section>
+    //         Max Pax should be greater than Min Pax in{" "}
+    //         {waitTypeList[listIndex + 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // } else if (
+    //   listIndex > 0 &&
+    //   listIndex < waitTypeList[listIndex - 1].minPax
+    // ) {
+    //   if (maxPax >= waitTypeList[listIndex + 1].minPax) {
+    //     return setEditError(
+    //       <section>
+    //         Max Pax should be greater than Min Pax in{" "}
+    //         {waitTypeList[listIndex + 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+    //     return setEditError(
+    //       <section>
+    //         Min Pax should be less or equal to{" "}
+    //         {waitTypeList[listIndex - 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // } else if (listIndex === setWaitTypeList.length - 1) {
+    //   if (minPax <= waitTypeList[listIndex - 1].maxPax) {
+    //     return setEditError(
+    //       <section>
+    //         Min Pax should not be greater than{" "}
+    //         {waitTypeList[listIndex - 1].waitTypeName}
+    //       </section>
+    //     );
+    //   }
+    // }
 
-    console.log("am testing");
 
     if (maxPax) {
       setMaxPax(maxPax);

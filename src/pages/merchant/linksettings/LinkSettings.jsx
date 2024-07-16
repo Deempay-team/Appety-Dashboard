@@ -28,7 +28,6 @@ const column = ["Day", "Start Time", "End Time", "Action"];
 
 const LinkSettingsPage = () => {
   const exportRef = useRef();
-  const inputRef = useRef();
   const baseURL = secrets.baseURL;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const linkUrl = JSON.parse(storage.fetch("merchantDetails")).linkUrl;
@@ -393,7 +392,7 @@ const LinkSettingsPage = () => {
     if (updateMerchantData) {
       queryMerchantUpdate();
       setIsLoadingOrderUrl(false);
-      setIsLoadingVideoUrl(false)
+      setIsLoadingVideoUrl(false);
       Notify("success", "Your Status has being updated Successfully!");
     }
   }, [updateMerchantData]);
@@ -416,50 +415,43 @@ const LinkSettingsPage = () => {
   const handleEditMon = () => {
     setWaitTimeId(timeList[0]?.waitTimeId);
     setStatus("1");
-    setDayFull("MONDAY")
-   // setIsLoadingMonday(true);
+    setDayFull("MONDAY");
   };
 
   const handleEditTue = () => {
     setWaitTimeId(timeList[1]?.waitTimeId);
     setStatus("1");
-    setDayFull("TUESDAY")
-   // setIsLoadingTuesday(true);
+    setDayFull("TUESDAY");
   };
 
   const handleEditWed = () => {
     setWaitTimeId(timeList[2]?.waitTimeId);
     setStatus("1");
-    setDayFull("WEDNESDAY")
-   // setIsLoadingWednesday(true);
+    setDayFull("WEDNESDAY");
   };
 
   const handleEditThur = () => {
     setWaitTimeId(timeList[3]?.waitTimeId);
     setStatus("1");
-   // setIsLoadingThursday(true);
-   setDayFull("THURSDAY")
+    setDayFull("THURSDAY");
   };
 
   const handleEditFri = () => {
     setWaitTimeId(timeList[4]?.waitTimeId);
     setStatus("1");
-    setDayFull("FRIDAY")
-   // setIsLoadingFriday(true);
+    setDayFull("FRIDAY");
   };
 
   const handleEditSat = () => {
     setWaitTimeId(timeList[5]?.waitTimeId);
     setStatus("1");
-    setDayFull("SATURDAY")
-    //setIsLoadingSaturday(true);
+    setDayFull("SATURDAY");
   };
 
   const handleEditSun = () => {
     setWaitTimeId(timeList[6]?.waitTimeId);
     setStatus("1");
-    setDayFull("SUNDAY")
-   // setIsLoadingSunday(true);
+    setDayFull("SUNDAY");
   };
 
   const addBack = () => {
@@ -489,7 +481,7 @@ const LinkSettingsPage = () => {
     }
     if (adsVideoUrl) {
       setAdsVideoUrl(`https://${adsVideoUrl}`);
-      setIsLoadingVideoUrl(true)
+      setIsLoadingVideoUrl(true);
     }
     reset();
   };
@@ -519,12 +511,12 @@ const LinkSettingsPage = () => {
       case "FRIDAY":
         setIsLoadingFriday(true);
         break;
-        case "SATURDAY":
-          setIsLoadingSaturday(true);
-          break;
-        case "SUNDAY":
-          setIsLoadingSunday(true);
-          break;
+      case "SATURDAY":
+        setIsLoadingSaturday(true);
+        break;
+      case "SUNDAY":
+        setIsLoadingSunday(true);
+        break;
       default:
         setIsLoadingMonday(true);
         break;
@@ -552,10 +544,6 @@ const LinkSettingsPage = () => {
         }, 1500);
       })
       .catch((error) => console.log(error));
-  };
-
-  const timeInput = () => {
-    inputRef.current.click();
   };
 
   return (
@@ -1614,8 +1602,7 @@ const LinkSettingsPage = () => {
                         https://
                       </button>
                       <input
-                        //placeholder={orderUrl ? orderUrl : "Enter Preorder url"}
-                        placeholder= "Enter Preorder url"
+                        placeholder="Enter Preorder url"
                         className="bg-[#ffffff] border border-[#a6a5a4] hover:border-[#F99762]  focus:border-[#F99762] outline-none text-[#000000] placeholder-[#bdbdbd] rounded-lg block md:w-[204px] w-[170px] px-4 dark:placeholder-[#f99762] h-[64px]"
                         {...register("preOrderUrl")}
                       />
@@ -1631,7 +1618,7 @@ const LinkSettingsPage = () => {
 
                 <div class="mx-6 border-[0.5px] border-[#e0e0e0] "></div>
                 <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
-                <span class="text-base font-normal">
+                  <span class="text-base font-normal">
                     <h1 className="text_18">Monitor Link</h1>
                     <p className="text_12 mt-2 text-[#6b6968] mb-4">
                       This will play on the monitor
@@ -1641,28 +1628,22 @@ const LinkSettingsPage = () => {
                       className="flex"
                     >
                       <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
-                      {`https://queue.appety.com.sg/display-tv/${monitorUrl}`}
+                        {`https://queue.appety.com.sg/display-tv/${monitorUrl}`}
                       </button>
-                 
+
                       <button
                         type="submit"
                         className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] "
                       >
-                         {copied ? (
-                        <span
-                          class="  cursor-pointer"
-                          onClick={handleCopy}
-                        >
-                          <CopyIcon />
-                        </span>
-                      ) : (
-                        <span
-                          class=" cursor-pointer"
-                          onClick={handleCopy}
-                        >
-                          <CopiedIcon />
-                        </span>
-                      )}
+                        {copied ? (
+                          <span class="  cursor-pointer" onClick={handleCopy}>
+                            <CopyIcon />
+                          </span>
+                        ) : (
+                          <span class=" cursor-pointer" onClick={handleCopy}>
+                            <CopiedIcon />
+                          </span>
+                        )}
                       </button>
                     </form>
                   </span>
@@ -1693,7 +1674,6 @@ const LinkSettingsPage = () => {
                   </span>
                 </div>
 
-
                 <div class="mx-6 border-[0.5px] border-[#e0e0e0]"></div>
                 <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
                   <span class="text-base font-normal">
@@ -1721,7 +1701,6 @@ const LinkSettingsPage = () => {
                       </div>
                     </div>
                   </span>
-                 
                 </div>
               </div>
             </>
