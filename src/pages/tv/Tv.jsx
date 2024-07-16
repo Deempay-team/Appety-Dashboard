@@ -18,7 +18,6 @@ export const TvPage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
- // const [playing, setPlaying] = useState(true);
   const [summaryList, setSummaryList] = useState([]);
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
 
