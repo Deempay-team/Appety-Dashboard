@@ -20,6 +20,8 @@ import {
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
 
+import "./styles.css";
+
 const column = [
   "Queue Type",
   "pax Range",
@@ -558,7 +560,7 @@ export const MerchantHomePage = () => {
         </div>
 
         {/* CENTER */}
-        <div className="flex-1 2xl:px-[200px] px-10 h-screen overflow-y-auto bg-[#F6F7F9]">
+        <div className="flex-1 adjust-padding h-screen overflow-y-auto bg-[#F6F7F9]">
           <main className="  py-8">
             <div className="mt-1 mb-8 ">
               <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[5px] ">

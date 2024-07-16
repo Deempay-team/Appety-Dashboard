@@ -1,0 +1,48 @@
+@media screen and (max-width: 1920px) {
+  .adjust-padding {
+    padding-left: 251.5px;
+    padding-right: 251.5px;
+  }
+}
+
+@media screen and (max-width: 1680px) {
+  .adjust-padding {
+    padding-left: 132px;
+    padding-right: 132px;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .adjust-padding {
+    padding-left: 91.2px;
+    padding-right: 91.2px;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .adjust-padding {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+}
+
+@media screen and (max-width: 1366px) {
+  .adjust-padding {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .adjust-padding {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .adjust-padding {
+    padding-left: 35px;
+    padding-right: 35px;
+  }
+}
