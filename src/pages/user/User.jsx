@@ -12,11 +12,11 @@ import {
 } from "../../assests/icons/Icons";
 import { useJoinQueue } from "../../hooks/useUser";
 import secrets from "../../config/secrets";
+import ringer from "../../assests/sounds/success-sound.mp3"
 
 export const UserHomePage = () => {
   const { linkUrl } = useParams();
   const baseURL = secrets.baseURL;
-  const audioSound = new Audio("../../assests/sounds/success-sounds.mp3");
   const [fillDataPage, setFillDataPage] = useState(true);
   const [isOpenPage, setIsOpenPage] = useState(true);
   const [isEmail, setIsEmail] = useState(false);
@@ -47,6 +47,15 @@ export const UserHomePage = () => {
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
 
+  const audio = new Audio(ringer);
+  audio.loop = true
+
+  const playSound = () => {
+    audio.loop = true;
+    audio.play();
+  }
+
+
   var timeOutId;
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
@@ -71,9 +80,9 @@ export const UserHomePage = () => {
 //CHECK IF THE MERCHANT IS OPEN OR NOT
 useEffect(() => {
   if (linkUrlStatus) {
-    if (linkUrlStatus !== "1") {
-    
-      //setFillDataPage(false)
+    if (linkUrlStatus === "1") {
+      setIsOpenPage(true);
+    } else {
       setIsOpenPage(false);
     }
   }
@@ -204,7 +213,7 @@ useEffect(() => {
 
             if (res?.data?.data?.waitCall === "1") {
               setProgressBar(false);
-             // audioSound.play();
+              playSound();
             }
           }
         })
@@ -225,10 +234,7 @@ useEffect(() => {
     //setCusPhone(`65${cusPhone}`);
   };
 
-  const testClick = () => {
-    audioSound.play();
-  }
-
+ 
   return (
     <div className="bg-[#F6F7F9]">
       {/* HEADER */}
@@ -269,17 +275,13 @@ useEffect(() => {
           </div>
         </div>
       </div>
+  
 
       {isOpenPage ? 
       <>
         {/* FORM FILL-IN SIDE */}
         {fillDataPage ? (
         <div className="bg-[#F6F7F9] ">
-
-          {/* <button onClick={testClick}>
-            test00
-          </button> */}
-
 
           <div className=" max-w-md items-center mx-auto grid  bg-[#F6F7F9] sm:px-0 px-6">
             <h1 className="text-2xl text-black font-semibold mb-[4px] mt-10">
@@ -548,7 +550,7 @@ useEffect(() => {
        <>
          <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
             <div>
-              <span className="mt-[184px] flex items-center justify-center">
+              <span className="mt-[180px] flex items-center justify-center">
                 <NotOpenIcon />
               </span>
               <h2 className="text-center my-3 text-2xl text-[#000000]">
