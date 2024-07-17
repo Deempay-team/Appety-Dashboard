@@ -248,10 +248,10 @@ const QueueSettingsPage = () => {
 
   //CALL UPDATE API
   useEffect(() => {
-    if ((minPax, maxPax, estimateTime)) {
+    if ((minPax, maxPax, estimateTime, waitTypeName)) {
       fetchEditWaitType();
     }
-  }, [minPax, maxPax, estimateTime]);
+  }, [minPax, maxPax, estimateTime, waitTypeName]);
 
   const handleEditQ1 = () => {
     setWaitTypeId(queueList[0]?.waitTypeId);
@@ -308,7 +308,17 @@ const QueueSettingsPage = () => {
   const onSubmitHandler = (data) => {
     const { minPax, maxPax, estimateTime } = data;
 
-    if (maxPax <= minPax) {
+    if (maxPax > minPax) {
+      if (maxPax) {
+        setMaxPax(maxPax);
+      }
+      if (minPax) {
+        setMinPax(minPax);
+      }
+      if (estimateTime) {
+        setEstimateTime(estimateTime);
+      }
+    }else {
       return setEditError(
         <section>Max Pax must be greater than Min Pax</section>
       );
@@ -354,15 +364,15 @@ const QueueSettingsPage = () => {
     // }
 
 
-    if (maxPax) {
-      setMaxPax(maxPax);
-    }
-    if (minPax) {
-      setMinPax(minPax);
-    }
-    if (estimateTime) {
-      setEstimateTime(estimateTime);
-    }
+    // if (maxPax) {
+    //   setMaxPax(maxPax);
+    // }
+    // if (minPax) {
+    //   setMinPax(minPax);
+    // }
+    // if (estimateTime) {
+    //   setEstimateTime(estimateTime);
+    // }
 
     switch (waitTypeName) {
       case "Q1":
