@@ -298,6 +298,9 @@ export const UserHomePage = () => {
                         <input
                           type="text"
                           placeholder="Enter Your Name"
+                          autocomplete="on"
+                          name="name"
+                          id="name"
                           className={`in_put bg-[#ffffff] ${
                             errors.cusName && "input_error"
                           }`}
@@ -315,8 +318,11 @@ export const UserHomePage = () => {
                       <div className="mt-10">
                         <input
                           type="number"
+                          autocomplete="on"
                           placeholder="Enter Your Phone Number "
-                          className={`in_put bg-[#ffffff] ${
+                          name="number"
+                          id="number"
+                          className={`in_put put bg-[#ffffff] ${
                             errors.cusPhone && "input_error"
                           }`}
                           {...register("cusPhone", {
@@ -356,8 +362,11 @@ export const UserHomePage = () => {
                       <div className="mt-10">
                         <input
                           type="number"
+                          autocomplete="on"
                           placeholder="Enter Pax"
-                          className={`in_put bg-[#ffffff] ${
+                          name="code"
+                          id="code"
+                          className={`in_put put bg-[#ffffff] ${
                             errors.paxNo && "input_error"
                           }`}
                           {...register("paxNo", {

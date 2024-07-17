@@ -441,7 +441,7 @@ export const MerchantHomePage = () => {
       <div className="flex min-h-screen items-start fixed">
 
         {/* LEFT SIDE */}
-        <div class="sticky top-0  w-[380px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
+        <div class="sticky top-0  2xl:w-[380px] w-[362px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
@@ -812,7 +812,7 @@ export const MerchantHomePage = () => {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="sticky top-0 w-[380px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
+        <div className="sticky top-0 2xl:w-[380px] w-[362px] border-l border-[#D9D9D9]  bg-[#F6F7F9] ">
           <div className="flow-root border-b border-[#d9d9d9]">
             <span className="flex  items-center justify-center py-6 ">
               {isServed ? (
