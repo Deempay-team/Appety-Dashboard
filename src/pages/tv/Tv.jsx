@@ -22,7 +22,7 @@ export const TvPage = () => {
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
   const [nextInLine, setNextInLine] = useState("-");
   const [callTimer, setCallTime] = useState(0);
-  const [callInterval, setCallInterval] = useState(120000);
+  const [callInterval, setCallInterval] = useState(10000);
 
   var timeOutId;
 

@@ -45,7 +45,7 @@ export const UserHomePage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [posPercent, setPosPercent] = useState(0);
   const [callTimer, setCallTime] = useState(0);
-  const [callInterval, setCallInterval] = useState(120000);
+  const [callInterval, setCallInterval] = useState(10000);
   const [isUserFetch, setIsUserFetch] = useState(true);
 
   //AUDIO SOUND FOR WHEN TABLE IS READY

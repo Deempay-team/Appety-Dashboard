@@ -248,10 +248,10 @@ const QueueSettingsPage = () => {
 
   //CALL UPDATE API
   useEffect(() => {
-    if ((minPax, maxPax, estimateTime, waitTypeName)) {
+    if ((minPax, maxPax, estimateTime)) {
       fetchEditWaitType();
     }
-  }, [minPax, maxPax, estimateTime, waitTypeName]);
+  }, [minPax, maxPax, estimateTime]);
 
   const handleEditQ1 = () => {
     setWaitTypeId(queueList[0]?.waitTypeId);
