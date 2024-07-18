@@ -38,6 +38,8 @@ export const TvPage = () => {
           setMerchName(tvData?.merchName);
           setLinkUrl(tvData?.linkUrl);
           setAdsVideoUrl(tvData?.adsVideoUrl);
+
+          console.log(tvData?.adsVideoUrl)
           setSummaryList(tvData?.summary);
 
           for (let i = 0; i < tvData?.summary.length; i++) {

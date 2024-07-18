@@ -491,7 +491,7 @@ const LinkSettingsPage = () => {
     const { preOrderUrl } = data;
     if (preOrderUrl) {
 
-      setPreOrderUrl(`https://${preOrderUrl.includes("https://") ? preOrderUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : preOrderUrl}`);
+      setPreOrderUrl(`https://${preOrderUrl.includes("https://") ? preOrderUrl.slice(8) : preOrderUrl}`);
       setIsLoadingOrderUrl(true);
       setIsUpdatedMerch(true);
     }
@@ -502,7 +502,7 @@ const LinkSettingsPage = () => {
     const { adsVideoUrl } = data;
   
     if (adsVideoUrl) {
-      setAdsVideoUrl(`https://${adsVideoUrl.includes("https://") ? adsVideoUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : adsVideoUrl}`);
+      setAdsVideoUrl(`https://${adsVideoUrl.includes("https://") ? adsVideoUrl.slice(8) : adsVideoUrl}`);
       setIsLoadingVideoUrl(true);
       setIsUpdatedMerch(true);
     }
@@ -552,11 +552,11 @@ const LinkSettingsPage = () => {
   }, [startTimeOld, endTimeOld]);
 
   useEffect(() => {
-    setValue("adsVideoUrl", adsVideoUrl ? adsVideoUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, ""): "");
+    setValue("adsVideoUrl", adsVideoUrl ? adsVideoUrl.slice(8): "");
   }, [adsVideoUrl]);
 
   useEffect(() => {
-    setValue("preOrderUrl", preOrderUrl ? preOrderUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : "");
+    setValue("preOrderUrl", preOrderUrl ? preOrderUrl.slice(8) : "");
   }, [preOrderUrl]);
 
   const closeModal = () => {
