@@ -321,7 +321,7 @@ const LinkSettingsPage = () => {
       setWaitTimeId("");
       setEndTime("");
       setstartTime("")
-    } else if (data?.code === "U00022") {
+    } else if (data?.code !== "000000") {
       setIsLoadingMonday(false);
       setIsLoadingTuesday(false);
       setIsLoadingWednesday(false);
@@ -339,7 +339,7 @@ const LinkSettingsPage = () => {
       setIsEditSaturday(true);
       setIsEditSunday(true);
       closeModal();
-      Notify("error", "Please check your input and try again!");
+      Notify("error", data?.message);
       setWaitTimeId("");
       setEndTime("");
       setstartTime("")
