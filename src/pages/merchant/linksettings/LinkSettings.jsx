@@ -319,6 +319,8 @@ const LinkSettingsPage = () => {
       closeModal();
       Notify("success", "Your Queue has being updated Successfully!");
       setWaitTimeId("");
+      setEndTime("");
+      setstartTime("")
     } else if (data?.code === "U00022") {
       setIsLoadingMonday(false);
       setIsLoadingTuesday(false);
@@ -339,6 +341,8 @@ const LinkSettingsPage = () => {
       closeModal();
       Notify("error", "Please check your input and try again!");
       setWaitTimeId("");
+      setEndTime("");
+      setstartTime("")
     }
   }, [data]);
 

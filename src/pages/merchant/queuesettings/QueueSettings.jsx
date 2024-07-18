@@ -205,7 +205,7 @@ const QueueSettingsPage = () => {
 
   //RETURN UPDATE API DATA
   useEffect(() => {
-    if (data) {
+    if (data?.code === "000000") {
       setIsLoadingEditQ1(false);
       setIsLoadingEditQ2(false);
       setIsLoadingEditQ3(false);
@@ -223,6 +223,15 @@ const QueueSettingsPage = () => {
       closeModal();
       Notify("success", "Your Queue has being updated Successfully!");
       setWaitTypeName("");
+      setEstimateTime("");
+      setMinPax("");
+      setMaxPax("");
+    }else {
+      Notify("error", data?.message);
+      setWaitTypeName("");
+      setEstimateTime("");
+      setMinPax("");
+      setMaxPax("");
     }
   }, [data]);
 
@@ -1186,13 +1195,7 @@ const QueueSettingsPage = () => {
               </div>
 
               <div>
-                <p className="mt-4 text_16 text-[#6B6968] font-normal">
-                  To edit the table above, please start from the bottom row (Q5)
-                </p>
-              </div>
-
-              <div>
-                <p className="mt-2 text_16 text-[red] font-normal">
+                <p className="mt-4 text_16 text-[red] font-normal">
                   {editError}
                 </p>
               </div>

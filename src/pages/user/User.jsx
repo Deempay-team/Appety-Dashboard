@@ -43,7 +43,7 @@ export const UserHomePage = () => {
   const [linkUrlStatus, setLinkUrlStatus] = useState("");
   const [preOrderUrl, setPreOrderUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [posPercent, setPosPercent] = useState(0);
+  const [posPercent, setPosPercent] = useState(100);
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
   const [isUserFetch, setIsUserFetch] = useState(true);

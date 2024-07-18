@@ -8,6 +8,7 @@ import { Modal } from "antd";
 import { AppetyLogoBig, CloseIcon, OpenIcon } from "../../assests/icons/Icons";
 import { EmailImage } from "../../assests/images";
 import secrets from "../../config/secrets";
+import Notify from "../../components/Notification";
 import axios from "axios";
 
 export const SignUpPage = () => {
@@ -113,6 +114,7 @@ export const SignUpPage = () => {
         .then(function (response) {
           if (response.data.code === "000000") {
             setIsLoadingResend(false);
+            Notify("success", "Email was sent Successfully!");
           } 
         })
         .catch(function (error) {

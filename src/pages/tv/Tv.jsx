@@ -22,7 +22,7 @@ export const TvPage = () => {
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
   const [nextInLine, setNextInLine] = useState("-");
   const [callTimer, setCallTime] = useState(0);
-  const [callInterval, setCallInterval] = useState(10000);
+  const [callInterval, setCallInterval] = useState(30000);
 
   var timeOutId;
 
@@ -51,13 +51,6 @@ export const TvPage = () => {
         console.log("log-error", error);
       });
   }, []);
-
-   // START TIMER
-  useEffect(() => {
-    if (nextInLine) {
-      handleStartTimer();
-    }
-  }, [nextInLine]);
 
   // start timer function calls every 2mins
   let timer = 0;
@@ -91,6 +84,13 @@ export const TvPage = () => {
         });
     }, callInterval);
   };
+
+  // START TIMER
+  useEffect(() => {
+    if (nextInLine) {
+      handleStartTimer();
+    }
+  }, [nextInLine]);
 
   const qrcode = (
     <QRCode
@@ -203,7 +203,8 @@ export const TvPage = () => {
                 width="100%"
                 //height="100vh"
                 height="720px"
-                playing="true"
+                playing={true}
+                loop={true}
               />
             </div>
             <div className="bg-[#ffffff] h-[350px] col-span-2 rounded-[5px]">
