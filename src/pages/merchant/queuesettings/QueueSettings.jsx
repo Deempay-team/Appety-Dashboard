@@ -226,7 +226,7 @@ const QueueSettingsPage = () => {
       setEstimateTime("");
       setMinPax("");
       setMaxPax("");
-    }else {
+    }else if (data?.code !== "000000") {
       Notify("error", data?.message);
       setWaitTypeName("");
       setEstimateTime("");
