@@ -10,6 +10,16 @@ export const currentTime = new Date().toLocaleTimeString("en-us", {
   minute: "2-digit",
 });
 
+export const formatDateTime = (undate) => {
+  return new Date(undate).toLocaleDateString("en-us", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 //FUNCTION TO ADD SPACE IN NUMBER
 export const addSpace = (accountNum) => {
   let newAccNo = "";

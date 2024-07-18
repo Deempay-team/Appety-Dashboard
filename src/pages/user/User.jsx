@@ -474,12 +474,12 @@ export const UserHomePage = () => {
                           style={{ width: "100%" }}
                         >
                           <div
-                            style={{ width: `${posPercent + "%"}` }}
+                            style={{ width: `${100 - posPercent + "%"}` }}
                             className={"h-full bg-[#FDDCCB] rounded"}
                           ></div>
                           <spa
-                            style={{ left: `${posPercent - 4 + "%"}` }}
-                            className="absolute text-[#000000] font-semibold top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#FCCBB0]"
+                            style={{ left: `${100 - posPercent - 4 + "%"}` }}
+                            className="absolute text-[#ffffff] font-semibold top-[-150%] items-center justify-center flex border border-[#f99762] rounded-full h-[28px] w-[28px] bg-[#f99762]"
                           >
                             {waitPostion}
                           </spa>

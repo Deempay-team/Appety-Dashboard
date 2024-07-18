@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import { FaUserCircle } from "react-icons/fa";
-import { currentDate, currentTime, formatDate } from "../../../utils/functions";
+import { currentDate, currentTime, formatDate, formatDateTime  } from "../../../utils/functions";
 import { useUpdateQueue } from "../../../hooks/useMechant";
 import {
   SpinnerOrange,
@@ -19,6 +19,7 @@ import {
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
+import ringer from "../../../assests/sounds/success-sound.mp3";
 
 import "./styles.css";
 
@@ -71,6 +72,19 @@ export const MerchantHomePage = () => {
   const [isButtonWaitTye, setIsButtonWaitTye] = useState(false);
   const [waitCall, setWaitCall] = useState("0");
   const [isLoadingWaitCall, setIsLoadingWaitCall] = useState(false);
+  const [callTime, setCallTime] = useState(0);
+  const [callInterval, setCallInterval] = useState(10000);
+
+  var timeOutId;
+
+  //AUDIO SOUND FOR WHEN TABLE IS READY
+  const audio = new Audio(ringer);
+  //audio.loop = true;
+  const playSound = () => {
+   // audio.loop = true;
+    audio.play();
+  };
+
 
   //CALL TO UPDATE QUEUE
   const { data: queueUpdateData, mutate: fetchQueueUpdate } = useUpdateQueue({
@@ -121,6 +135,7 @@ export const MerchantHomePage = () => {
           setQueueType(res?.data?.data);
           setWaitTypeId(res?.data?.data[0].waitTypeId);
           setWaitTypeName(res?.data?.data[0].waitTypeName);
+          startTimer();
         }
       })
       .catch(function (error) {
@@ -132,6 +147,7 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     //setIsLoadingWaitType(true);
     if (isButtonWaitTye || statusUpdateSuccess) {
+      // clearInterval(timeOutId);
       axios
         .get(`${baseURL}api/v1/wait/summary/${merchId}`)
         .then(function (res) {
@@ -234,6 +250,84 @@ export const MerchantHomePage = () => {
         });
     }
   };
+
+  const callQueueBackgrund = () => {
+    if (waitTypeId) {
+      axios
+        .get(
+          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
+        )
+        .then(function (res) {
+          if (res?.data?.code === "000000") {
+            setQueueList(res?.data?.data);
+            setWaitSize(res?.data?.data.length);
+          }
+        })
+        .catch(function (error) {
+          console.log("served-error", error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if(callTime) {
+      axios
+      .get(`${baseURL}api/v1/wait/summary/${merchId}`)
+      .then(function (res) {
+        if (res?.data?.code === "000000") {
+          //setIsLoadingWaitType(false);
+       //  setQueueType(res?.data?.data);
+        
+          //setWaitTypeId(res?.data?.data[0].waitTypeId);
+          //setWaitTypeName(res?.data?.data[0].waitTypeName);
+          for ( let i = 0; i < res?.data?.data.length ; i++) {
+           
+            //console.log("waiting-1", res?.data?.data[i]?.totalWaiting)
+            //console.log("waiting-22", queueType[i]?.totalWaiting)
+
+
+            
+           if (res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting){
+            callQueueBackgrund();
+              setQueueType(res?.data?.data);
+           // setStatusUpdateSuccess(true);
+              setWaitTypeId(res?.data?.data[i].waitTypeId);
+              setWaitTypeName(res?.data?.data[i].waitTypeName);
+              setActiveWaitTypeId(i+1);
+              playSound();
+
+            console.log("waiting-1", res?.data?.data[i]?.totalWaiting)
+           console.log("i---", i)
+            console.log("waiting-22", queueType[i]?.totalWaiting)
+
+
+              //clearInterval(timeOutId);
+
+             // console.log("i am in a queue");
+          //setWaitTypeId(res?.data?.data[0].waitTypeId);
+          //setWaitTypeName(res?.data?.data[0].waitTypeName);
+           }
+
+         }
+        }
+      })
+      .catch(function (error) {
+        console.log("summary-error", error);
+      });
+    //  startTimer();
+    }
+  }, [callTime])
+
+   // start timer function 
+   const startTimer = () => {
+
+   let timer = 0;
+   timeOutId = setInterval(function () {
+    timer += 1;
+    setCallTime(timer);  
+  }, callInterval);
+}
+ 
 
   useEffect(() => {
     if (serveStatus) {
@@ -533,7 +627,7 @@ export const MerchantHomePage = () => {
                                     Date/Time
                                   </p>
                                   <p className="text_14 text-[#000000]">
-                                    {currentDate} {currentTime}{" "}
+                                    {formatDateTime(list.createTime)}
                                   </p>
                                 </div>
                               </div>
@@ -925,7 +1019,7 @@ export const MerchantHomePage = () => {
                                     Date/Time
                                   </p>
                                   <p className="text_14 text-[#000000]">
-                                    {currentDate} {currentTime}{" "}
+                                  {formatDateTime(list.createTime)}
                                   </p>
                                 </div>
                               </div>
