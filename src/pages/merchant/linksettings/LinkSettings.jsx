@@ -321,7 +321,7 @@ const LinkSettingsPage = () => {
       setWaitTimeId("");
       setEndTime("");
       setstartTime("")
-    } else if (data?.code !== "000000") {
+    } else if (data?.code === "U00022") {
       setIsLoadingMonday(false);
       setIsLoadingTuesday(false);
       setIsLoadingWednesday(false);
