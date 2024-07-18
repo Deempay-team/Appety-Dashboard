@@ -253,8 +253,8 @@ export const SignUpPage = () => {
             <div className="mt-8">
                 <input
                   placeholder="Enter Phone Number"
-                  type="number"
-                  className={`in_put put ${errors.phoneNo && "input_error"}`}
+                  type="text"
+                  className={`in_put ${errors.phoneNo && "input_error"}`}
                   {...register("phoneNo", {
                     required: "Phone Number is required",
                   })}
