@@ -1639,7 +1639,7 @@ const LinkSettingsPage = () => {
                       />
                       <button
                         type="submit"
-                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
+                        className="gray-bg ml-2 w-[84px] md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
                       >
                         {isLoadingOrderUrl ? <SpinnerMediumWhite /> : "Save"}
                       </button>
@@ -1697,7 +1697,7 @@ const LinkSettingsPage = () => {
                       />
                       <button
                         type="submit"
-                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
+                        className="gray-bg ml-2 w-[84px] md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] hover:bg-[#F99762] hover:text-[#ffffff]"
                       >
                         {isLoadingVideoUrl ? <SpinnerMediumWhite /> : "Save"}
                       </button>
