@@ -73,9 +73,10 @@ export const TvPage = () => {
             for (let i = 0; i < tvData?.summary.length; i++) {
               if (tvData?.summary[i].nextWaitCalled === "1") {
                 setNextInLine(tvData?.summary[i].nextInLine);
-              } else if (tvData?.summary[i].nextWaitCalled !== "1") {
-                clearTimeout(timeOutId);
-              }
+              } 
+              // else if (tvData?.summary[i].nextWaitCalled !== "1") {
+              //   clearTimeout(timeOutId);
+              // }
             }
           }
         })

@@ -33,6 +33,8 @@ const LinkSettingsPage = () => {
   const linkUrl = JSON.parse(storage.fetch("merchantDetails")).linkUrl;
   const switchIsOn = JSON.parse(storage.fetch("merchantDetails")).linkUrlStatus;
   const monitorUrl = JSON.parse(storage.fetch("merchantDetails")).monitorUrl;
+  const OldOrderLink = JSON.parse(storage.fetch("merchantDetails")).preOrderUrl;
+  const OldMonitorLink = JSON.parse(storage.fetch("merchantDetails")).adsVideoUrl;
   const [waitTimeId, setWaitTimeId] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setstartTime] = useState("");
@@ -69,6 +71,7 @@ const LinkSettingsPage = () => {
   const [isTimeFetch, setIsTimeFetch] = useState(true);
   const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [copied, setCopied] = useState(true);
+  const [isUpdatedMerch, setIsUpdatedMerch] = useState(false);
 
   // monitorUrl: res?.data?.data?.monitorUrl,
 
@@ -77,7 +80,6 @@ const LinkSettingsPage = () => {
     register,
     handleSubmit,
     setValue,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -242,6 +244,8 @@ const LinkSettingsPage = () => {
           setIsLoadingTime(false);
           const daysData = res?.data?.data;
           setTimeList(daysData);
+          setPreOrderUrl(OldOrderLink)
+          setAdsVideoUrl(OldMonitorLink)
         }
       })
       .catch(function (error) {
@@ -271,6 +275,9 @@ const LinkSettingsPage = () => {
       .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
+          setIsUpdatedMerch(false);
+          setPreOrderUrl(res?.data?.data?.preOrderUrl);
+          setAdsVideoUrl(res?.data?.data?.adsVideoUrl);
           storage.add(
             "merchantDetails",
             JSON.stringify({
@@ -283,11 +290,10 @@ const LinkSettingsPage = () => {
               logoUrl: res?.data?.data?.logoUrl,
               preOrderUrl: res?.data?.data?.preOrderUrl,
               monitorUrl: res?.data?.data?.monitorUrl,
+              adsVideoUrl:  res?.data?.data?.adsVideoUrl,
             })
           );
           isSwitchOn(res?.data?.data?.linkUrlStatus);
-
-          console.log("merchant-error", res.data);
         }
       })
       .catch(function (error) {
@@ -339,7 +345,7 @@ const LinkSettingsPage = () => {
       setIsEditSaturday(true);
       setIsEditSunday(true);
       closeModal();
-      Notify("error", data?.message);
+    // Notify("error", data?.message);
       setWaitTimeId("");
       setEndTime("");
       setstartTime("")
@@ -393,26 +399,30 @@ const LinkSettingsPage = () => {
 
   //MERCHANT RETURN DATA API
   useEffect(() => {
-    if (updateMerchantData) {
-      queryMerchantUpdate();
+    
+    if (updateMerchantData?.code === "000000") {
       setIsLoadingOrderUrl(false);
       setIsLoadingVideoUrl(false);
       Notify("success", "Your Status has being updated Successfully!");
+      queryMerchantUpdate();
+      setIsUpdatedMerch(false);
     }
   }, [updateMerchantData]);
 
   //API TO TURN OFF LINK AUTOMATICALLY
   useEffect(() => {
-    if (linkUrlStatus || preOrderUrl || adsVideoUrl) {
+    if (isUpdatedMerch) {
       fetchUpdateMerchant();
     }
-  }, [linkUrlStatus, preOrderUrl, adsVideoUrl]);
+  }, [isUpdatedMerch]);
 
   const onChange = (checked) => {
     if (checked) {
       setLinkUrlStatus("1");
+      setIsUpdatedMerch(true);
     } else {
       setLinkUrlStatus("0");
+      setIsUpdatedMerch(true);
     }
   };
 
@@ -478,16 +488,25 @@ const LinkSettingsPage = () => {
   );
 
   const onSubmitPreOrder = (data) => {
-    const { preOrderUrl, adsVideoUrl } = data;
+    const { preOrderUrl } = data;
     if (preOrderUrl) {
-      setPreOrderUrl(`https://${preOrderUrl}`);
+
+      setPreOrderUrl(`https://${preOrderUrl.includes("https://") ? preOrderUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : preOrderUrl}`);
       setIsLoadingOrderUrl(true);
+      setIsUpdatedMerch(true);
     }
+    //reset();
+  };
+
+  const onSubmitAdsVideoUrl = (data) => {
+    const { adsVideoUrl } = data;
+  
     if (adsVideoUrl) {
-      setAdsVideoUrl(`https://${adsVideoUrl}`);
+      setAdsVideoUrl(`https://${adsVideoUrl.includes("https://") ? adsVideoUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : adsVideoUrl}`);
       setIsLoadingVideoUrl(true);
+      setIsUpdatedMerch(true);
     }
-    reset();
+    //reset();
   };
 
   const onSubmitHandler = (data) => {
@@ -531,6 +550,14 @@ const LinkSettingsPage = () => {
     setValue("startTime", startTimeOld);
     setValue("endTime", endTimeOld);
   }, [startTimeOld, endTimeOld]);
+
+  useEffect(() => {
+    setValue("adsVideoUrl", adsVideoUrl ? adsVideoUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, ""): "");
+  }, [adsVideoUrl]);
+
+  useEffect(() => {
+    setValue("preOrderUrl", preOrderUrl ? preOrderUrl.replace(/^(?:https?:\/\/)?|(\/)/ig, "") : "");
+  }, [preOrderUrl]);
 
   const closeModal = () => {
     setShowRemoveModal(false);
@@ -1627,8 +1654,8 @@ const LinkSettingsPage = () => {
                     <p className="text_12 mt-2 text-[#6b6968] mb-4">
                       This will play on the monitor
                     </p>
-                    <form
-                      onSubmit={handleSubmit(onSubmitPreOrder)}
+                    <div
+                      //onSubmit={handleSubmit(onSubmitPreOrder)}
                       className="flex"
                     >
                       <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
@@ -1649,7 +1676,7 @@ const LinkSettingsPage = () => {
                           </span>
                         )}
                       </button>
-                    </form>
+                    </div>
                   </span>
                   <span class="text-base font-normal">
                     <h1 className="text_18">Video Add URL</h1>
@@ -1657,7 +1684,7 @@ const LinkSettingsPage = () => {
                       This will play on the monitor
                     </p>
                     <form
-                      onSubmit={handleSubmit(onSubmitPreOrder)}
+                      onSubmit={handleSubmit(onSubmitAdsVideoUrl)}
                       className="flex"
                     >
                       <button className="text-[#000] md:py-[20px] py-4 mr-2 rounded-[5px] gray-bg  text_16 md:px-[32px] font-normal">

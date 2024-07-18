@@ -227,7 +227,7 @@ const QueueSettingsPage = () => {
       setMinPax("");
       setMaxPax("");
     }else {
-      Notify("error", data?.message);
+     // Notify("error", data?.message);
       setWaitTypeName("");
       setEstimateTime("");
       setMinPax("");
@@ -370,17 +370,6 @@ const QueueSettingsPage = () => {
     //       </section>
     //     );
     //   }
-    // }
-
-
-    // if (maxPax) {
-    //   setMaxPax(maxPax);
-    // }
-    // if (minPax) {
-    //   setMinPax(minPax);
-    // }
-    // if (estimateTime) {
-    //   setEstimateTime(estimateTime);
     // }
 
     switch (waitTypeName) {
