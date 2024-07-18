@@ -1655,7 +1655,6 @@ const LinkSettingsPage = () => {
                       This will play on the monitor
                     </p>
                     <div
-                      //onSubmit={handleSubmit(onSubmitPreOrder)}
                       className="flex"
                     >
                       <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">

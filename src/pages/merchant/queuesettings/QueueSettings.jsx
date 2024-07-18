@@ -524,7 +524,7 @@ const QueueSettingsPage = () => {
                           <>
                             <td className="">
                               <input
-                                type="number"
+                                type="text"
                                 className={`input-shorter put mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
@@ -538,8 +538,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
                                 {...register("maxPax", {
@@ -549,8 +549,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="text_16 py-6 ">
                               <input
-                                type="number"
-                                className={`input-short put mx-auto ${
+                                type="text"
+                                className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
                                 {...register("estimateTime", {
@@ -679,8 +679,8 @@ const QueueSettingsPage = () => {
                           <>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
                                 {...register("minPax", {
@@ -690,8 +690,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
                                 {...register("maxPax", {
@@ -701,8 +701,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="text_16 py-6 ">
                               <input
-                                type="number"
-                                className={`input-short put mx-auto ${
+                                type="text"
+                                className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
                                 {...register("estimateTime", {
@@ -828,8 +828,8 @@ const QueueSettingsPage = () => {
                           <>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
                                 {...register("minPax", {
@@ -839,8 +839,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
                                 {...register("maxPax", {
@@ -850,8 +850,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="text_16 py-6 ">
                               <input
-                                type="number"
-                                className={`input-short put mx-auto ${
+                                type="text"
+                                className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
                                 {...register("estimateTime", {
@@ -977,8 +977,8 @@ const QueueSettingsPage = () => {
                           <>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
                                 {...register("minPax", {
@@ -988,8 +988,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
                                 {...register("maxPax", {
@@ -999,8 +999,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="text_16 py-6 ">
                               <input
-                                type="number"
-                                className={`input-short put mx-auto ${
+                                type="text"
+                                className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
                                 {...register("estimateTime", {
@@ -1126,8 +1126,8 @@ const QueueSettingsPage = () => {
                           <>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.minPax && "input_error"
                                 }`}
                                 {...register("minPax", {
@@ -1137,8 +1137,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="">
                               <input
-                                type="number"
-                                className={`input-shorter put mx-auto ${
+                                type="text"
+                                className={`input-shorter mx-auto ${
                                   errors.maxPax && "input_error"
                                 }`}
                                 {...register("maxPax", {
@@ -1148,8 +1148,8 @@ const QueueSettingsPage = () => {
                             </td>
                             <td className="text_16 py-6 ">
                               <input
-                                type="number"
-                                className={`input-short put mx-auto ${
+                                type="text"
+                                className={`input-short mx-auto ${
                                   errors.estimateTime && "input_error"
                                 }`}
                                 {...register("estimateTime", {
