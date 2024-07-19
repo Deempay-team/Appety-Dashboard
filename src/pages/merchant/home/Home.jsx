@@ -275,17 +275,8 @@ export const MerchantHomePage = () => {
       .get(`${baseURL}api/v1/wait/summary/${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
-          //setIsLoadingWaitType(false);
-       //  setQueueType(res?.data?.data);
-        
-          //setWaitTypeId(res?.data?.data[0].waitTypeId);
-          //setWaitTypeName(res?.data?.data[0].waitTypeName);
+  
           for ( let i = 0; i < res?.data?.data.length ; i++) {
-           
-            //console.log("waiting-1", res?.data?.data[i]?.totalWaiting)
-            //console.log("waiting-22", queueType[i]?.totalWaiting)
-
-
             
            if (res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting){
             callQueueBackgrund();
@@ -295,17 +286,6 @@ export const MerchantHomePage = () => {
               setWaitTypeName(res?.data?.data[i].waitTypeName);
               setActiveWaitTypeId(i+1);
               playSound();
-
-            console.log("waiting-1", res?.data?.data[i]?.totalWaiting)
-           console.log("i---", i)
-            console.log("waiting-22", queueType[i]?.totalWaiting)
-
-
-              //clearInterval(timeOutId);
-
-             // console.log("i am in a queue");
-          //setWaitTypeId(res?.data?.data[0].waitTypeId);
-          //setWaitTypeName(res?.data?.data[0].waitTypeName);
            }
 
          }
@@ -362,6 +342,16 @@ export const MerchantHomePage = () => {
   }, [updateStatus]);
 
   useEffect(() => {
+
+    if (updateStatus === "SERVED") {
+      setIsCheckInQueue(true);
+     }else if (updateStatus === "CANCELLED"){
+      setIsCancellingQueue(true);
+     }else if (updateStatus === "WAITING") {
+      setIsLoadingWaitCall(true);
+     }
+
+  
     if (queueUpdateData?.code === "000000") {
       setIsCancellingQueue(false);
       setShowCancelModal(false);
@@ -401,18 +391,18 @@ export const MerchantHomePage = () => {
 
   const handleCheckIn = () => {
     setUpdateStatus("SERVED");
-    setIsCheckInQueue(true);
+    //setIsCheckInQueue(true);
   };
 
   const handleCancelQueue = () => {
     setUpdateStatus("CANCELLED");
-    setIsCancellingQueue(true);
+  //  setIsCancellingQueue(true);
   };
 
   const handleCall = () => {
     setUpdateStatus("WAITING");
     setWaitCall("1");
-    setIsLoadingWaitCall(true);
+  //  setIsLoadingWaitCall(true);
   };
 
   const handleLogout = () => {
