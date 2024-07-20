@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import storage from "../utils/storage";
 import { FaUserCircle } from "react-icons/fa";
 import { ArrowDownIcon, ArrowUpIcon } from "../assests/icons/Icons";
-import { currentDate, currentTime } from "../utils/functions";
 import axios from "axios";
 import secrets from "../config/secrets";
 
@@ -16,6 +15,37 @@ const HeaderPage = () => {
   const [logoUrl, setLogoUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
   const [changeIcon, setChangeIcon] = useState(false);
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [calltimer1, setCallTimer1] = useState(0);
+
+   useEffect(() => {
+   // return () => {
+      let timer1 = 0;
+  setInterval(function () {
+    timer1 += 1;
+    setCallTimer1(timer1);
+  }, 10000);
+  //  };
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      let timeRun = new Date().toLocaleTimeString("en-us", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      let dateRun = new Date().toLocaleDateString("en-us", {
+        year: "numeric",
+        month: "numeric",
+        //month: "short",
+        day: "numeric",
+      });
+      setCurrentTime(timeRun);
+      setCurrentDate(dateRun); 
+    };
+  }, [calltimer1]);
 
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {

@@ -1,3 +1,7 @@
+//import React, { useState, useEffect } from "react";
+
+//const [currentTime1, setCurrentTime1] = useState("0");
+
 export const currentDate = new Date().toLocaleDateString("en-us", {
   year: "numeric",
   month: "numeric",
@@ -9,6 +13,33 @@ export const currentTime = new Date().toLocaleTimeString("en-us", {
   hour: "2-digit",
   minute: "2-digit",
 });
+
+// function myFunction() {
+//   return Math.PI;
+// }
+
+//export const currentTime = currentTime1;
+
+// export function currentTime  () {
+//   "90:49";
+// }
+
+// export function currentTime () {
+//   let timeRun = new Date().toLocaleTimeString("en-us", {
+//     hour: "2-digit",
+//     minute: "2-digit",
+//   });
+//   let timer = 0;
+//     setInterval(function () {
+//     timer += 1;  
+//     timeRun = new Date().toLocaleTimeString("en-us", {
+//       hour: "2-digit",
+//       minute: "2-digit",
+//     })
+//   }, 1000);
+
+//   return "23:45";
+// }
 
 export const formatDateTime = (undate) => {
   return new Date(undate).toLocaleDateString("en-us", {

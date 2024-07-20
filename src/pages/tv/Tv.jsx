@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import QRCode from "qrcode.react";
 import { FaUserCircle } from "react-icons/fa";
-import { currentDate, currentTime } from "../../utils/functions";
 import secrets from "../../config/secrets";
 import ReactPlayer from "react-player";
 import { SpinnerOrange } from "../../components/spinner/Spinner";
@@ -20,11 +19,103 @@ export const TvPage = () => {
   const [logoUrl, setLogoUrl] = useState("");
   const [summaryList, setSummaryList] = useState([]);
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
-  const [nextInLine, setNextInLine] = useState("-");
+  const [nextCalled, setNextCalled] = useState("-");
+  const [callList, setCallList] = useState([]);
   const [callTimer, setCallTime] = useState(0);
-  const [callInterval, setCallInterval] = useState(30000);
+  const [callInterval, setCallInterval] = useState(20000);
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [calltimer1, setCallTimer1] = useState(0);
 
   var timeOutId;
+
+  
+
+  useEffect(() => {
+   // return () => {
+      let timer1 = 0;
+  setInterval(function () {
+    timer1 += 1;
+    setCallTimer1(timer1);
+    console.log('timer1', timer1)
+  }, 20000);
+  //  };
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      let timeRun = new Date().toLocaleTimeString("en-us", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      let dateRun = new Date().toLocaleDateString("en-us", {
+        year: "numeric",
+        month: "numeric",
+        //month: "short",
+        day: "numeric",
+      });
+      setCurrentTime(timeRun);
+      setCurrentDate(dateRun); 
+
+      
+      
+     // setTimeout(() => { console.log('World!'); }, 2000)
+
+      for (let i = 0; i < callList.length; i++) {
+        if (callList[i]) {
+         // setNextCalled(callList[i]);
+          console.log('callList[i]', callList[i])
+
+          //console.log('callList[i]--2222', nextCalled)
+        }
+        //console.log('callList[i]--0000', nextCalled)
+      }
+      console.log('callList[0]', callList[0])
+    console.log('callList[1]', callList[1])
+    console.log('callList[2]', callList[2])
+    console.log('callList[3]', callList[3])
+    console.log('callList[4]', callList[4])
+
+    //setNextCalled(callList[0] ?? "-");
+
+    setTimeout(() => { 
+
+      //callList[0] != null ??  setNextCalled(callList[0]) 
+      callList[0] != null ? setNextCalled(callList[0]) : console.log("")
+
+
+
+      //setNextCalled(callList[0] ?? "-");
+    }, 0)
+
+    setTimeout(() => { 
+      
+      callList[1] != null ? setNextCalled(callList[1]) : console.log("")
+    }, 5000)
+
+    setTimeout(() => { 
+     
+      //callList[2] != null ??  setNextCalled(callList[2]) 
+      callList[2] != null ? setNextCalled(callList[2]) : console.log("")
+    }, 10000)
+
+    setTimeout(() => { 
+      //setNextCalled(callList[3] ?? "-");
+      //callList[3] != null ??  setNextCalled(callList[3]) 
+      callList[3] != null ? setNextCalled(callList[3]) : console.log("")
+    }, 15000)
+    
+
+    setTimeout(() => { 
+      //setNextCalled(callList[4] ?? "-");
+      //callList[4] != null ??  setNextCalled(callList[4]) 
+      callList[4] != null ? setNextCalled(callList[4]) : console.log("")
+    }, 20000)
+
+    };
+  }, [calltimer1]);
+
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {
@@ -39,14 +130,17 @@ export const TvPage = () => {
           setLinkUrl(tvData?.linkUrl);
           setAdsVideoUrl(tvData?.adsVideoUrl);
 
-          console.log(tvData?.adsVideoUrl)
+          console.log(tvData?.adsVideoUrl);
           setSummaryList(tvData?.summary);
 
-          for (let i = 0; i < tvData?.summary.length; i++) {
-            if (tvData?.summary[i].nextWaitCalled === "1") {
-              setNextInLine(tvData?.summary[i].nextInLine);
+          handleStartTimer();
+          let listNext = []
+            for (let i = 0; i < tvData?.summary.length; i++) {
+              if (tvData?.summary[i].nextWaitCalled === "1") {
+                listNext[i] = tvData?.summary[i].nextInLine;
+              }
             }
-          }
+            setCallList(listNext);
         }
       })
       .catch(function (error) {
@@ -72,14 +166,13 @@ export const TvPage = () => {
             setAdsVideoUrl(tvData?.adsVideoUrl);
             setSummaryList(tvData?.summary);
 
+            let listNext = []
             for (let i = 0; i < tvData?.summary.length; i++) {
               if (tvData?.summary[i].nextWaitCalled === "1") {
-                setNextInLine(tvData?.summary[i].nextInLine);
-              } 
-              else if (tvData?.summary[i].nextWaitCalled !== "1") {
-                clearTimeout(timeOutId);
+                listNext[i] = tvData?.summary[i].nextInLine;
               }
             }
+            setCallList(listNext);
           }
         })
         .catch(function (error) {
@@ -88,12 +181,15 @@ export const TvPage = () => {
     }, callInterval);
   };
 
+  console.log('callList[i]--', nextCalled)
+
+
   // START TIMER
-  useEffect(() => {
-    if (nextInLine) {
-      handleStartTimer();
-    }
-  }, [nextInLine]);
+  // useEffect(() => {
+  //   if (nextInLine) {
+  //     handleStartTimer();
+  //   }
+  // }, [nextInLine]);
 
   const qrcode = (
     <QRCode
@@ -193,7 +289,7 @@ export const TvPage = () => {
                   Calling
                 </h2>
                 <h3 className="text-center text-[120px] mt-[-2rem] text-[#000000] font-semibold">
-                  {nextInLine}
+                  {nextCalled}
                 </h3>
                 <p className="text-center text-[27px] mt- text-[#000000] font-[300px]">
                   Please Proceed Inside

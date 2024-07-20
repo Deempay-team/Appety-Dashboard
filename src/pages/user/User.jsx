@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { currentDate, currentTime } from "../../utils/functions";
 import { SpinnerWhite, SpinnerOrange } from "../../components/spinner/Spinner";
 import { FaUserCircle } from "react-icons/fa";
 import axios from "axios";
@@ -47,16 +46,50 @@ export const UserHomePage = () => {
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
   const [isUserFetch, setIsUserFetch] = useState(true);
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [calltimer1, setCallTimer1] = useState(0);
 
   //AUDIO SOUND FOR WHEN TABLE IS READY
   const audio = new Audio(ringer);
   audio.loop = true;
   const playSound = () => {
-    audio.loop = true;
-    audio.play();
+    try {
+      audio.loop = true;
+      audio.play();
+    } catch (error) {
+      console.log("audio error", error);
+    }
   };
 
   var timeOutId;
+
+  useEffect(() => {
+    // return () => {
+    let timer1 = 0;
+    setInterval(function () {
+      timer1 += 1;
+      setCallTimer1(timer1);
+    }, 10000);
+    //  };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      let timeRun = new Date().toLocaleTimeString("en-us", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      let dateRun = new Date().toLocaleDateString("en-us", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      setCurrentTime(timeRun);
+      setCurrentDate(dateRun);
+    };
+  }, [calltimer1]);
 
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
   useEffect(() => {

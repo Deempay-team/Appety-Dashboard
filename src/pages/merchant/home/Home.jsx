@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import { FaUserCircle } from "react-icons/fa";
-import { currentDate, currentTime, formatDate, formatDateTime  } from "../../../utils/functions";
+import { formatDate, formatDateTime  } from "../../../utils/functions";
 import { useUpdateQueue } from "../../../hooks/useMechant";
 import {
   SpinnerOrange,
@@ -74,6 +74,37 @@ export const MerchantHomePage = () => {
   const [isLoadingWaitCall, setIsLoadingWaitCall] = useState(false);
   const [callTime, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
+  const [currentTime, setCurrentTime] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+  const [calltimer1, setCallTimer1] = useState(0);
+
+   useEffect(() => {
+   // return () => {
+      let timer1 = 0;
+  setInterval(function () {
+    timer1 += 1;
+    setCallTimer1(timer1);
+  }, 10000);
+  //  };
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      let timeRun = new Date().toLocaleTimeString("en-us", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+
+      let dateRun = new Date().toLocaleDateString("en-us", {
+        year: "numeric",
+        month: "numeric",
+        //month: "short",
+        day: "numeric",
+      });
+      setCurrentTime(timeRun);
+      setCurrentDate(dateRun); 
+    };
+  }, [calltimer1]);
 
   var timeOutId;
 
@@ -81,8 +112,11 @@ export const MerchantHomePage = () => {
   const audio = new Audio(ringer);
   //audio.loop = true;
   const playSound = () => {
-   // audio.loop = true;
+   try {
     audio.play();
+   } catch (error) {
+    console.log("audio error", error);
+   }
   };
 
 
