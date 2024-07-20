@@ -226,7 +226,6 @@ export const UserHomePage = () => {
   const onSubmitHandler = (data) => {
     const { email, cusPhone, cusName, paxNo } = data;
     setEmail(email);
-    //setCusPhone(cusPhone);
     setCusName(cusName);
     setPaxNo(paxNo);
     setCusPhone(`65${cusPhone}`);
@@ -336,9 +335,6 @@ export const UserHomePage = () => {
                               message: "maximum allowed number is 8",
                             },
                           })}
-                          // {...register("cusPhone", {
-                          //   required: "Phone Number is required",
-                          // })}
                         />
                         {errors.cusPhone && (
                           <p className=" mt-1 text-sm text-[red]">
@@ -557,13 +553,13 @@ export const UserHomePage = () => {
             <>
               <div className="pt-5 max-w-md items-center mx-auto grid  bg-[#F6F7F9] py-1 sm:px-0 px-6">
                 <div>
-                  <span className="mt-[180px] flex items-center justify-center">
+                  <span className="mt-[160px] flex items-center justify-center">
                     <NotOpenIcon />
                   </span>
                   <h2 className="text-center my-3 text-2xl text-[#000000]">
                     Sorry we are not open yet
                   </h2>
-                  <h3 className="text-center mb-[190px] text-base text-[#6B6968]">
+                  <h3 className="text-center mb-[170px] text-base text-[#6B6968]">
                     Check With The Host
                   </h3>
                 </div>
