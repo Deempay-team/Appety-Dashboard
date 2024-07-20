@@ -84,7 +84,7 @@ export const MerchantHomePage = () => {
   setInterval(function () {
     timer1 += 1;
     setCallTimer1(timer1);
-  }, 10000);
+  }, 1000);
   //  };
   }, [])
 
