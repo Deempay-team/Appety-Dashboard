@@ -51,61 +51,10 @@ export const TvPage = () => {
       let dateRun = new Date().toLocaleDateString("en-us", {
         year: "numeric",
         month: "numeric",
-        //month: "short",
         day: "numeric",
       });
       setCurrentTime(timeRun);
       setCurrentDate(dateRun);
-
-      // setTimeout(() => { console.log('World!'); }, 2000)
-
-      //   for (let i = 0; i < callList.length; i++) {
-      //     if (callList[i]) {
-      //      // setNextCalled(callList[i]);
-      //       console.log('callList[i]', callList[i])
-
-      //       //console.log('callList[i]--2222', nextCalled)
-      //     }
-      //     //console.log('callList[i]--0000', nextCalled)
-      //   }
-      //   console.log('callList[0]', callList[0])
-      // console.log('callList[1]', callList[1])
-      // console.log('callList[2]', callList[2])
-      // console.log('callList[3]', callList[3])
-      // console.log('callList[4]', callList[4])
-
-      //setNextCalled(callList[0] ?? "-");
-
-      // setTimeout(() => {
-
-      //   //callList[0] != null ??  setNextCalled(callList[0])
-      //   callList[0] != null ? setNextCalled(callList[0]) : console.log("")
-
-      //   //setNextCalled(callList[0] ?? "-");
-      // }, 0)
-
-      // setTimeout(() => {
-
-      //   callList[1] != null ? setNextCalled(callList[1]) : console.log("")
-      // }, 5000)
-
-      // setTimeout(() => {
-
-      //   //callList[2] != null ??  setNextCalled(callList[2])
-      //   callList[2] != null ? setNextCalled(callList[2]) : console.log("")
-      // }, 10000)
-
-      // setTimeout(() => {
-      //   //setNextCalled(callList[3] ?? "-");
-      //   //callList[3] != null ??  setNextCalled(callList[3])
-      //   callList[3] != null ? setNextCalled(callList[3]) : console.log("")
-      // }, 15000)
-
-      // setTimeout(() => {
-      //   //setNextCalled(callList[4] ?? "-");
-      //   //callList[4] != null ??  setNextCalled(callList[4])
-      //   callList[4] != null ? setNextCalled(callList[4]) : console.log("")
-      // }, 20000)
     };
   }, [calltimer1]);
 
@@ -123,8 +72,6 @@ export const TvPage = () => {
           setMerchName(tvData?.merchName);
           setLinkUrl(tvData?.linkUrl);
           setAdsVideoUrl(tvData?.adsVideoUrl);
-
-          console.log(tvData?.adsVideoUrl);
           setSummaryList(tvData?.summary);
 
           handleStartTimer();
@@ -143,8 +90,7 @@ export const TvPage = () => {
       });
   }, []);
 
-  // start timer function calls every 2mins
-  //let timer = 0;
+
   const handleStartTimer = () => {
     timeOutId = setInterval(function () {
       timer += 1;
@@ -176,41 +122,75 @@ export const TvPage = () => {
     }, callInterval);
   };
 
-  //console.log('callList[i]--', nextCalled)
 
   useEffect(() => {
     if (callTimer) {
       let calledTotal = 0;
+
+      let calledList = [];
+
       for (let i = 0; i < summaryList.length; i++) {
         if (summaryList[i].nextWaitCalled === "1") {
-          calledTotal += 1;
-          if (i === nextCalledPosition) {
-            console.log("callList[i]Continue--", i);
+          calledList.push(summaryList[i].nextInLine);
+        }
+      }
+
+      for (let i = 0; i < calledList.length; i++) {
+        calledTotal += 1;
+        // console.log("i", i);
+        // console.log(" calledList.length-1",  calledList.length-1);
+        // console.log("calledList",  calledList);
+        if (i === nextCalledPosition) {
+          //console.log("callList[i]Continue--", i);
+          continue;
+        } else {
+          //console.log("callList[i]--", calledList[i]);
+          if (i < nextCalledPosition) {
             continue;
           } else {
-            console.log("callList[i]--", summaryList[i].nextInLine);
-            if (i < nextCalledPosition) {
-              continue;
+           
+            if (i === calledList.length-1) {
+              setNextCalled(calledList[i]);
+              setNextCalledPosition(-1);
+              break;
             } else {
-              if (i === 4) {
-                setNextCalled(summaryList[i].nextInLine);
-                setNextCalledPosition(-1);
-                break;
-              } else {
-                setNextCalled(summaryList[i].nextInLine);
-                setNextCalledPosition(i);
-                break;
-              }
+              setNextCalled(calledList[i]);
+              setNextCalledPosition(i);
+              break;
             }
           }
         }
       }
 
+      // for (let i = 0; i < summaryList.length; i++) {
+      //   if (summaryList[i].nextWaitCalled === "1") {
+      //     calledTotal += 1;
+      //     if (i === nextCalledPosition) {
+      //       console.log("callList[i]Continue--", i);
+      //       continue;
+      //     } else {
+      //       console.log("callList[i]--", summaryList[i].nextInLine);
+      //       if (i < nextCalledPosition) {
+      //         continue;
+      //       } else {
+      //         if (i === 4) {
+      //           setNextCalled(summaryList[i].nextInLine);
+      //           setNextCalledPosition(-1);
+      //           break;
+      //         } else {
+      //           setNextCalled(summaryList[i].nextInLine);
+      //           setNextCalledPosition(i);
+      //           break;
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+
       if (calledTotal === 0) {
         setNextCalled("-");
         setNextCalledPosition(-1);
       }
-      
     }
   }, [callTimer]);
 
