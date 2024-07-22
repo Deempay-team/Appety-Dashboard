@@ -20,27 +20,26 @@ export const TvPage = () => {
   const [summaryList, setSummaryList] = useState([]);
   const [isMonitorFetch, setIsMonitorFetch] = useState(true);
   const [nextCalled, setNextCalled] = useState("-");
+  const [nextCalledPosition, setNextCalledPosition] = useState(-1);
   const [callList, setCallList] = useState([]);
   const [callTimer, setCallTime] = useState(0);
-  const [callInterval, setCallInterval] = useState(20000);
+  const [callInterval, setCallInterval] = useState(10000);
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
 
   var timeOutId;
 
-  
-
   useEffect(() => {
-   // return () => {
-      let timer1 = 0;
-  setInterval(function () {
-    timer1 += 1;
-    setCallTimer1(timer1);
-    console.log('timer1', timer1)
-  }, 20000);
-  //  };
-  }, [])
+    // return () => {
+    let timer1 = 0;
+    setInterval(function () {
+      timer1 += 1;
+      setCallTimer1(timer1);
+      console.log("timer1", timer1);
+    }, 10000);
+    //  };
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -56,69 +55,64 @@ export const TvPage = () => {
         day: "numeric",
       });
       setCurrentTime(timeRun);
-      setCurrentDate(dateRun); 
+      setCurrentDate(dateRun);
 
-      
-      
-     // setTimeout(() => { console.log('World!'); }, 2000)
+      // setTimeout(() => { console.log('World!'); }, 2000)
 
-      for (let i = 0; i < callList.length; i++) {
-        if (callList[i]) {
-         // setNextCalled(callList[i]);
-          console.log('callList[i]', callList[i])
+      //   for (let i = 0; i < callList.length; i++) {
+      //     if (callList[i]) {
+      //      // setNextCalled(callList[i]);
+      //       console.log('callList[i]', callList[i])
 
-          //console.log('callList[i]--2222', nextCalled)
-        }
-        //console.log('callList[i]--0000', nextCalled)
-      }
-      console.log('callList[0]', callList[0])
-    console.log('callList[1]', callList[1])
-    console.log('callList[2]', callList[2])
-    console.log('callList[3]', callList[3])
-    console.log('callList[4]', callList[4])
-
-    //setNextCalled(callList[0] ?? "-");
-
-    setTimeout(() => { 
-
-      //callList[0] != null ??  setNextCalled(callList[0]) 
-      callList[0] != null ? setNextCalled(callList[0]) : console.log("")
-
-
+      //       //console.log('callList[i]--2222', nextCalled)
+      //     }
+      //     //console.log('callList[i]--0000', nextCalled)
+      //   }
+      //   console.log('callList[0]', callList[0])
+      // console.log('callList[1]', callList[1])
+      // console.log('callList[2]', callList[2])
+      // console.log('callList[3]', callList[3])
+      // console.log('callList[4]', callList[4])
 
       //setNextCalled(callList[0] ?? "-");
-    }, 0)
 
-    setTimeout(() => { 
-      
-      callList[1] != null ? setNextCalled(callList[1]) : console.log("")
-    }, 5000)
+      // setTimeout(() => {
 
-    setTimeout(() => { 
-     
-      //callList[2] != null ??  setNextCalled(callList[2]) 
-      callList[2] != null ? setNextCalled(callList[2]) : console.log("")
-    }, 10000)
+      //   //callList[0] != null ??  setNextCalled(callList[0])
+      //   callList[0] != null ? setNextCalled(callList[0]) : console.log("")
 
-    setTimeout(() => { 
-      //setNextCalled(callList[3] ?? "-");
-      //callList[3] != null ??  setNextCalled(callList[3]) 
-      callList[3] != null ? setNextCalled(callList[3]) : console.log("")
-    }, 15000)
-    
+      //   //setNextCalled(callList[0] ?? "-");
+      // }, 0)
 
-    setTimeout(() => { 
-      //setNextCalled(callList[4] ?? "-");
-      //callList[4] != null ??  setNextCalled(callList[4]) 
-      callList[4] != null ? setNextCalled(callList[4]) : console.log("")
-    }, 20000)
+      // setTimeout(() => {
 
+      //   callList[1] != null ? setNextCalled(callList[1]) : console.log("")
+      // }, 5000)
+
+      // setTimeout(() => {
+
+      //   //callList[2] != null ??  setNextCalled(callList[2])
+      //   callList[2] != null ? setNextCalled(callList[2]) : console.log("")
+      // }, 10000)
+
+      // setTimeout(() => {
+      //   //setNextCalled(callList[3] ?? "-");
+      //   //callList[3] != null ??  setNextCalled(callList[3])
+      //   callList[3] != null ? setNextCalled(callList[3]) : console.log("")
+      // }, 15000)
+
+      // setTimeout(() => {
+      //   //setNextCalled(callList[4] ?? "-");
+      //   //callList[4] != null ??  setNextCalled(callList[4])
+      //   callList[4] != null ? setNextCalled(callList[4]) : console.log("")
+      // }, 20000)
     };
   }, [calltimer1]);
 
-
   //API CALL FOR THE USER TO SEE MERCHANT DETAILS
+  let timer = 0;
   useEffect(() => {
+    timer += 1;
     axios
       .get(`${baseURL}api/v1/link/fetch/monitor/${monitorUrl}`)
       .then(function (res) {
@@ -134,13 +128,14 @@ export const TvPage = () => {
           setSummaryList(tvData?.summary);
 
           handleStartTimer();
-          let listNext = []
-            for (let i = 0; i < tvData?.summary.length; i++) {
-              if (tvData?.summary[i].nextWaitCalled === "1") {
-                listNext[i] = tvData?.summary[i].nextInLine;
-              }
+          let listNext = [];
+          for (let i = 0; i < tvData?.summary.length; i++) {
+            if (tvData?.summary[i].nextWaitCalled === "1") {
+              listNext[i] = tvData?.summary[i].nextInLine;
             }
-            setCallList(listNext);
+          }
+          setCallList(listNext);
+          setCallTime(timer);
         }
       })
       .catch(function (error) {
@@ -149,11 +144,10 @@ export const TvPage = () => {
   }, []);
 
   // start timer function calls every 2mins
-  let timer = 0;
+  //let timer = 0;
   const handleStartTimer = () => {
     timeOutId = setInterval(function () {
       timer += 1;
-      setCallTime(timer);
       axios
         .get(`${baseURL}api/v1/link/fetch/monitor/${monitorUrl}`)
         .then(function (res) {
@@ -166,13 +160,14 @@ export const TvPage = () => {
             setAdsVideoUrl(tvData?.adsVideoUrl);
             setSummaryList(tvData?.summary);
 
-            let listNext = []
+            let listNext = [];
             for (let i = 0; i < tvData?.summary.length; i++) {
               if (tvData?.summary[i].nextWaitCalled === "1") {
                 listNext[i] = tvData?.summary[i].nextInLine;
               }
             }
             setCallList(listNext);
+            setCallTime(timer);
           }
         })
         .catch(function (error) {
@@ -181,15 +176,43 @@ export const TvPage = () => {
     }, callInterval);
   };
 
-  console.log('callList[i]--', nextCalled)
+  //console.log('callList[i]--', nextCalled)
 
+  useEffect(() => {
+    if (callTimer) {
+      let calledTotal = 0;
+      for (let i = 0; i < summaryList.length; i++) {
+        if (summaryList[i].nextWaitCalled === "1") {
+          calledTotal += 1;
+          if (i === nextCalledPosition) {
+            console.log("callList[i]Continue--", i);
+            continue;
+          } else {
+            console.log("callList[i]--", summaryList[i].nextInLine);
+            if (i < nextCalledPosition) {
+              continue;
+            } else {
+              if (i === 4) {
+                setNextCalled(summaryList[i].nextInLine);
+                setNextCalledPosition(-1);
+                break;
+              } else {
+                setNextCalled(summaryList[i].nextInLine);
+                setNextCalledPosition(i);
+                break;
+              }
+            }
+          }
+        }
+      }
 
-  // START TIMER
-  // useEffect(() => {
-  //   if (nextInLine) {
-  //     handleStartTimer();
-  //   }
-  // }, [nextInLine]);
+      if (calledTotal === 0) {
+        setNextCalled("-");
+        setNextCalledPosition(-1);
+      }
+      
+    }
+  }, [callTimer]);
 
   const qrcode = (
     <QRCode
