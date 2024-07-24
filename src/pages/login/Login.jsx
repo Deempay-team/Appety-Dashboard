@@ -42,7 +42,7 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      navigate("/dashboard/merchant");
+      let roleStatus = "SUPERADMIN";
       const { data: userDetails } = data;
       login(userDetails?.accessToken);
       storage.add(
@@ -56,8 +56,20 @@ export const LoginPage = () => {
           phoneNo: userDetails?.phoneNo,
         })
       );
+
+      // if(roleStatus === "ADMIN") {
+      //   navigate("/dashboard/merchant");
+      // }else{
+      //   navigate("/dashboard/admin/overview");
+      // }
+
+      if(userDetails?.role === "ADMIN") {
+        navigate("/dashboard/merchant");
+      }else{
+        navigate("/dashboard/admin/overview");
+      }
       reset();
-      //setUserId(userDetails?.userId);
+      
     } else if (data?.code === "U00005") {
       setApiResponseError(
         <section style={{ color: "red" }}>Invalid login credentials</section>
@@ -70,7 +82,6 @@ export const LoginPage = () => {
         10
       );
     }
-    // reset();
   }, [data]);
 
   // SUBMMIT FORM

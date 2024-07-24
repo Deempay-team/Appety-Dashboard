@@ -20,13 +20,11 @@ const HeaderPage = () => {
   const [calltimer1, setCallTimer1] = useState(0);
 
    useEffect(() => {
-   // return () => {
       let timer1 = 0;
   setInterval(function () {
     timer1 += 1;
     setCallTimer1(timer1);
   }, 1000);
-  //  };
   }, [])
 
   useEffect(() => {
@@ -39,7 +37,6 @@ const HeaderPage = () => {
       let dateRun = new Date().toLocaleDateString("en-us", {
         year: "numeric",
         month: "numeric",
-        //month: "short",
         day: "numeric",
       });
       setCurrentTime(timeRun);

@@ -31,14 +31,11 @@ export const TvPage = () => {
   var timeOutId;
 
   useEffect(() => {
-    // return () => {
     let timer1 = 0;
     setInterval(function () {
       timer1 += 1;
       setCallTimer1(timer1);
-      console.log("timer1", timer1);
     }, 10000);
-    //  };
   }, []);
 
   useEffect(() => {
@@ -137,14 +134,10 @@ export const TvPage = () => {
 
       for (let i = 0; i < calledList.length; i++) {
         calledTotal += 1;
-        // console.log("i", i);
-        // console.log(" calledList.length-1",  calledList.length-1);
         // console.log("calledList",  calledList);
         if (i === nextCalledPosition) {
-          //console.log("callList[i]Continue--", i);
           continue;
         } else {
-          //console.log("callList[i]--", calledList[i]);
           if (i < nextCalledPosition) {
             continue;
           } else {
@@ -161,31 +154,6 @@ export const TvPage = () => {
           }
         }
       }
-
-      // for (let i = 0; i < summaryList.length; i++) {
-      //   if (summaryList[i].nextWaitCalled === "1") {
-      //     calledTotal += 1;
-      //     if (i === nextCalledPosition) {
-      //       console.log("callList[i]Continue--", i);
-      //       continue;
-      //     } else {
-      //       console.log("callList[i]--", summaryList[i].nextInLine);
-      //       if (i < nextCalledPosition) {
-      //         continue;
-      //       } else {
-      //         if (i === 4) {
-      //           setNextCalled(summaryList[i].nextInLine);
-      //           setNextCalledPosition(-1);
-      //           break;
-      //         } else {
-      //           setNextCalled(summaryList[i].nextInLine);
-      //           setNextCalledPosition(i);
-      //           break;
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
 
       if (calledTotal === 0) {
         setNextCalled("-");

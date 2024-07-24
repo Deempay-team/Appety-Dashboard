@@ -12,6 +12,7 @@ import {
 import { useJoinQueue } from "../../hooks/useUser";
 import secrets from "../../config/secrets";
 import ringer from "../../assests/sounds/success-sound.mp3";
+import useSound from 'use-sound';
 
 export const UserHomePage = () => {
   const { linkUrl } = useParams();
@@ -49,29 +50,28 @@ export const UserHomePage = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
+  const [play] = useSound(ringer);
 
   //AUDIO SOUND FOR WHEN TABLE IS READY
-  const audio = new Audio(ringer);
-  audio.loop = true;
-  const playSound = () => {
-    try {
-      audio.loop = true;
-      audio.play();
-    } catch (error) {
-      console.log("audio error", error);
-    }
-  };
+  // const audio = new Audio(ringer);
+  // audio.loop = true;
+  // const playSound = () => {
+  //   try {
+  //     audio.loop = true;
+  //     audio.play();
+  //   } catch (error) {
+  //     console.log("audio error", error);
+  //   }
+  // };
 
   var timeOutId;
 
   useEffect(() => {
-    // return () => {
     let timer1 = 0;
     setInterval(function () {
       timer1 += 1;
       setCallTimer1(timer1);
     }, 1000);
-    //  };
   }, []);
 
   useEffect(() => {
@@ -244,7 +244,7 @@ export const UserHomePage = () => {
 
             if (res?.data?.data?.waitCall === "1") {
               setProgressBar(false);
-              playSound();
+              play();
             }
           }
         })

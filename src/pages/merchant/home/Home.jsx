@@ -20,6 +20,7 @@ import {
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
 import ringer from "../../../assests/sounds/success-sound.mp3";
+import useSound from 'use-sound';
 
 import "./styles.css";
 
@@ -77,15 +78,14 @@ export const MerchantHomePage = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
+  const [play] = useSound(ringer);
 
    useEffect(() => {
-   // return () => {
       let timer1 = 0;
   setInterval(function () {
     timer1 += 1;
     setCallTimer1(timer1);
   }, 1000);
-  //  };
   }, [])
 
   useEffect(() => {
@@ -107,18 +107,6 @@ export const MerchantHomePage = () => {
   }, [calltimer1]);
 
   var timeOutId;
-
-  //AUDIO SOUND FOR WHEN TABLE IS READY
-  const audio = new Audio(ringer);
-  //audio.loop = true;
-  const playSound = () => {
-   try {
-    audio.play();
-   } catch (error) {
-    console.log("audio error", error);
-   }
-  };
-
 
   //CALL TO UPDATE QUEUE
   const { data: queueUpdateData, mutate: fetchQueueUpdate } = useUpdateQueue({
@@ -179,7 +167,6 @@ export const MerchantHomePage = () => {
 
   //CALL QUERY SUMMARY API
   useEffect(() => {
-    //setIsLoadingWaitType(true);
     if (isButtonWaitTye || statusUpdateSuccess) {
       // clearInterval(timeOutId);
       axios
@@ -315,11 +302,10 @@ export const MerchantHomePage = () => {
            if (res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting){
             callQueueBackgrund();
               setQueueType(res?.data?.data);
-           // setStatusUpdateSuccess(true);
               setWaitTypeId(res?.data?.data[i].waitTypeId);
               setWaitTypeName(res?.data?.data[i].waitTypeName);
               setActiveWaitTypeId(i+1);
-              playSound();
+              play();
            }
 
          }
@@ -328,7 +314,6 @@ export const MerchantHomePage = () => {
       .catch(function (error) {
         console.log("summary-error", error);
       });
-    //  startTimer();
     }
   }, [callTime])
 
@@ -342,7 +327,6 @@ export const MerchantHomePage = () => {
   }, callInterval);
 }
  
-
   useEffect(() => {
     if (serveStatus) {
       callApi();
@@ -375,17 +359,7 @@ export const MerchantHomePage = () => {
     }
   }, [updateStatus]);
 
-  useEffect(() => {
-
-    if (updateStatus === "SERVED") {
-      setIsCheckInQueue(true);
-     }else if (updateStatus === "CANCELLED"){
-      setIsCancellingQueue(true);
-     }else if (updateStatus === "WAITING") {
-      setIsLoadingWaitCall(true);
-     }
-
-  
+  useEffect(() => {  
     if (queueUpdateData?.code === "000000") {
       setIsCancellingQueue(false);
       setShowCancelModal(false);
@@ -420,23 +394,29 @@ export const MerchantHomePage = () => {
       }
       setUpdateStatus("");
       // call waiting queue api
+    } 
+    else  {
+      setIsCheckInQueue(false);
+      setIsCancellingQueue(false);
+      setIsLoadingWaitCall(false);
+      setUpdateStatus("");
     }
   }, [queueUpdateData]);
 
   const handleCheckIn = () => {
     setUpdateStatus("SERVED");
-    //setIsCheckInQueue(true);
+    setIsCheckInQueue(true);
   };
 
   const handleCancelQueue = () => {
     setUpdateStatus("CANCELLED");
-  //  setIsCancellingQueue(true);
+    setIsCancellingQueue(true);
   };
 
   const handleCall = () => {
     setUpdateStatus("WAITING");
     setWaitCall("1");
-  //  setIsLoadingWaitCall(true);
+    setIsLoadingWaitCall(true);
   };
 
   const handleLogout = () => {
@@ -669,6 +649,8 @@ export const MerchantHomePage = () => {
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
                     <h2 className="text_24 font-semibold">Sorry</h2>
                     <h4 className="text_16">There is no available Queue</h4>
+                  
+                    {/* <button onClick={play}>Boop!</button> */}
                   </span>
                 </div>
               </>
