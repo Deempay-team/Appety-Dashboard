@@ -19,8 +19,6 @@ import {
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
-import ringer from "../../../assests/sounds/success-sound.mp3";
-import useSound from 'use-sound';
 
 import "./styles.css";
 
@@ -78,7 +76,6 @@ export const MerchantHomePage = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
-  const [play] = useSound(ringer);
 
    useEffect(() => {
       let timer1 = 0;
@@ -98,7 +95,6 @@ export const MerchantHomePage = () => {
       let dateRun = new Date().toLocaleDateString("en-us", {
         year: "numeric",
         month: "numeric",
-        //month: "short",
         day: "numeric",
       });
       setCurrentTime(timeRun);
@@ -168,7 +164,6 @@ export const MerchantHomePage = () => {
   //CALL QUERY SUMMARY API
   useEffect(() => {
     if (isButtonWaitTye || statusUpdateSuccess) {
-      // clearInterval(timeOutId);
       axios
         .get(`${baseURL}api/v1/wait/summary/${merchId}`)
         .then(function (res) {
@@ -239,7 +234,6 @@ export const MerchantHomePage = () => {
             setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
             setCurrentWaitId(res?.data?.data[0]?.waitId ?? "-");
             setCurrentWait(res?.data?.data[0]?.waitNo ?? "-");
-
             if (res?.data?.data[0]?.waitCall === "1") {
               setCurrentStatus("CALLED");
             } else {
@@ -296,16 +290,19 @@ export const MerchantHomePage = () => {
       .get(`${baseURL}api/v1/wait/summary/${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
-  
           for ( let i = 0; i < res?.data?.data.length ; i++) {
-            
            if (res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting){
             callQueueBackgrund();
               setQueueType(res?.data?.data);
               setWaitTypeId(res?.data?.data[i].waitTypeId);
               setWaitTypeName(res?.data?.data[i].waitTypeName);
               setActiveWaitTypeId(i+1);
-              play();
+              Notify(
+                "success",
+                "Joined Succesfully!",
+                `Someone just joined ${res?.data?.data[i].waitTypeName}`,
+                10
+              );
            }
 
          }
@@ -319,7 +316,6 @@ export const MerchantHomePage = () => {
 
    // start timer function 
    const startTimer = () => {
-
    let timer = 0;
    timeOutId = setInterval(function () {
     timer += 1;
@@ -377,7 +373,6 @@ export const MerchantHomePage = () => {
       setStatusUpdateSuccess(true);
 
       if (updateStatus === "SERVED") {
-        // //call served queue api
         if (serveStatus !== "SERVED") {
           handleServeStatus();
         } else {
@@ -393,7 +388,6 @@ export const MerchantHomePage = () => {
         }
       }
       setUpdateStatus("");
-      // call waiting queue api
     } 
     else  {
       setIsCheckInQueue(false);
