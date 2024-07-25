@@ -63,13 +63,12 @@ export const LoginPage = () => {
       //   navigate("/dashboard/admin/overview");
       // }
 
-      if(userDetails?.role === "ADMIN") {
+      if (userDetails?.role === "ADMIN") {
         navigate("/dashboard/merchant");
-      }else{
+      } else {
         navigate("/dashboard/admin/overview");
       }
       reset();
-      
     } else if (data?.code === "U00005") {
       setApiResponseError(
         <section style={{ color: "red" }}>Invalid login credentials</section>
@@ -118,16 +117,19 @@ export const LoginPage = () => {
           </div>
 
           <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <div className="mt-10">
+            <div class="relative w-full mt-10">
               <input
                 type="email"
-                placeholder="Enter Email Address"
+                placeholder=""
                 onFocus={() => setApiResponseError("")}
-                className={`in_put ${errors.email && "input_error"}`}
+                className={`in_putNew peer bg-[#EEEEEE] ${
+                  errors.email && "input_error"
+                }`}
                 {...register("email", {
                   required: "Email is required",
                 })}
               />
+              <label className="label_new z-2">Enter Email Address</label>
               {errors.email && (
                 <p className=" mt-1 text-sm text-[red]">
                   {errors.email.message}
@@ -135,23 +137,24 @@ export const LoginPage = () => {
               )}
             </div>
 
-            <div className="relative">
-              <div className="mt-10">
-                <input
-                  type={show ? "text" : "password"}
-                  placeholder="Enter Password"
-                  onFocus={() => setApiResponseError("")}
-                  className={`in_put ${errors.password && "input_error"}`}
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                />
-                {errors.password && (
-                  <p className=" mt-1 text-sm text-[red]">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+            <div class="relative w-full mt-10">
+              <input
+                type={show ? "text" : "password"}
+                placeholder=""
+                onFocus={() => setApiResponseError("")}
+                className={`in_putNew peer bg-[#EEEEEE] ${
+                  errors.password && "input_error"
+                }`}
+                {...register("password", {
+                  required: "Password is required",
+                })}
+              />
+              <label className="label_new z-2">Enter Password</label>
+              {errors.password && (
+                <p className=" mt-1 text-sm text-[red]">
+                  {errors.password.message}
+                </p>
+              )}
               <span onClick={() => setShow(!show)}>
                 {show ? (
                   <span className="absolute cursor-pointer right-[14px] top-[18px] ">
@@ -172,14 +175,14 @@ export const LoginPage = () => {
               >
                 Forgot password?
               </Link>
-            </div >
-              <button
-                type="submit"
-                className="submit_btn "
-                disabled={isLoggingIn}
-              >
-                {isLoggingIn ? <SpinnerWhite /> : "Login"}
-              </button>
+            </div>
+            <button
+              type="submit"
+              className="submit_btn "
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? <SpinnerWhite /> : "Login"}
+            </button>
           </form>
 
           <p className="mt-5  mb-[0px] text-center text-sm ">

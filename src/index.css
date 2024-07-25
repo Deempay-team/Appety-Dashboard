@@ -68,9 +68,6 @@ body {
     @apply text-[#F99762];
   }
   
-
-  #bdbdbd
-
   .dark-bg {
     @apply bg-[#FDDCCB];
   }

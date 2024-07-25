@@ -185,7 +185,7 @@ export const AdminMerchantListPage = () => {
               <tbody>
                 <tr
                   className="bg-[#ffffff]"
-                  //key={i}
+                //key={i}
                 >
                   <td className="text_16 px-2 py-8 capitalize">The place</td>
                   <td className="text_16 px-2 py-8">
@@ -231,34 +231,34 @@ export const AdminMerchantListPage = () => {
                 <>
                   <form onSubmit={handleSubmit(onSubmitHandler)}>
                     <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid">
-                      <div className="mt-8">
+                      <div className="mt-8 relative">
                         <input
-                          placeholder="Enter First Name"
+                          placeholder=""
                           type="text"
-                          className={`in_put ${
-                            errors.firstName && "input_error"
-                          }`}
+                          className={`in_putNew peer bg-[#EEEEEE] ${errors.firstName && "input_error"
+                            }`}
                           {...register("firstName", {
                             required: "First Name is required",
                           })}
                         />
+                        <label className="label_new z-2">Enter First Name</label>
                         {errors.firstName && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.firstName.message}
                           </p>
                         )}
                       </div>
-                      <div className="mt-8">
+                      <div className="mt-8 relative">
                         <input
-                          placeholder="Enter Last Name"
+                          placeholder=""
                           type="text"
-                          className={`in_put ${
-                            errors.lastName && "input_error"
-                          }`}
+                          className={`in_putNew peer bg-[#EEEEEE] ${errors.lastName && "input_error"
+                            }`}
                           {...register("lastName", {
                             required: "Last Name is required",
                           })}
                         />
+                        <label className="label_new z-2">Enter Last Name</label>
                         {errors.lastName && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.lastName.message}
@@ -266,17 +266,17 @@ export const AdminMerchantListPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="mt-8">
+                    <div className="mt-8 relative">
                       <input
-                        placeholder="Enter Resturant Name"
+                        placeholder=""
                         type="text"
-                        className={`in_put ${
-                          errors.businessName && "input_error"
-                        }`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${errors.businessName && "input_error"
+                          }`}
                         {...register("businessName", {
                           required: "Resturant is required",
                         })}
                       />
+                      <label className="label_new z-2">Enter Resturant Name</label>
                       {errors.businessName && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.businessName.message}
@@ -284,15 +284,17 @@ export const AdminMerchantListPage = () => {
                       )}
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-8 relative">
                       <input
-                        placeholder="Enter Email"
+                        placeholder=""
                         type="email"
-                        className={`in_put ${errors.email && "input_error"}`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${errors.email && "input_error"
+                          }`}
                         {...register("email", {
                           required: "Email is required",
                         })}
                       />
+                      <label className="label_new z-2">Enter Email</label>
                       {errors.email && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.email.message}
@@ -300,60 +302,62 @@ export const AdminMerchantListPage = () => {
                       )}
                     </div>
 
-                    <div className="mt-8">
+                    <div className="mt-8 relative">
                       <input
-                        placeholder="Enter Address"
+                        placeholder=""
                         type="text"
-                        className={`in_put ${errors.address && "input_error"}`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${errors.address && "input_error"
+                          }`}
                         {...register("address", {
                           required: "Address is required",
                         })}
                       />
+                      <label className="label_new z-2">Enter Address</label>
                       {errors.address && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.address.message}
                         </p>
                       )}
                     </div>
-                    <div className="mt-8">
+                    <div className="mt-8 relative">
                       <input
-                        placeholder="Enter Phone Number"
+                        placeholder=""
                         type="text"
-                        className={`in_put ${errors.phoneNo && "input_error"}`}
+                        className={`in_putNew peer bg-[#EEEEEE] put ${errors.phoneNo && "input_error"
+                          }`}
                         {...register("phoneNo", {
                           required: "Phone Number is required",
                         })}
                       />
+                      <label className="label_new z-2">Enter Phone Number</label>
                       {errors.phoneNo && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.phoneNo.message}
                         </p>
                       )}
                     </div>
-                    <div className="relative">
-                      <div className="mt-8">
-                        <input
-                          type={show ? "text" : "password"}
-                          placeholder="Enter Password"
-                          className={`in_put ${
-                            errors.password && "input_error"
+                    <div class="relative w-full mt-8">
+                      <input
+                        type={show ? "text" : "password"}
+                        placeholder=""
+                        className={`in_putNew peer bg-[#EEEEEE] ${errors.password && "input_error"
                           }`}
-                          {...register("password", {
-                            required: "password is required",
-                            pattern: {
-                              value:
-                                /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z!@#\$%\^\&*\)\(+=._-\d]{6,}$/,
-                              message:
-                                "Your password should contain at least a number and a letter and minimum of 6 characters",
-                            },
-                          })}
-                        />
-                        {errors.password && (
-                          <p className=" mt-1 text-sm text-[red]">
-                            {errors.password.message}
-                          </p>
-                        )}
-                      </div>
+                        {...register("password", {
+                          required: "password is required",
+                          pattern: {
+                            value:
+                              /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z!@#\$%\^\&*\)\(+=._-\d]{6,}$/,
+                            message:
+                              "Your password should contain at least a number and a letter and minimum of 6 characters",
+                          },
+                        })}
+                      />
+                      <label className="label_new z-2">Enter Password</label>
+                      {errors.password && (
+                        <p className=" mt-1 text-sm text-[red]">
+                          {errors.password.message}
+                        </p>
+                      )}
                       <span onClick={() => setShow(!show)}>
                         {show ? (
                           <span className="absolute cursor-pointer right-[14px] top-[18px] ">

@@ -351,12 +351,12 @@ export const UserHomePage = () => {
 
                       <div class="relative w-full mt-10">
                         <input
-                          type="text"
+                          type="number"
                           placeholder=""
                           autocomplete="on"
                           name="name"
                           id="name"
-                          className={`in_putNew peer  ${
+                          className={`in_putNew peer put ${
                             errors.cusPhone && "input_error"
                           }`}
                           {...register("cusPhone", {
