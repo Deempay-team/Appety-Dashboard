@@ -12,14 +12,12 @@ import { ForgotPasswordPage } from "./pages/password/ForgotPassword";
 import { SignUpPage } from "./pages/signup";
 import { SignUpVerifyPage } from "./pages/signup";
 import PrivateRoute from "./routes/PrivateRoute";
-//import HomePage from "./pages/Home";
 import { NotFoundPage } from "./pages/not-found";
 import { UserHomePage } from "./pages/user";
 import { MerchantHomePage } from "./pages/merchant/home/Home";
 import LinkSettingsPage from "./pages/merchant/linksettings/LinkSettings";
 import ImageSettingsPage from "./pages/merchant/imagesettings/ImageSettings";
 import QueueSettingsPage from "./pages/merchant/queuesettings/QueueSettings";
-import { VerifyPage } from "./pages/verify";
 import { TvPage } from "./pages/tv";
 import { AdminMerchantListPage } from "./pages/admin/merchant-list";
 
@@ -59,7 +57,6 @@ const App = () => {
           <Route path="/display-tv/:monitorUrl?" element={<TvPage />} exact />
           <Route path="/signup" element={<SignUpPage />} exact />
           <Route path="/signup/verify/:email?/:token?" element={<SignUpVerifyPage />} exact />
-          <Route path="/verify-account/:userEmail?" element={<VerifyPage />} exact />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

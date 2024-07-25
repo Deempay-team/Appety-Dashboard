@@ -545,7 +545,7 @@ export const MerchantHomePage = () => {
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
                 <p className="text_24">Waiting in Queue</p>
-                <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[50px] h-[30px] xl:w-[50px] w-[30px] text_24  bg-[#FAA87C] items-center flex justify-center ">
+                <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[50px] h-[30px] xl:w-[50px] w-[30px] text_36  bg-[#FAA87C] items-center flex justify-center ">
                   {waitSize}
                 </span>
               </span>
@@ -649,8 +649,7 @@ export const MerchantHomePage = () => {
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
                     <h2 className="text_24 font-semibold">Sorry</h2>
                     <h4 className="text_16">There is no available Queue</h4>
-                  
-                    {/* <button onClick={play}>Boop!</button> */}
+                
                   </span>
                 </div>
               </>
@@ -837,7 +836,7 @@ export const MerchantHomePage = () => {
               </div>
             </div>
 
-            <div className="text-[#6b6968] rounded-lg  bg-[#ffffff] w-full mt-8 items-center mx-auto mb-[100px] ">
+            <div className="text-[#6b6968] rounded-lg  bg-[#ffffff] w-full mt-8 items-center mx-auto mb-[200px] ">
               <div className="flex bg-[#ffffff] grid-col-3  pt-4  pb-2">
                 <div className="px-16 grid pt-4">
                   <div className="pb-9 grid grid-cols-2	gap-4">
