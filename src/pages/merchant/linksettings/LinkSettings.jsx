@@ -73,8 +73,6 @@ const LinkSettingsPage = () => {
   const [copied, setCopied] = useState(true);
   const [isUpdatedMerch, setIsUpdatedMerch] = useState(false);
 
-  // monitorUrl: res?.data?.data?.monitorUrl,
-
   // FORM VALIDATION
   const {
     register,
@@ -495,7 +493,6 @@ const LinkSettingsPage = () => {
       setIsLoadingOrderUrl(true);
       setIsUpdatedMerch(true);
     }
-    //reset();
   };
 
   const onSubmitAdsVideoUrl = (data) => {
@@ -506,7 +503,6 @@ const LinkSettingsPage = () => {
       setIsLoadingVideoUrl(true);
       setIsUpdatedMerch(true);
     }
-    //reset();
   };
 
   const onSubmitHandler = (data) => {
@@ -697,11 +693,9 @@ const LinkSettingsPage = () => {
                           <>
                             <td className="">
                               <span
-                              //onClick={() => {timeInput()}}
                               >
                                 <input
                                   type="time"
-                                  //ref={inputRef}
                                   className={`input-time mx-auto ${
                                     errors.startTime && "input_error"
                                   }`}

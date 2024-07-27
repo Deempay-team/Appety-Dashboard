@@ -122,14 +122,15 @@ export const LoginPage = () => {
                 type="email"
                 placeholder=""
                 onFocus={() => setApiResponseError("")}
-                className={`in_putNew peer bg-[#EEEEEE] ${
+                className={`in_putNew peer  ${
                   errors.email && "input_error"
                 }`}
                 {...register("email", {
                   required: "Email is required",
                 })}
               />
-              <label className="label_new z-2">Enter Email Address</label>
+              <label className="label_new z-2">Enter Email</label>
+              <label className="label_newTop z-2">Email</label>
               {errors.email && (
                 <p className=" mt-1 text-sm text-[red]">
                   {errors.email.message}
@@ -142,7 +143,7 @@ export const LoginPage = () => {
                 type={show ? "text" : "password"}
                 placeholder=""
                 onFocus={() => setApiResponseError("")}
-                className={`in_putNew peer bg-[#EEEEEE] ${
+                className={`in_putNew peer  ${
                   errors.password && "input_error"
                 }`}
                 {...register("password", {
@@ -150,6 +151,7 @@ export const LoginPage = () => {
                 })}
               />
               <label className="label_new z-2">Enter Password</label>
+              <label className="label_newTop z-2">Password</label>
               {errors.password && (
                 <p className=" mt-1 text-sm text-[red]">
                   {errors.password.message}

@@ -120,8 +120,8 @@ body {
     @apply text-[#000000] xl:text-[32px] text-[26px] font-normal leading-6;
   }
 
-  .text_36 {
-    @apply text-[#000000] xl:text-[36px] text-[28px] font-normal leading-6;
+  .text_34 {
+    @apply text-[#000000] xl:text-[34px] text-[26px] font-normal leading-6;
   }
 
   .input_label {
@@ -129,11 +129,15 @@ body {
   }
 
   .label_new {
-    @apply text-gray-500 pointer-events-none absolute left-4 inset-y-0 h-fit flex items-center select-none transition-all text-sm peer-focus:text-sm peer-placeholder-shown:text-base px-1 peer-focus:px-1 peer-placeholder-shown:px-0 bg-white peer-focus:bg-white peer-placeholder-shown:bg-transparent m-0 peer-focus:m-0 peer-placeholder-shown:m-auto -translate-y-1/2 peer-focus:text-[#F99762] peer-focus:-translate-y-1/2 peer-placeholder-shown:translate-y-0;
+    @apply text-gray-500 pointer-events-none absolute left-4 peer-focus:hidden inset-y-0 h-fit flex items-center select-none transition-all text-sm peer-focus:text-sm peer-placeholder-shown:text-base px-1 peer-focus:px-1 peer-placeholder-shown:px-0 bg-white peer-focus:bg-white peer-placeholder-shown:bg-transparent m-0 peer-focus:m-0 peer-placeholder-shown:m-auto -translate-y-1/2 peer-focus:text-[#F99762] peer-focus:-translate-y-1/2 peer-placeholder-shown:translate-y-0;
+  }
+
+  .label_newTop {
+    @apply text-gray-500 pointer-events-none hidden peer-focus:flex absolute left-4 inset-y-0 h-fit items-center select-none transition-all text-sm peer-focus:text-sm peer-placeholder-shown:text-base px-1 peer-focus:px-1 peer-placeholder-shown:px-0 bg-white peer-focus:bg-white peer-placeholder-shown:bg-transparent m-0 peer-focus:m-0 peer-placeholder-shown:m-auto -translate-y-1/2 peer-focus:text-[#F99762] peer-focus:-translate-y-1/2 peer-placeholder-shown:translate-y-0;
   }
 
   .in_putNew {
-    @apply transition-all px-4 py-3 w-full text-lg text-gray-600 bg-white rounded-lg border border-[#FEEAE0] outline-none select-all focus:border-[#F99762];
+    @apply transition-all px-4 py-3 w-full text-lg text-gray-600 bg-white rounded-lg border-[0.7px] border-[#F99762] outline-none select-all focus:border-[1.5px] focus:border-[#F99762];
   }
 
   .in_put {

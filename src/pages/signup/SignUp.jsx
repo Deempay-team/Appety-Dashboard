@@ -178,7 +178,7 @@ export const SignUpPage = () => {
                     <input
                       placeholder=""
                       type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
+                      className={`in_putNew peer ${
                         errors.firstName && "input_error"
                       }`}
                       {...register("firstName", {
@@ -186,6 +186,7 @@ export const SignUpPage = () => {
                       })}
                     />
                     <label className="label_new z-2">Enter First Name</label>
+                    <label className="label_newTop z-2">First Name</label>
                     {errors.firstName && (
                       <p className=" mt-1 text-sm text-[red]">
                         {errors.firstName.message}
@@ -197,7 +198,7 @@ export const SignUpPage = () => {
                     <input
                       placeholder=""
                       type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
+                      className={`in_putNew peer ${
                         errors.lastName && "input_error"
                       }`}
                       {...register("lastName", {
@@ -205,6 +206,7 @@ export const SignUpPage = () => {
                       })}
                     />
                     <label className="label_new z-2">Enter Last Name</label>
+                    <label className="label_newTop z-2">Last Name</label>
                     {errors.lastName && (
                       <p className=" mt-1 text-sm text-[red]">
                         {errors.lastName.message}
@@ -216,7 +218,7 @@ export const SignUpPage = () => {
                   <input
                     placeholder=""
                     type="text"
-                    className={`in_putNew peer bg-[#EEEEEE] ${
+                    className={`in_putNew peer ${
                       errors.businessName && "input_error"
                     }`}
                     {...register("businessName", {
@@ -224,6 +226,7 @@ export const SignUpPage = () => {
                     })}
                   />
                   <label className="label_new z-2">Enter Resturant Name</label>
+                  <label className="label_newTop z-2">Resturant Name</label>
                   {errors.businessName && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.businessName.message}
@@ -235,7 +238,7 @@ export const SignUpPage = () => {
                   <input
                     placeholder=""
                     type="email"
-                    className={`in_putNew peer bg-[#EEEEEE] ${
+                    className={`in_putNew peer ${
                       errors.email && "input_error"
                     }`}
                     {...register("email", {
@@ -243,6 +246,7 @@ export const SignUpPage = () => {
                     })}
                   />
                   <label className="label_new z-2">Enter Email</label>
+                  <label className="label_newTop z-2">Email</label>
                   {errors.email && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.email.message}
@@ -254,7 +258,7 @@ export const SignUpPage = () => {
                   <input
                     placeholder=""
                     type="text"
-                    className={`in_putNew peer bg-[#EEEEEE] ${
+                    className={`in_putNew peer ${
                       errors.address && "input_error"
                     }`}
                     {...register("address", {
@@ -262,6 +266,7 @@ export const SignUpPage = () => {
                     })}
                   />
                   <label className="label_new z-2">Enter Address</label>
+                  <label className="label_newTop z-2">Address</label>
                   {errors.address && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.address.message}
@@ -272,7 +277,7 @@ export const SignUpPage = () => {
                   <input
                     placeholder=""
                     type="text"
-                    className={`in_putNew peer bg-[#EEEEEE] put ${
+                    className={`in_putNew peer put ${
                       errors.phoneNo && "input_error"
                     }`}
                     {...register("phoneNo", {
@@ -280,6 +285,7 @@ export const SignUpPage = () => {
                     })}
                   />
                   <label className="label_new z-2">Enter Phone Number</label>
+                  <label className="label_newTop z-2">Phone Number</label>
                   {errors.phoneNo && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.phoneNo.message}
@@ -291,7 +297,7 @@ export const SignUpPage = () => {
                   <input
                     type={show ? "text" : "password"}
                     placeholder=""
-                    className={`in_putNew peer bg-[#EEEEEE] ${
+                    className={`in_putNew peer ${
                       errors.password && "input_error"
                     }`}
                     {...register("password", {
@@ -305,6 +311,7 @@ export const SignUpPage = () => {
                     })}
                   />
                   <label className="label_new z-2">Enter Password</label>
+                  <label className="label_newTop z-2">Password</label>
                   {errors.password && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.password.message}

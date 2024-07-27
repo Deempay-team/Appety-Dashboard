@@ -271,7 +271,6 @@ export const TvPage = () => {
               <ReactPlayer
                 url={adsVideoUrl}
                 width="100%"
-                //height="100vh"
                 height="720px"
                 playing={true}
                 loop={true}

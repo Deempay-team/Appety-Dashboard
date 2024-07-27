@@ -242,6 +242,7 @@ export const AdminMerchantListPage = () => {
                           })}
                         />
                         <label className="label_new z-2">Enter First Name</label>
+                        <label className="label_newTop z-2">First Name</label>
                         {errors.firstName && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.firstName.message}
@@ -259,6 +260,7 @@ export const AdminMerchantListPage = () => {
                           })}
                         />
                         <label className="label_new z-2">Enter Last Name</label>
+                        <label className="label_newTop z-2">Last Name</label>
                         {errors.lastName && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.lastName.message}
@@ -277,6 +279,7 @@ export const AdminMerchantListPage = () => {
                         })}
                       />
                       <label className="label_new z-2">Enter Resturant Name</label>
+                      <label className="label_newTop z-2">Resturant Name</label>
                       {errors.businessName && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.businessName.message}
@@ -295,6 +298,7 @@ export const AdminMerchantListPage = () => {
                         })}
                       />
                       <label className="label_new z-2">Enter Email</label>
+                      <label className="label_newTop z-2">Email</label>
                       {errors.email && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.email.message}
@@ -313,6 +317,7 @@ export const AdminMerchantListPage = () => {
                         })}
                       />
                       <label className="label_new z-2">Enter Address</label>
+                      <label className="label_newTop z-2">Address</label>
                       {errors.address && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.address.message}
@@ -330,6 +335,7 @@ export const AdminMerchantListPage = () => {
                         })}
                       />
                       <label className="label_new z-2">Enter Phone Number</label>
+                      <label className="label_newTop z-2">Phone Number</label>
                       {errors.phoneNo && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.phoneNo.message}
@@ -353,6 +359,7 @@ export const AdminMerchantListPage = () => {
                         })}
                       />
                       <label className="label_new z-2">Enter Password</label>
+                      <label className="label_newTop z-2">Password</label>
                       {errors.password && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.password.message}

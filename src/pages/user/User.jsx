@@ -342,6 +342,7 @@ export const UserHomePage = () => {
                           })}
                         />
                         <label className="label_new z-2">Enter Your Name</label>
+                        <label className="label_newTop z-2">Name</label>
                         {errors.cusName && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.cusName.message}
@@ -372,6 +373,7 @@ export const UserHomePage = () => {
                           })}
                         />
                         <label className="label_new z-2">Enter Your Phone Number</label>
+                        <label className="label_newTop z-2">Phone Number</label>
                         {errors.cusPhone && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.cusPhone.message}
@@ -398,6 +400,7 @@ export const UserHomePage = () => {
                           })}
                         />
                         <label className="label_new z-2">Enter Pax</label>
+                        <label className="label_newTop z-2">Pax</label>
                         {errors.paxNo && (
                           <p className=" mt-1 text-sm text-[red]">
                             {errors.paxNo.message}
@@ -459,7 +462,8 @@ export const UserHomePage = () => {
                            }`}
                            {...register("email")}
                          />
-                         <label className="label_new z-2">Enter Pax</label>
+                         <label className="label_new z-2">Enter Email</label>
+                         <label className="label_newTop z-2">Email</label>
                        </div>
                         // <div className="mt-6">
                         //   <input

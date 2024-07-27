@@ -6,11 +6,12 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   CloseModalIcon,
+  RemoveQueueModalIcon,
 } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import { FaUserCircle } from "react-icons/fa";
-import { formatDate, formatDateTime  } from "../../../utils/functions";
+import { formatDate, formatDateTime } from "../../../utils/functions";
 import { useUpdateQueue } from "../../../hooks/useMechant";
 import {
   SpinnerOrange,
@@ -67,6 +68,7 @@ export const MerchantHomePage = () => {
   const [activeWaitTypeId, setActiveWaitTypeId] = useState(1);
   const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showCenterCancelModal, setShowCenterCancelModal] = useState(false);
   const [cancelQueueList, setCancelQueueList] = useState([]);
   const [isButtonWaitTye, setIsButtonWaitTye] = useState(false);
   const [waitCall, setWaitCall] = useState("0");
@@ -77,13 +79,13 @@ export const MerchantHomePage = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
 
-   useEffect(() => {
-      let timer1 = 0;
-  setInterval(function () {
-    timer1 += 1;
-    setCallTimer1(timer1);
-  }, 1000);
-  }, [])
+  useEffect(() => {
+    let timer1 = 0;
+    setInterval(function () {
+      timer1 += 1;
+      setCallTimer1(timer1);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -98,7 +100,7 @@ export const MerchantHomePage = () => {
         day: "numeric",
       });
       setCurrentTime(timeRun);
-      setCurrentDate(dateRun); 
+      setCurrentDate(dateRun);
     };
   }, [calltimer1]);
 
@@ -276,6 +278,12 @@ export const MerchantHomePage = () => {
           if (res?.data?.code === "000000") {
             setQueueList(res?.data?.data);
             setWaitSize(res?.data?.data.length);
+
+            setCurrentName(res?.data?.data[0]?.cusName ?? "-");
+            setCurrentPax(res?.data?.data[0]?.paxNo ?? "-");
+            setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
+            setCurrentWaitId(res?.data?.data[0]?.waitId ?? "-");
+            setCurrentWait(res?.data?.data[0]?.waitNo ?? "-");
           }
         })
         .catch(function (error) {
@@ -285,44 +293,51 @@ export const MerchantHomePage = () => {
   };
 
   useEffect(() => {
-    if(callTime) {
+    if (callTime) {
       axios
-      .get(`${baseURL}api/v1/wait/summary/${merchId}`)
-      .then(function (res) {
-        if (res?.data?.code === "000000") {
-          for ( let i = 0; i < res?.data?.data.length ; i++) {
-           if (res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting){
-            callQueueBackgrund();
-              setQueueType(res?.data?.data);
-              setWaitTypeId(res?.data?.data[i].waitTypeId);
-              setWaitTypeName(res?.data?.data[i].waitTypeName);
-              setActiveWaitTypeId(i+1);
-              Notify(
-                "success",
-                "Joined Succesfully!",
-                `Someone just joined ${res?.data?.data[i].waitTypeName}`,
-                10
-              );
-           }
+        .get(`${baseURL}api/v1/wait/summary/${merchId}`)
+        .then(function (res) {
+          if (res?.data?.code === "000000") {   
 
-         }
-        }
-      })
-      .catch(function (error) {
-        console.log("summary-error", error);
-      });
+            for (let i = 0; i < res?.data?.data.length; i++) {
+              if (
+                res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting
+              ) {
+                callQueueBackgrund();
+                setQueueType(res?.data?.data);
+                setWaitTypeId(res?.data?.data[i].waitTypeId);
+                setWaitTypeName(res?.data?.data[i].waitTypeName);
+                setActiveWaitTypeId(i + 1);
+
+                // console.log("Joined Succesfully!00", res?.data?.data);
+                // console.log("i-totalWaiting", res?.data?.data[i]?.totalWaiting);
+                // console.log("queueType-totalWaiting", queueType[i]?.totalWaiting);
+
+                Notify(
+                  "success",
+                  "Joined Succesfully!",
+                  `Someone just joined ${res?.data?.data[i].waitTypeName}`,
+                  10
+                );
+              }
+            }
+          }
+        })
+        .catch(function (error) {
+          console.log("summary-error", error);
+        });
     }
-  }, [callTime])
+  }, [callTime]);
 
-   // start timer function 
-   const startTimer = () => {
-   let timer = 0;
-   timeOutId = setInterval(function () {
-    timer += 1;
-    setCallTime(timer);  
-  }, callInterval);
-}
- 
+  // start timer function
+  const startTimer = () => {
+    let timer = 0;
+    timeOutId = setInterval(function () {
+      timer += 1;
+      setCallTime(timer);
+    }, callInterval);
+  };
+
   useEffect(() => {
     if (serveStatus) {
       callApi();
@@ -355,10 +370,11 @@ export const MerchantHomePage = () => {
     }
   }, [updateStatus]);
 
-  useEffect(() => {  
+  useEffect(() => {
     if (queueUpdateData?.code === "000000") {
       setIsCancellingQueue(false);
       setShowCancelModal(false);
+      setShowCenterCancelModal(false);
       setIsCheckInQueue(false);
       setIsLoadingCancelModal(false);
       setWaitCall("0");
@@ -388,8 +404,7 @@ export const MerchantHomePage = () => {
         }
       }
       setUpdateStatus("");
-    } 
-    else  {
+    } else {
       setIsCheckInQueue(false);
       setIsCancellingQueue(false);
       setIsLoadingWaitCall(false);
@@ -430,6 +445,10 @@ export const MerchantHomePage = () => {
 
   const closeModal = () => {
     setShowCancelModal(false);
+  };
+
+  const closeCenterModal = () => {
+    setShowCenterCancelModal(false);
   };
 
   return (
@@ -532,14 +551,13 @@ export const MerchantHomePage = () => {
 
       {/* BODY */}
       <div className="flex min-h-screen items-start fixed">
-
         {/* LEFT SIDE */}
         <div class="sticky top-0  2xl:w-[380px] w-[362px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
               <span className="flex pl-10 ">
                 <p className="text_24">Waiting in Queue</p>
-                <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[50px] h-[30px] xl:w-[50px] w-[30px] text_36  bg-[#FAA87C] items-center flex justify-center ">
+                <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[55px] h-[30px] xl:w-[55px] w-[30px] text_34  bg-[#FAA87C] items-center flex justify-center ">
                   {waitSize}
                 </span>
               </span>
@@ -643,7 +661,6 @@ export const MerchantHomePage = () => {
                   <span className="grid pt-[15rem] items-center justify-center text-center max-w-sm">
                     <h2 className="text_24 font-semibold">Sorry</h2>
                     <h4 className="text_16">There is no available Queue</h4>
-                
                   </span>
                 </div>
               </>
@@ -892,10 +909,10 @@ export const MerchantHomePage = () => {
                   {isCheckInQueue ? <SpinnerWhite /> : "Check - In"}
                 </button>
                 <button
-                  onClick={handleCancelQueue}
+                  onClick={() => setShowCenterCancelModal(true)}
                   className="short_btn_white ml-6"
                 >
-                  {isCancellingQueue ? <SpinnerOrangeMedium /> : "Cancel"}
+                  Cancel
                 </button>
                 <button onClick={handleCall} className="short_btn_green ml-6 ">
                   {isLoadingWaitCall ? <SpinnerWhite /> : " Call"}
@@ -1018,7 +1035,7 @@ export const MerchantHomePage = () => {
                                     Date/Time
                                   </p>
                                   <p className="text_14 text-[#000000]">
-                                  {formatDateTime(list.createTime)}
+                                    {formatDateTime(list.createTime)}
                                   </p>
                                 </div>
                               </div>
@@ -1045,6 +1062,45 @@ export const MerchantHomePage = () => {
           </div>
         </div>
       </div>
+
+      {/* SHOW CANCEL CENTER MODAL */}
+      {showCenterCancelModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg p-[112px] w-[600px] relative">
+              <div className="">
+                <div className="flex justify-center items-center">
+                  <RemoveQueueModalIcon />
+                </div>
+                <div className=" text-center ">
+                  <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
+                    Are you sure?
+                  </p>
+                  <p className="text_18 text-[#000000] pb-[84px]">
+                    This queue will completely removed
+                  </p>
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={closeCenterModal}
+                    type="submit"
+                    className="short_btn mr-[24px]"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={handleCancelQueue}
+                    type="submit"
+                    className="short_btn_white"
+                  >
+                    {isCancellingQueue ? <SpinnerOrangeMedium /> : "Continue"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
 
       {/* SHOW CANCEL QUEUE MODAL */}
       {showCancelModal ? (
