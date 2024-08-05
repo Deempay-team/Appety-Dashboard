@@ -22,6 +22,8 @@ export const TvPage = () => {
   const [nextCalled, setNextCalled] = useState("-");
   const [nextCalledPosition, setNextCalledPosition] = useState(-1);
   const [callList, setCallList] = useState([]);
+
+  const [callListSaved, setCallListSaved] = useState([]);
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
   const [currentTime, setCurrentTime] = useState("");
@@ -87,7 +89,6 @@ export const TvPage = () => {
       });
   }, []);
 
-
   const handleStartTimer = () => {
     timeOutId = setInterval(function () {
       timer += 1;
@@ -119,7 +120,6 @@ export const TvPage = () => {
     }, callInterval);
   };
 
-
   useEffect(() => {
     if (callTimer) {
       let calledTotal = 0;
@@ -132,24 +132,38 @@ export const TvPage = () => {
         }
       }
 
-      for (let i = 0; i < calledList.length; i++) {
-        calledTotal += 1;
-        // console.log("calledList",  calledList);
-        if (i === nextCalledPosition) {
-          continue;
-        } else {
-          if (i < nextCalledPosition) {
+      let newCalled = "";
+      let newCalledPosition = 0;
+
+      for (let i = 0; i < callList.length; i++) {
+        if (callList[i] && !callListSaved.includes(callList[i])) {
+          newCalled = callList[i];
+          newCalledPosition = i;
+        }
+      }
+      setCallListSaved(calledList);
+
+      if (newCalled) {
+        calledTotal = 1;
+        setNextCalled(newCalled);
+      } else {
+        for (let i = 0; i < calledList.length; i++) {
+          calledTotal += 1;
+          if (i === nextCalledPosition) {
             continue;
           } else {
-           
-            if (i === calledList.length-1) {
-              setNextCalled(calledList[i]);
-              setNextCalledPosition(-1);
-              break;
+            if (i < nextCalledPosition) {
+              continue;
             } else {
-              setNextCalled(calledList[i]);
-              setNextCalledPosition(i);
-              break;
+              if (i === calledList.length - 1) {
+                setNextCalled(calledList[i]);
+                setNextCalledPosition(-1);
+                break;
+              } else {
+                setNextCalled(calledList[i]);
+                setNextCalledPosition(i);
+                break;
+              }
             }
           }
         }
