@@ -404,7 +404,7 @@ export const MerchantHomePage = () => {
         }
       }
       setUpdateStatus("");
-    } else {
+    } else if(queueUpdateData?.code ==="U00016") {
       setIsCheckInQueue(false);
       setIsCancellingQueue(false);
       setIsLoadingWaitCall(false);
