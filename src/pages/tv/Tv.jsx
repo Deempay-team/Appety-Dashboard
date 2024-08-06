@@ -146,6 +146,7 @@ export const TvPage = () => {
       if (newCalled) {
         calledTotal = 1;
         setNextCalled(newCalled);
+        setNextCalledPosition(-1);
       } else {
         for (let i = 0; i < calledList.length; i++) {
           calledTotal += 1;
