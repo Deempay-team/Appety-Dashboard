@@ -308,11 +308,6 @@ export const MerchantHomePage = () => {
                 setWaitTypeId(res?.data?.data[i].waitTypeId);
                 setWaitTypeName(res?.data?.data[i].waitTypeName);
                 setActiveWaitTypeId(i + 1);
-
-                // console.log("Joined Succesfully!00", res?.data?.data);
-                // console.log("i-totalWaiting", res?.data?.data[i]?.totalWaiting);
-                // console.log("queueType-totalWaiting", queueType[i]?.totalWaiting);
-
                 Notify(
                   "success",
                   "Joined Succesfully!",
@@ -408,7 +403,16 @@ export const MerchantHomePage = () => {
       setIsCheckInQueue(false);
       setIsCancellingQueue(false);
       setIsLoadingWaitCall(false);
-      setUpdateStatus("");
+      setUpdateStatus("")
+      setShowCancelModal(false);
+      setShowCenterCancelModal(false);
+      Notify(
+        "error",
+        "Update Unsuccesfully!",
+        queueUpdateData?.message,
+        5
+      );
+
     }
   }, [queueUpdateData]);
 

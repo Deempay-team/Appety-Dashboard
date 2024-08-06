@@ -173,15 +173,15 @@ body {
   }
 
   .short_btn {
-    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#F99762] hover:bg-[#ed996c] w-[158px] text-sm text-[#ffffff] font-normal;
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#F99762] hover:bg-[#FBBA96] w-[158px] text-sm text-[#ffffff] font-normal;
   }
 
   .short_btn_white {
-    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762]  w-[158px] text-sm text-[#F99762] font-normal;
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762]  w-[158px] text-sm text-[#F99762] hover:bg-[#F6F7F9] font-normal;
   }
 
   .short_btn_green {
-    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#33B469] hover:bg-[#46be78] hover:text-[#ffffff]  w-[158px] text-sm text-[#FFFFFF] font-normal;
+    @apply sm:h-[50px] h-[50px] rounded-[5px] bg-[#33B469] hover:bg-[#83dea9] hover:text-[#ffffff]  w-[158px] text-sm text-[#FFFFFF] font-normal;
   }
 
   .big_btn {
