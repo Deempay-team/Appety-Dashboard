@@ -152,7 +152,7 @@ export const SignUpPage = () => {
                 <AppetyLogoBig />
                 <div className="grid pl-4">
                   <h2 className=" md:text-6xl text-2xl font-semibold text-[#ffffff]">
-                    APPETY
+                   appety
                   </h2>
                   <p className="md:text-2xl text-lg md:pt-4 pt-0 text-[#ffffff]">
                     Queue Management System
@@ -160,7 +160,7 @@ export const SignUpPage = () => {
                 </div>
               </div>
               <p className="md:text-2xl text-lg md:pt-[198px] pt-10 text-[#ffffff]">
-                Get other payment softwares from Appety
+                Get other payment softwares from appety
               </p>
             </div>
 
