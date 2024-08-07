@@ -181,7 +181,7 @@ export const TvPage = () => {
   const qrcode = (
     <QRCode
       id="qrCodeId"
-      size={265}
+      size={250}
       value={`https://queue.appety.com.sg/user/${linkUrl}`}
       bgColor="white"
       fqColor="black"
@@ -299,11 +299,18 @@ export const TvPage = () => {
               />
             </div>
             <div className="bg-[#ffffff] h-[350px] col-span-2 rounded-[5px]">
-              <div className="flex items-center justify-between px-[80px]">
-                <p className="text-[#000000] text-[27px] max-w-[400px]">
-                  Scan for a Queue Number. Do not close your browser. Scan again
-                  if you close your browser accidentally.
+              <div className="flex items-center justify-between px-[30px]">
+                <div className="grid">
+                <p className="text-[#000000] text-[18px] max-w-[500px] pt-[14px]">
+                Scan the QR code to get a queue number. Keep the browser open for a notification when your table is ready. If you close the browser by accident, scan the QR code again and enter your mobile number to retrieve your queue number.
                 </p>
+                <p className="text-[#000000] text-[18px] max-w-[500px] pt-[14px]">
+                扫描二维码获取排队号码。保持浏览器打开，桌位准备好时会发送通知。如果不小心关闭了浏览器，请重新扫描二维码并输入您的手机号码以找回排队号码。
+                </p>
+                <p className="text-[#000000] text-[18px] max-w-[500px] pt-[14px]">
+                QR 코드를 스캔하여 대기 번호를 받으세요. 테이블이 준비되면 브라우저에 알림이 전송되므로 브라우저를 열어 두세요. 브라우저를 실수로 닫은 경우, QR 코드를 다시 스캔하고 휴대폰 번호를 입력하여 대기 번호를 다시 받으세요.
+                </p>
+                </div>
                 <section className="mt-6">{qrcode}</section>
               </div>
             </div>
