@@ -8,6 +8,7 @@ import {
   CloseModalIcon,
   RemoveQueueModalIcon,
   SuccessModalIcon,
+  AppetyLogoMedium,
 } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
@@ -311,11 +312,6 @@ export const MerchantHomePage = () => {
                 setWaitTypeName(res?.data?.data[i].waitTypeName);
                 setActiveWaitTypeId(i + 1);
                 
-                // if (showJoinModal) {
-                   
-                // }
-
-
                 setShowJoinModal(true)
                 // Notify(
                 //   "success",
@@ -426,7 +422,7 @@ export const MerchantHomePage = () => {
         setUpdateStatus("");
       } else {
         setUpdateStatus("");
-        Notify("error", "Update Unsuccesfully!", queueUpdateData?.message, 5);
+        Notify("error", "Failed to Update", queueUpdateData?.message, 5);
       }
     }
   }, [queueUpdateData]);
@@ -959,7 +955,17 @@ export const MerchantHomePage = () => {
                 </button>
               </div>
             </div>
+            
+
+            <div className="flex items-center justify-center text-base mb-[80px]">
+              <p className="text-center pr-2">Powered By</p>
+              <AppetyLogoMedium />
+            </div>
           </main>
+          {/* <div className="flex items-center justify-center text-base ">
+              <p className="text-center pr-2">Powered By</p>
+              <AppetyLogoMedium />
+            </div> */}
         </div>
 
         {/* RIGHT SIDE */}

@@ -6,6 +6,7 @@ import { FaUserCircle } from "react-icons/fa";
 import secrets from "../../config/secrets";
 import ReactPlayer from "react-player";
 import { SpinnerOrange } from "../../components/spinner/Spinner";
+import { AppetyLogoMedium } from "../../assests/icons/Icons";
 
 const column = ["Pax", "Next In Line"];
 
@@ -232,9 +233,15 @@ export const TvPage = () => {
                   <div class="h-5 mx-4 border-[0.5px] border-[#000000]"></div>
                   <p className="">{currentTime}</p>
                 </span>
+                <div className="flex ml-8 items-center justify-center text-base">
+              <p className="text-center pr-2">Powered By</p>
+              <AppetyLogoMedium />
+            </div>
               </div>
             </div>
           </div>
+
+          
 
           <div className="grid grid-cols-3 gap-4 px-10 pt-10 pb-20 bg-[#F6F7F9] h-fit">
             <div className="bg-[#ffffff] h-[350px] rounded-[5px]">

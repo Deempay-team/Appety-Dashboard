@@ -246,7 +246,7 @@ export const UserHomePage = () => {
             if (res?.data?.data?.waitCall === "1") {
               setProgressBar(false);
               playSound();
-             // play();
+              // play();
             }
           }
         })
@@ -328,8 +328,7 @@ export const UserHomePage = () => {
                   </div>
                   <div className="sm:max-w-md max-w-[366px] rounded-lg items-center mx-auto grid  bg-[#FFFFFF] py-10 px-6">
                     <form onSubmit={handleSubmit(onSubmitHandler)} className="">
-                   
-                       <div class="relative w-full ">
+                      <div class="relative w-full ">
                         <input
                           type="text"
                           placeholder=""
@@ -374,7 +373,9 @@ export const UserHomePage = () => {
                             },
                           })}
                         />
-                        <label className="label_new z-2">Enter Your Phone Number</label>
+                        <label className="label_new z-2">
+                          Enter Your Phone Number
+                        </label>
                         <label className="label_newTop z-2">Phone Number</label>
                         {errors.cusPhone && (
                           <p className=" mt-1 text-sm text-[red]">
@@ -383,7 +384,7 @@ export const UserHomePage = () => {
                         )}
                       </div>
 
-                        <div class="relative w-full mt-10">
+                      <div class="relative w-full mt-10">
                         <input
                           type="number"
                           placeholder=""
@@ -409,12 +410,14 @@ export const UserHomePage = () => {
                           </p>
                         )}
                       </div>
-                   
+
                       <div class="text-[#606060] rounded-lg h-[50px] px-4 flex items-center  justify-between bg-[#FEEAE0] w-full mt-10">
                         <span class="text-[#6B6968] text-sm">
                           Estimated Time
                         </span>
-                        <span class="text-[#000000] text-lg ">{estimateTime}</span>
+                        <span class="text-[#000000] text-lg ">
+                          {estimateTime}
+                        </span>
                       </div>
 
                       <div className="mt-6 flex ">
@@ -455,34 +458,20 @@ export const UserHomePage = () => {
                       </div>
 
                       {isEmail ? (
-                         <div class="relative w-full mt-8">
-                         <input
-                           type="email"
-                           placeholder=""
-                           className={`in_putNew peer put ${
-                             errors.email && "input_error"
-                           }`}
-                           {...register("email")}
-                         />
-                         <label className="label_new z-2">Enter Email</label>
-                         <label className="label_newTop z-2">Email</label>
-                       </div>
-                        // <div className="mt-6">
-                        //   <input
-                        //     type="email"
-                        //     placeholder="Enter Your Email (Optional)"
-                        //     className={`in_put bg-[#ffffff] ${
-                        //       errors.email && "input_error"
-                        //     }`}
-                        //     {...register("email")}
-                        //   />
-                        //   {errors.email && (
-                        //     <p className=" mt-1 text-sm text-[red]">
-                        //       {errors.email.message}
-                        //     </p>
-                        //   )}
-                        // </div>
-                      ) : null}
+                        <div class="relative w-full mt-8">
+                          <input
+                            type="email"
+                            placeholder=""
+                            className={`in_putNew peer put ${
+                              errors.email && "input_error"
+                            }`}
+                            {...register("email")}
+                          />
+                          <label className="label_new z-2">Enter Email</label>
+                          <label className="label_newTop z-2">Email</label>
+                        </div>
+                      ) : 
+                      null}
 
                       <div>
                         <button
