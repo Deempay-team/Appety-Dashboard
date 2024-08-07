@@ -34,6 +34,8 @@ const ImageSettingsPage = () => {
               linkUrlStatus: res?.data?.data?.linkUrlStatus,
               logoUrl: res.data.data?.logoUrl,
               preOrderUrl: res?.data?.data?.preOrderUrl,
+              monitorUrl: res?.data?.data?.monitorUrl,
+              adsVideoUrl:  res?.data?.data?.adsVideoUrl,
             })
           );
         }
