@@ -19,6 +19,7 @@ import {
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
+import { Modal } from "antd";
 import secrets from "../../../config/secrets";
 
 import "./styles.css";
@@ -279,6 +280,8 @@ export const MerchantHomePage = () => {
             setQueueList(res?.data?.data);
             setWaitSize(res?.data?.data.length);
 
+             console.log("served-error", res?.data?.data);
+
             setCurrentName(res?.data?.data[0]?.cusName ?? "-");
             setCurrentPax(res?.data?.data[0]?.paxNo ?? "-");
             setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
@@ -308,6 +311,12 @@ export const MerchantHomePage = () => {
                 setWaitTypeId(res?.data?.data[i].waitTypeId);
                 setWaitTypeName(res?.data?.data[i].waitTypeName);
                 setActiveWaitTypeId(i + 1);
+                // Modal.success({
+                //   title: "Joined Succesfully!",
+                //   content:
+                //     `Someone just joined ${res?.data?.data[i].waitTypeName}`,
+                //  // onOk: () => existingUser(),
+                // });
                 Notify(
                   "success",
                   "Joined Succesfully!",
@@ -366,6 +375,7 @@ export const MerchantHomePage = () => {
   }, [updateStatus]);
 
   useEffect(() => {
+   if(queueUpdateData) {
     if (queueUpdateData?.code === "000000") {
       setIsCancellingQueue(false);
       setShowCancelModal(false);
@@ -385,21 +395,21 @@ export const MerchantHomePage = () => {
 
       if (updateStatus === "SERVED") {
         if (serveStatus !== "SERVED") {
-          handleServeStatus();
+         // handleServeStatus();
         } else {
           callApi();
           setIsLoadingServed(true);
         }
       } else {
         if (serveStatus !== "CANCELLED") {
-          handleCancelStatus();
+          //handleCancelStatus();
         } else {
           callApi();
           setIsLoadingServed(false);
         }
       }
       setUpdateStatus("");
-    } else if(queueUpdateData?.code ==="U00016") {
+    } else {
       setIsCheckInQueue(false);
       setIsCancellingQueue(false);
       setIsLoadingWaitCall(false);
@@ -412,8 +422,8 @@ export const MerchantHomePage = () => {
         queueUpdateData?.message,
         5
       );
-
     }
+   }
   }, [queueUpdateData]);
 
   const handleCheckIn = () => {
@@ -894,14 +904,14 @@ export const MerchantHomePage = () => {
                 {/* </div> */}
                 <div class="h-[170px] mx-4 border-[0.5px] border-[#d9d9d9]"></div>
                 <div className="mx-auto grid pt-1">
-                  <h2 className="text-center text_14 text-[#6B6968] font-normal">
+                  <h2 className="text-center text_14 mt-7 text-[#6B6968] font-normal">
                     Queue Number
                   </h2>
-                  <h3 className="text-center mt-[-30px] text-[56px] text-[#000000] font-semibold">
+                  <h3 className="text-center mt-[-15px] text-[56px] text-[#000000] font-semibold">
                     {currentWait}
                   </h3>
                   <p className="text-center mt-[-25px] text_14 text-[#000000] font-normal">
-                    Called in 25 Mins ago
+                    {/* Called in 25 Mins ago */}
                   </p>
                 </div>
               </div>

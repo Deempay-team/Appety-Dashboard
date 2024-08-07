@@ -225,8 +225,8 @@ export const SignUpPage = () => {
                       required: "Resturant is required",
                     })}
                   />
-                  <label className="label_new z-2">Enter Resturant Name</label>
-                  <label className="label_newTop z-2">Resturant Name</label>
+                  <label className="label_new z-2">Enter Restaurant Name</label>
+                  <label className="label_newTop z-2">Restaurant Name</label>
                   {errors.businessName && (
                     <p className=" mt-1 text-sm text-[red]">
                       {errors.businessName.message}

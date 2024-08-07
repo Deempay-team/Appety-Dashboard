@@ -168,6 +168,14 @@ body {
     @apply block flex-1  w-full text-sm rounded-lg border-[red] focus:border-[red] outline-none border-[2px];
   }
 
+  .input_short_error {
+    @apply block flex-1  w-full text-sm rounded-lg border-[red] focus:border-[red] outline-none border-[1px];
+  }
+
+  .input_shorter_error {
+    @apply block   w-[90px] text-sm rounded-lg border-[red] focus:border-[red] outline-none border-[1px];
+  }
+
   .submit_btn {
     @apply text-base leading-4 text-[#ffffff] h-[50px]  rounded-lg bg-[#F99762] hover:bg-[#ed996c]  w-full;
   }

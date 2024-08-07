@@ -205,33 +205,55 @@ const QueueSettingsPage = () => {
 
   //RETURN UPDATE API DATA
   useEffect(() => {
-    if (data?.code === "000000") {
-      setIsLoadingEditQ1(false);
-      setIsLoadingEditQ2(false);
-      setIsLoadingEditQ3(false);
-      setIsLoadingEditQ4(false);
-      setIsLoadingEditQ5(false);
-      setIsLoadingRemove(false);
-      setIsLoadingAdd(false);
+    if (data) {
+      if (data?.code === "000000") {
+        setIsLoadingEditQ1(false);
+        setIsLoadingEditQ2(false);
+        setIsLoadingEditQ3(false);
+        setIsLoadingEditQ4(false);
+        setIsLoadingEditQ5(false);
+        setIsLoadingRemove(false);
+        setIsLoadingAdd(false);
 
-      setIsEditQ1(true);
-      setIsEditQ2(true);
-      setIsEditQ3(true);
-      setIsEditQ4(true);
-      setIsEditQ5(true);
-      queryUpdate();
-      closeModal();
-      Notify("success", "Your Queue has being updated Successfully!");
-      setWaitTypeName("");
-      setEstimateTime("");
-      setMinPax("");
-      setMaxPax("");
-    }else {
-     // Notify("error", data?.message);
-      setWaitTypeName("");
-      setEstimateTime("");
-      setMinPax("");
-      setMaxPax("");
+        setIsEditQ1(true);
+        setIsEditQ2(true);
+        setIsEditQ3(true);
+        setIsEditQ4(true);
+        setIsEditQ5(true);
+        queryUpdate();
+        closeModal();
+        Notify("success", "Your Queue has being updated Successfully!");
+        setWaitTypeName("");
+        setEstimateTime("");
+        setMinPax("");
+        setMaxPax("");
+      } else {
+        Notify("error", data?.message);
+        setWaitTypeName("");
+        setEstimateTime("");
+        setMinPax("");
+        setMaxPax("");
+      }
+      switch (waitTypeName) {
+        case "Q1":
+          setIsLoadingEditQ1(false);
+          break;
+        case "Q2":
+          setIsLoadingEditQ2(false);
+          break;
+        case "Q3":
+          setIsLoadingEditQ3(false);
+          break;
+        case "Q4":
+          setIsLoadingEditQ4(false);
+          break;
+        case "Q5":
+          setIsLoadingEditQ5(false);
+          break;
+        default:
+          setIsLoadingEditQ1(false);
+          break;
+      }
     }
   }, [data]);
 
@@ -258,6 +280,26 @@ const QueueSettingsPage = () => {
   //CALL UPDATE API
   useEffect(() => {
     if ((minPax, maxPax, estimateTime)) {
+      switch (waitTypeName) {
+        case "Q1":
+          setIsLoadingEditQ1(true);
+          break;
+        case "Q2":
+          setIsLoadingEditQ2(true);
+          break;
+        case "Q3":
+          setIsLoadingEditQ3(true);
+          break;
+        case "Q4":
+          setIsLoadingEditQ4(true);
+          break;
+        case "Q5":
+          setIsLoadingEditQ5(true);
+          break;
+        default:
+          setIsLoadingEditQ1(true);
+          break;
+      }
       fetchEditWaitType();
     }
   }, [minPax, maxPax, estimateTime]);
@@ -309,7 +351,7 @@ const QueueSettingsPage = () => {
         onClick={addBack}
         className="cursor-pointer block px-4 py-4 text_16 text-[#000000]"
       >
-       {isLoadingAdd ? <SpinnerOrangeMedium /> : "Add Back"}
+        {isLoadingAdd ? <SpinnerOrangeMedium /> : "Add Back"}
       </span>
     </Menu>
   );
@@ -327,7 +369,8 @@ const QueueSettingsPage = () => {
       if (estimateTime) {
         setEstimateTime(estimateTime);
       }
-    }else {
+      return setEditError(<section></section>);
+    } else {
       return setEditError(
         <section>Max Pax must be greater than Min Pax</section>
       );
@@ -371,27 +414,6 @@ const QueueSettingsPage = () => {
     //     );
     //   }
     // }
-
-    switch (waitTypeName) {
-      case "Q1":
-        setIsLoadingEditQ1(true);
-        break;
-      case "Q2":
-        setIsLoadingEditQ2(true);
-        break;
-      case "Q3":
-        setIsLoadingEditQ3(true);
-        break;
-      case "Q4":
-        setIsLoadingEditQ4(true);
-        break;
-      case "Q5":
-        setIsLoadingEditQ5(true);
-        break;
-      default:
-        setIsLoadingEditQ1(true);
-        break;
-    }
   };
 
   useEffect(() => {
@@ -526,37 +548,52 @@ const QueueSettingsPage = () => {
                               <input
                                 type="text"
                                 className={`input-shorter put mx-auto ${
-                                  errors.minPax && "input_error"
+                                  errors.minPax && "input_short_error"
                                 }`}
                                 {...register("minPax", {
-                                  required: "",
+                                  required: "Min Pax is required",
                                   pattern: {
                                     value: /^(?!(0))[0-9]+$/,
                                   },
                                 })}
                               />
+                              {errors.minPax && (
+                                <p className="mt-[2px] text-sm text-[red]">
+                                  {errors.minPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="">
                               <input
                                 type="text"
                                 className={`input-shorter mx-auto ${
-                                  errors.maxPax && "input_error"
+                                  errors.maxPax && "input_short_error"
                                 }`}
                                 {...register("maxPax", {
-                                  required: "",
+                                  required: "Max Pax is required",
                                 })}
                               />
+                              {errors.maxPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.maxPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
                                 className={`input-short mx-auto ${
-                                  errors.estimateTime && "input_error"
+                                  errors.estimateTime && "input_shorter_error"
                                 }`}
                                 {...register("estimateTime", {
-                                  required: "",
+                                  required: "Wait time is required",
                                 })}
                               />
+                              {errors.estimateTime && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.estimateTime.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <span className="flex items-center justify-center">
@@ -680,35 +717,53 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                className={`input-shorter mx-auto ${
-                                  errors.minPax && "input_error"
+                                className={`input-shorter put mx-auto ${
+                                  errors.minPax && "input_short_error"
                                 }`}
                                 {...register("minPax", {
-                                  required: "",
+                                  required: "Min Pax is required",
+                                  pattern: {
+                                    value: /^(?!(0))[0-9]+$/,
+                                  },
                                 })}
                               />
+                              {errors.minPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.minPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="">
                               <input
                                 type="text"
                                 className={`input-shorter mx-auto ${
-                                  errors.maxPax && "input_error"
+                                  errors.maxPax && "input_short_error"
                                 }`}
                                 {...register("maxPax", {
-                                  required: "",
+                                  required: "Max Pax is required",
                                 })}
                               />
+                              {errors.maxPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.maxPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
                                 className={`input-short mx-auto ${
-                                  errors.estimateTime && "input_error"
+                                  errors.estimateTime && "input_shorter_error"
                                 }`}
                                 {...register("estimateTime", {
-                                  required: "",
+                                  required: "Wait time is required",
                                 })}
                               />
+                              {errors.estimateTime && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.estimateTime.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <span className="flex items-center justify-center">
@@ -829,35 +884,53 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                className={`input-shorter mx-auto ${
-                                  errors.minPax && "input_error"
+                                className={`input-shorter put mx-auto ${
+                                  errors.minPax && "input_short_error"
                                 }`}
                                 {...register("minPax", {
-                                  required: "",
+                                  required: "Min Pax is required",
+                                  pattern: {
+                                    value: /^(?!(0))[0-9]+$/,
+                                  },
                                 })}
                               />
+                              {errors.minPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.minPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="">
                               <input
                                 type="text"
                                 className={`input-shorter mx-auto ${
-                                  errors.maxPax && "input_error"
+                                  errors.maxPax && "input_short_error"
                                 }`}
                                 {...register("maxPax", {
-                                  required: "",
+                                  required: "Max Pax is required",
                                 })}
                               />
+                              {errors.maxPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.maxPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
                                 className={`input-short mx-auto ${
-                                  errors.estimateTime && "input_error"
+                                  errors.estimateTime && "input_shorter_error"
                                 }`}
                                 {...register("estimateTime", {
-                                  required: "",
+                                  required: "Wait time is required",
                                 })}
                               />
+                              {errors.estimateTime && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.estimateTime.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <span className="flex items-center justify-center">
@@ -978,35 +1051,53 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                className={`input-shorter mx-auto ${
-                                  errors.minPax && "input_error"
+                                className={`input-shorter put mx-auto ${
+                                  errors.minPax && "input_short_error"
                                 }`}
                                 {...register("minPax", {
-                                  required: "",
+                                  required: "Min Pax is required",
+                                  pattern: {
+                                    value: /^(?!(0))[0-9]+$/,
+                                  },
                                 })}
                               />
+                              {errors.minPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.minPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="">
                               <input
                                 type="text"
                                 className={`input-shorter mx-auto ${
-                                  errors.maxPax && "input_error"
+                                  errors.maxPax && "input_short_error"
                                 }`}
                                 {...register("maxPax", {
-                                  required: "",
+                                  required: "Max Pax is required",
                                 })}
                               />
+                              {errors.maxPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.maxPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
                                 className={`input-short mx-auto ${
-                                  errors.estimateTime && "input_error"
+                                  errors.estimateTime && "input_shorter_error"
                                 }`}
                                 {...register("estimateTime", {
-                                  required: "",
+                                  required: "Wait time is required",
                                 })}
                               />
+                              {errors.estimateTime && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.estimateTime.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <span className="flex items-center justify-center">
@@ -1127,35 +1218,53 @@ const QueueSettingsPage = () => {
                             <td className="">
                               <input
                                 type="text"
-                                className={`input-shorter mx-auto ${
-                                  errors.minPax && "input_error"
+                                className={`input-shorter put mx-auto ${
+                                  errors.minPax && "input_short_error"
                                 }`}
                                 {...register("minPax", {
-                                  required: "",
+                                  required: "Min Pax is required",
+                                  pattern: {
+                                    value: /^(?!(0))[0-9]+$/,
+                                  },
                                 })}
                               />
+                              {errors.minPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.minPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="">
                               <input
                                 type="text"
                                 className={`input-shorter mx-auto ${
-                                  errors.maxPax && "input_error"
+                                  errors.maxPax && "input_short_error"
                                 }`}
                                 {...register("maxPax", {
-                                  required: "",
+                                  required: "Max Pax is required",
                                 })}
                               />
+                              {errors.maxPax && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.maxPax.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <input
                                 type="text"
                                 className={`input-short mx-auto ${
-                                  errors.estimateTime && "input_error"
+                                  errors.estimateTime && "input_shorter_error"
                                 }`}
                                 {...register("estimateTime", {
-                                  required: "",
+                                  required: "Wait time is required",
                                 })}
                               />
+                              {errors.estimateTime && (
+                                <p className=" mt-[2px] text-sm text-[red]">
+                                  {errors.estimateTime.message}
+                                </p>
+                              )}
                             </td>
                             <td className="text_16 py-6 ">
                               <span className="flex items-center justify-center">
