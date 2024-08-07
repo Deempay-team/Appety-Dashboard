@@ -1657,6 +1657,7 @@ const LinkSettingsPage = () => {
 
                       <button
                         type="submit"
+                        onClick={handleCopy}
                         className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] "
                       >
                         {copied ? (

@@ -353,6 +353,35 @@ export const CopiedIcon = () => {
   );
 };
 
+export const SuccessModalIcon = () => {
+  return (
+    <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="100"
+    height="100"
+    fill="none"
+    viewBox="0 0 124 124"
+  >
+    <circle cx="61.609" cy="61.609" r="61.609" fill="#FEEAE0"></circle>
+    <g clipPath="url(#clip0_567_139)">
+      <path
+        fill="#F99762"
+        d="M61.836 19.382c-23.766 0-43.087 19.32-43.087 43.087 0 23.765 19.321 43.086 43.087 43.086 23.766 0 43.087-19.32 43.087-43.086S85.601 19.382 61.836 19.382zm20.863 33.38L57.935 80.067c-.635.726-1.814.726-2.54.09l-15.42-15.51c-.726-.726-.726-1.814 0-2.45l4.535-4.535c.726-.726 1.814-.726 2.45 0l9.433 9.525L75.442 46.14c.635-.726 1.723-.726 2.449-.09l4.717 4.263c.725.635.725 1.724.09 2.449z"
+      ></path>
+    </g>
+    <defs>
+      <clipPath id="clip0_567_139">
+        <path
+          fill="#fff"
+          d="M0 0H89.676V88.502H0z"
+          transform="translate(17.112 17.114)"
+        ></path>
+      </clipPath>
+    </defs>
+  </svg>
+  );
+};
+
 export const RemoveQueueModalIcon = () => {
   return (
     <svg

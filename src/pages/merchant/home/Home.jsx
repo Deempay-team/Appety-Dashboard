@@ -7,6 +7,7 @@ import {
   ArrowUpIcon,
   CloseModalIcon,
   RemoveQueueModalIcon,
+  SuccessModalIcon,
 } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
@@ -79,6 +80,7 @@ export const MerchantHomePage = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
+  const [showJoinModal, setShowJoinModal] = useState(false);
 
   useEffect(() => {
     let timer1 = 0;
@@ -260,7 +262,7 @@ export const MerchantHomePage = () => {
         .then(function (res) {
           if (res?.data?.code === "000000") {
             setIsLoadingServed(false);
-            setServedList(res?.data?.data);
+            setServedList(res?.data?.data.reverse());
           }
         })
         .catch(function (error) {
@@ -279,14 +281,12 @@ export const MerchantHomePage = () => {
           if (res?.data?.code === "000000") {
             setQueueList(res?.data?.data);
             setWaitSize(res?.data?.data.length);
-
-             console.log("served-error", res?.data?.data);
-
             setCurrentName(res?.data?.data[0]?.cusName ?? "-");
             setCurrentPax(res?.data?.data[0]?.paxNo ?? "-");
             setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
             setCurrentWaitId(res?.data?.data[0]?.waitId ?? "-");
             setCurrentWait(res?.data?.data[0]?.waitNo ?? "-");
+            setCurrentStatus(res?.data?.data[0]?.status ?? "-")
           }
         })
         .catch(function (error) {
@@ -300,8 +300,7 @@ export const MerchantHomePage = () => {
       axios
         .get(`${baseURL}api/v1/wait/summary/${merchId}`)
         .then(function (res) {
-          if (res?.data?.code === "000000") {   
-
+          if (res?.data?.code === "000000") {
             for (let i = 0; i < res?.data?.data.length; i++) {
               if (
                 res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting
@@ -311,18 +310,19 @@ export const MerchantHomePage = () => {
                 setWaitTypeId(res?.data?.data[i].waitTypeId);
                 setWaitTypeName(res?.data?.data[i].waitTypeName);
                 setActiveWaitTypeId(i + 1);
-                // Modal.success({
-                //   title: "Joined Succesfully!",
-                //   content:
-                //     `Someone just joined ${res?.data?.data[i].waitTypeName}`,
-                //  // onOk: () => existingUser(),
-                // });
-                Notify(
-                  "success",
-                  "Joined Succesfully!",
-                  `Someone just joined ${res?.data?.data[i].waitTypeName}`,
-                  10
-                );
+                
+                // if (showJoinModal) {
+                   
+                // }
+
+
+                setShowJoinModal(true)
+                // Notify(
+                //   "success",
+                //   "Joined Succesfully!",
+                //   `Someone just joined ${res?.data?.data[i].waitTypeName}`,
+                //   10
+                // );
               }
             }
           }
@@ -370,13 +370,26 @@ export const MerchantHomePage = () => {
 
   useEffect(() => {
     if (updateStatus) {
+      switch (updateStatus) {
+        case "SERVED":
+          setIsCheckInQueue(true);
+          break;
+        case "WAITING":
+          setIsLoadingWaitCall(true);
+          break;
+        case "CANCELLED":
+          setIsCancellingQueue(true);
+          break;
+        default:
+          break;
+      }
+
       fetchQueueUpdate();
     }
   }, [updateStatus]);
 
   useEffect(() => {
-   if(queueUpdateData) {
-    if (queueUpdateData?.code === "000000") {
+    if (queueUpdateData) {
       setIsCancellingQueue(false);
       setShowCancelModal(false);
       setShowCenterCancelModal(false);
@@ -384,62 +397,63 @@ export const MerchantHomePage = () => {
       setIsLoadingCancelModal(false);
       setWaitCall("0");
       setIsLoadingWaitCall(false);
-      Notify(
-        "success",
-        "Updated Succesfully!",
-        "Your Queue has being updated!",
-        5
-      );
 
-      setStatusUpdateSuccess(true);
+      if (queueUpdateData?.code === "000000") {
+        Notify(
+          "success",
+          "Updated Succesfully!",
+          "Your Queue has being updated!",
+          5
+        );
 
-      if (updateStatus === "SERVED") {
-        if (serveStatus !== "SERVED") {
-         // handleServeStatus();
+        setStatusUpdateSuccess(true);
+
+        if (updateStatus === "SERVED") {
+          if (serveStatus !== "SERVED") {
+            // handleServeStatus();
+          } else {
+            callApi();
+            setIsLoadingServed(true);
+          }
         } else {
-          callApi();
-          setIsLoadingServed(true);
+          if (serveStatus !== "CANCELLED") {
+            //handleCancelStatus();
+          } else {
+            callApi();
+            setIsLoadingServed(false);
+          }
         }
+        setUpdateStatus("");
       } else {
-        if (serveStatus !== "CANCELLED") {
-          //handleCancelStatus();
-        } else {
-          callApi();
-          setIsLoadingServed(false);
-        }
+        setUpdateStatus("");
+        Notify("error", "Update Unsuccesfully!", queueUpdateData?.message, 5);
       }
-      setUpdateStatus("");
-    } else {
-      setIsCheckInQueue(false);
-      setIsCancellingQueue(false);
-      setIsLoadingWaitCall(false);
-      setUpdateStatus("")
-      setShowCancelModal(false);
-      setShowCenterCancelModal(false);
-      Notify(
-        "error",
-        "Update Unsuccesfully!",
-        queueUpdateData?.message,
-        5
-      );
     }
-   }
   }, [queueUpdateData]);
 
   const handleCheckIn = () => {
-    setUpdateStatus("SERVED");
-    setIsCheckInQueue(true);
+    if (queueList.length !== 0) {
+      setUpdateStatus("SERVED");
+    } else {
+      Notify("error", "No wait", "Sorry no one on this queue", 5);
+    }
   };
 
   const handleCancelQueue = () => {
-    setUpdateStatus("CANCELLED");
-    setIsCancellingQueue(true);
+    if (queueList.length !== 0) {
+      setUpdateStatus("CANCELLED");
+    } else {
+      Notify("error", "No wait", "Sorry no one on this queue", 5);
+    }
   };
 
   const handleCall = () => {
-    setUpdateStatus("WAITING");
-    setWaitCall("1");
-    setIsLoadingWaitCall(true);
+    if (queueList.length !== 0) {
+      setUpdateStatus("WAITING");
+      setWaitCall("1");
+    } else {
+      Notify("error", "No wait", "Sorry no one on this queue", 5);
+    }
   };
 
   const handleLogout = () => {
@@ -457,12 +471,24 @@ export const MerchantHomePage = () => {
     setIsLoadingCancelModal(true);
   };
 
+  const showQueueCancelModal = () => {
+    if (queueList.length !== 0) {
+      setShowCenterCancelModal(true)
+    } else {
+      Notify("error", "No wait", "Sorry no one on this queue", 5);
+    }
+  }
+
   const closeModal = () => {
     setShowCancelModal(false);
   };
 
   const closeCenterModal = () => {
     setShowCenterCancelModal(false);
+  };
+
+  const closeJoinModal = () => {
+    setShowJoinModal(false);
   };
 
   return (
@@ -923,7 +949,7 @@ export const MerchantHomePage = () => {
                   {isCheckInQueue ? <SpinnerWhite /> : "Check - In"}
                 </button>
                 <button
-                  onClick={() => setShowCenterCancelModal(true)}
+                  onClick={showQueueCancelModal}
                   className="short_btn_white ml-6"
                 >
                   Cancel
@@ -1189,6 +1215,39 @@ export const MerchantHomePage = () => {
                 >
                   {isLoadingCancelModal ? <SpinnerWhite /> : "Cancel"}
                 </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+
+
+       {/* SHOW JOIN QUEUE MODAL */}
+       {showJoinModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-50">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg py-[80px] px-[70px] w-[600px] relative">
+              <div className="">
+                <div className="flex justify-center items-center">
+                  <SuccessModalIcon />
+                </div>
+                <div className=" text-center ">
+                  <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
+                  New Wait
+                  </p>
+                  <p className="text_18 text-[#000000] pb-[54px]">
+                    Someone just joined the queue
+                  </p>
+                </div>
+                <div className="flex justify-center items-center w-full">
+                  <button
+                    onClick={closeJoinModal}
+                    type="submit"
+                    className="sm:h-[50px] h-[50px] rounded-[5px] bg-[#F99762] hover:bg-[#FBBA96] w-full text-sm text-[#ffffff] font-normal "
+                  >
+                   Ok
+                  </button>
+                </div>
               </div>
             </div>
           </div>
