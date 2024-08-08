@@ -301,16 +301,16 @@ export const TvPage = () => {
               />
             </div>
             <div className="bg-[#ffffff] h-[350px] col-span-2 rounded-[5px]">
-              <div className="flex items-center justify-between px-[30px]">
+              <div className="flex items-center justify-between px-[70px]">
                 <div className="grid 2xl:mr-[30px] mr-[5px] ">
                 <p className="text-[#000000] 2xl:max-w-full  max-w-[500px] adjust-text ">
                 Scan for a Queue Number. Keep the browser open for notifications. If you close it, scan again and enter your mobile number to retrieve your queue number.
                 </p>
                 <p className="text-[#000000]  2xl:max-w-full  max-w-[500px] adjust-text">
-                扫描排队号码，勿关闭浏览器。关闭浏览器后，请再次扫描并输入手机号码。
+                대기 번호를 스캔하고 브라우저를 닫지 마세요. 브라우저를 닫으면 다시 스캔하고 휴대폰 번호를 입력하세요.
                 </p>
                 <p className="text-[#000000] 2xl:max-w-full max-w-[500px] adjust-text">
-                대기 번호를 스캔하고 브라우저를 닫지 마세요. 브라우저를 닫으면 다시 스캔하고 휴대폰 번호를 입력하세요.
+                扫描排队号码，勿关闭浏览器。关闭浏览器后，请再次扫描并输入手机号码。
                 </p>
                 </div>
                 <section className="mt-6">{qrcode}</section>
