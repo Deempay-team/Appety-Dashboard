@@ -16,14 +16,14 @@
 @media screen and (max-width: 2200px) {
   .adjust-text {
     padding-top: 15px;
-    font-size: 27.5px;
+    font-size: 27px;
   }
 }
 
 @media screen and (max-width: 2000px) {
   .adjust-text {
     padding-top: 15px;
-    font-size: 28px;
+    font-size: 25px;
   }
 }
 
@@ -41,7 +41,7 @@
   }
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: 1540px) {
   .adjust-text {
     padding-top: 14px;
     font-size: 20px;

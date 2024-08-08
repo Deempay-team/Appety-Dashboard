@@ -301,8 +301,8 @@ export const TvPage = () => {
               />
             </div>
             <div className="bg-[#ffffff] h-[350px] col-span-2 rounded-[5px]">
-              <div className="flex items-center justify-between px-[70px]">
-                <div className="grid 2xl:mr-[70px] mr-[50px] ">
+              <div className="flex items-center justify-between pl-[40px] pr-[70px]">
+                <div className="grid 2xl:mr-[70px] mr-[50px] pt-4">
                 <p className="text-[#000000] 2xl:max-w-full  max-w-[500px] adjust-text ">
                 Scan for a Queue Number. Keep the browser open for notifications. If you close it, scan again and enter your mobile number to retrieve your queue number.
                 </p>
