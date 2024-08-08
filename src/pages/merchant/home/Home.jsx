@@ -21,7 +21,6 @@ import {
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
-import { Modal } from "antd";
 import secrets from "../../../config/secrets";
 
 import "./styles.css";
