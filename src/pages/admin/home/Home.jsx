@@ -99,6 +99,7 @@ export const AdminHomePage = () => {
               <h2 className="text_18 pb-4 pt-10">Overview</h2>
 
               <div className="p-6 grid md:grid-cols-4 grid-cols-2 lg:gap-8 gap-4 bg-[#ffffff] rounded-[5px]">
+              
                 <div>
                   <div class="pt-4 px-4 pb-2.5 text-[#6b6968] rounded-[5px]  bg-[#eeeeee] w-full  ">
                     <div className="flex justify-between">
