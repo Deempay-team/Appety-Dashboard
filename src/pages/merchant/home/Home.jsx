@@ -658,7 +658,7 @@ export const MerchantHomePage = () => {
                                   </p>
                                   <p className="text_16 text-[#33B469] underline">
                                     <Link
-                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to the restaurant`}
+                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
                                       target="_blank"
                                     >
                                       {list.cusPhone}
@@ -920,7 +920,7 @@ export const MerchantHomePage = () => {
                       </p>
                       <p className="text_16 text-[#33B469] underline">
                         <Link
-                          to={`https://api.whatsapp.com/send?phone=${currentPhone}&text=Hello ${currentName} your table is ready, please proceed to the restaurant`}
+                          to={`https://api.whatsapp.com/send?phone=${currentPhone}&text=Hello ${currentName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
                           target="_blank"
                         >
                           {currentPhone}
@@ -1061,7 +1061,7 @@ export const MerchantHomePage = () => {
                                   </p>
                                   <p className="text_16 text-[#33B469] underline">
                                     <Link
-                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to the restaurant`}
+                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
                                       target="_blank"
                                     >
                                       {list.cusPhone}
@@ -1193,7 +1193,7 @@ export const MerchantHomePage = () => {
                       <p className="text_14 text-[#6b6968]">Phone Number</p>
                       <p className="text_18 text-[#33B469] underline">
                         <Link
-                          to={`https://api.whatsapp.com/send?phone=${cancelQueueList?.cusPhone}&text=Hello ${cancelQueueList?.cusName} your table is ready, please proceed to the restaurant`}
+                          to={`https://api.whatsapp.com/send?phone=${cancelQueueList?.cusPhone}&text=Hello ${cancelQueueList?.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
                           target="_blank"
                         >
                           {cancelQueueList?.cusPhone}
