@@ -82,6 +82,8 @@ export const MerchantHomePage = () => {
   const [calltimer1, setCallTimer1] = useState(0);
   const [showJoinModal, setShowJoinModal] = useState(false);
 
+  const [totalWaitingQueue, setTotalWaitingQueue] = useState(0);
+
   useEffect(() => {
     let timer1 = 0;
     setInterval(function () {
@@ -159,6 +161,12 @@ export const MerchantHomePage = () => {
           setWaitTypeId(res?.data?.data[0].waitTypeId);
           setWaitTypeName(res?.data?.data[0].waitTypeName);
           startTimer();
+
+          let totalWaitSize = 0;
+          for (let i = 0; i < res?.data?.data.length; i++) {
+            totalWaitSize += parseInt(res?.data?.data[i]?.totalWaiting);
+          }
+          setTotalWaitingQueue(totalWaitSize);
         }
       })
       .catch(function (error) {
@@ -176,6 +184,12 @@ export const MerchantHomePage = () => {
             setIsLoadingWaitType(false);
             setQueueType(res?.data?.data);
             setIsButtonWaitTye(false);
+
+            let totalWaitSize = 0;
+            for (let i = 0; i < res?.data?.data.length; i++) {
+              totalWaitSize += parseInt(res?.data?.data[i]?.totalWaiting);
+            }
+            setTotalWaitingQueue(totalWaitSize);
           }
         })
         .catch(function (error) {
@@ -286,7 +300,7 @@ export const MerchantHomePage = () => {
             setCurrentPhone(res?.data?.data[0]?.cusPhone ?? "-");
             setCurrentWaitId(res?.data?.data[0]?.waitId ?? "-");
             setCurrentWait(res?.data?.data[0]?.waitNo ?? "-");
-            setCurrentStatus(res?.data?.data[0]?.status ?? "-")
+            setCurrentStatus(res?.data?.data[0]?.status ?? "-");
           }
         })
         .catch(function (error) {
@@ -303,15 +317,16 @@ export const MerchantHomePage = () => {
           if (res?.data?.code === "000000") {
             for (let i = 0; i < res?.data?.data.length; i++) {
               if (
-                res?.data?.data[i]?.totalWaiting !== queueType[i]?.totalWaiting
+                parseInt(res?.data?.data[i]?.totalWaiting) >
+                parseInt(queueType[i]?.totalWaiting)
               ) {
                 callQueueBackgrund();
                 setQueueType(res?.data?.data);
                 setWaitTypeId(res?.data?.data[i].waitTypeId);
                 setWaitTypeName(res?.data?.data[i].waitTypeName);
                 setActiveWaitTypeId(i + 1);
-                
-                setShowJoinModal(true)
+
+                setShowJoinModal(true);
                 // Notify(
                 //   "success",
                 //   "Joined Succesfully!",
@@ -319,6 +334,12 @@ export const MerchantHomePage = () => {
                 //   10
                 // );
               }
+
+              let totalWaitSize = 0;
+              for (let i = 0; i < res?.data?.data.length; i++) {
+                totalWaitSize += parseInt(res?.data?.data[i]?.totalWaiting);
+              }
+              setTotalWaitingQueue(totalWaitSize);
             }
           }
         })
@@ -364,7 +385,9 @@ export const MerchantHomePage = () => {
   };
 
   useEffect(() => {
+    // console.log("am clicked Outside", queueList.length);
     if (updateStatus) {
+      console.log("am clickedInside Inside", queueList.length);
       switch (updateStatus) {
         case "SERVED":
           setIsCheckInQueue(true);
@@ -468,11 +491,11 @@ export const MerchantHomePage = () => {
 
   const showQueueCancelModal = () => {
     if (queueList.length !== 0) {
-      setShowCenterCancelModal(true)
+      setShowCenterCancelModal(true);
     } else {
       Notify("error", "No wait", "Sorry no one on this queue", 5);
     }
-  }
+  };
 
   const closeModal = () => {
     setShowCancelModal(false);
@@ -593,7 +616,7 @@ export const MerchantHomePage = () => {
               <span className="flex pl-10 ">
                 <p className="text_24">Waiting in Queue</p>
                 <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[55px] h-[30px] xl:w-[55px] w-[30px] text_34  bg-[#FAA87C] items-center flex justify-center ">
-                  {waitSize}
+                  {totalWaitingQueue}
                 </span>
               </span>
             </div>
@@ -954,7 +977,6 @@ export const MerchantHomePage = () => {
                 </button>
               </div>
             </div>
-            
 
             <div className="flex items-center justify-center text-base mb-[80px]">
               <p className="text-center pr-2">Powered By</p>
@@ -1226,9 +1248,8 @@ export const MerchantHomePage = () => {
         </>
       ) : null}
 
-
-       {/* SHOW JOIN QUEUE MODAL */}
-       {showJoinModal ? (
+      {/* SHOW JOIN QUEUE MODAL */}
+      {showJoinModal ? (
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-50">
             <div className="bg-[#ffffff] rounded-[15px] shadow-lg py-[80px] px-[70px] w-[600px] relative">
@@ -1238,7 +1259,7 @@ export const MerchantHomePage = () => {
                 </div>
                 <div className=" text-center ">
                   <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
-                  New Wait
+                    New Wait
                   </p>
                   <p className="text_18 text-[#000000] pb-[54px]">
                     Someone just joined the queue
@@ -1250,7 +1271,7 @@ export const MerchantHomePage = () => {
                     type="submit"
                     className="sm:h-[50px] h-[50px] rounded-[5px] bg-[#F99762] hover:bg-[#FBBA96] w-full text-sm text-[#ffffff] font-normal "
                   >
-                   Ok
+                    Ok
                   </button>
                 </div>
               </div>
