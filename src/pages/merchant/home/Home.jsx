@@ -387,7 +387,6 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     // console.log("am clicked Outside", queueList.length);
     if (updateStatus) {
-      console.log("am clickedInside Inside", queueList.length);
       switch (updateStatus) {
         case "SERVED":
           setIsCheckInQueue(true);
