@@ -33,15 +33,13 @@ export const AdminHomePage = () => {
   const [queueList, setQueueList] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
 
-    //CALL QUERY QUEUE API
+  //CALL QUERY QUEUE API
   useEffect(() => {
     axios
-      .get(
-        `${baseURL}api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
-      )
+      .get(`${baseURL}api/v1/wait/superadmin/query?merchId=${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
-          setQueueList(res?.data?.data)
+          setQueueList(res?.data?.data);
           setIsExporting(false);
           setIsQueueFetch(false);
         }
@@ -55,20 +53,19 @@ export const AdminHomePage = () => {
   const exportQueueDetails = () => {
     setIsExporting(true);
     axios
-      .get(
-        `${baseURL}api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
-      )
+      .get(`${baseURL}api/v1/wait/superadmin/query?merchId=${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           const formattedQueue = res?.data?.data.map((q) => {
             return {
               customerIdentificationNo: q.cusId,
-              //restaurantName: q.rName,
+              restaurantName: q.waitMerchName,
               customerName: q.cusName,
               customerPhone: q.cusPhone,
               registeredTime: formatDate(q.createTime),
               timeEnded: formatDate(q.updateTime),
               customerStatus: q.status,
+              customerEmail: q.email,
               queueNumber: q.waitNo,
             };
           });
@@ -99,7 +96,6 @@ export const AdminHomePage = () => {
               <h2 className="text_18 pb-4 pt-10">Overview</h2>
 
               <div className="p-6 grid md:grid-cols-4 grid-cols-2 lg:gap-8 gap-4 bg-[#ffffff] rounded-[5px]">
-              
                 <div>
                   <div class="pt-4 px-4 pb-2.5 text-[#6b6968] rounded-[5px]  bg-[#eeeeee] w-full  ">
                     <div className="flex justify-between">
@@ -108,7 +104,7 @@ export const AdminHomePage = () => {
                           Total Restaurants
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("60000")}
+                          {formatNumberWithCommas("6000")}
                         </p>
                       </div>
                       <div>
@@ -168,7 +164,7 @@ export const AdminHomePage = () => {
                           Active Users
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("1036089")}
+                          {formatNumberWithCommas("103689")}
                         </p>
                       </div>
                       <div>
@@ -222,26 +218,28 @@ export const AdminHomePage = () => {
                       </th>
                     ))}
                   </thead>
-                 <tbody className="">
-                 {queueList.map((list, i) => (
-                 <tr
-                   className="bg-[#ffffff] border-t-[0.5px] border-solid border-[#d7d7d7]"
-                   key={i}
-                 >
-                   <td className="text_16 px-2 py-5 capitalize">
-                     The place
-                   </td>
-                   <td className="text_16 px-2 py-5">{list.cusName}</td>
-                   <td className="text_16 px-2 py-5">
-                   {list.cusPhone}
-                   </td>
-                   <td className="text_16 px-2 py-5">{formatDate(list.createTime)}</td>
-                   <td className="text_16 px-2 py-5">{formatDate(list.updateTime)}</td>
-                   <td className="text_16 px-2 py-5">{list.status}</td>
-                   <td className="text_16 px-2 py-5">{list.waitNo}</td>
-                 </tr>   
-                   ))}            
-               </tbody>                 
+                  <tbody className="">
+                    {queueList.map((list, i) => (
+                      <tr
+                        className="bg-[#ffffff] border-t-[0.3px] border-solid border-[#d7d7d7]"
+                        key={i}
+                      >
+                        <td className="text_16 px-2 py-5 capitalize">
+                          {list.waitMerchName}
+                        </td>
+                        <td className="text_16 px-2 py-5">{list.cusName}</td>
+                        <td className="text_16 px-2 py-5">{list.cusPhone}</td>
+                        <td className="text_16 px-2 py-5">
+                          {formatDate(list.createTime)}
+                        </td>
+                        <td className="text_16 px-2 py-5">
+                          {formatDate(list.updateTime)}
+                        </td>
+                        <td className="text_16 px-2 py-5">{list.status}</td>
+                        <td className="text_16 px-2 py-5">{list.waitNo}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             </>

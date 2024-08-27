@@ -10,27 +10,27 @@ import {
   CloseIcon,
   OpenIcon,
 } from "../../../assests/icons/Icons";
-import { formatNumberWithCommas } from "../../../utils/functions";
 import {
   SpinnerMediumWhite,
   SpinnerOrange,
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import axios from "axios";
-import { currentDate, currentTime } from "../../../utils/functions";
+import { truncateLongName, truncateShortName } from "../../../utils/functions";
 import { EmailImage } from "../../../assests/images";
 import { formatDate, formatDateTime } from "../../../utils/functions";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
 import storage from "../../../utils/storage";
+import { Dropdown, Menu } from "antd";
 
 const column = [
   "Restaurant Name",
-  "Total Customers",
-  "Total Queues",
-  "Active Users",
-  "Total Pax",
-  "Status",
+  "Customer Phone",
+  "Email",
+  "Address",
+  "Date Created",
+  "Action",
   "Action",
 ];
 
@@ -50,6 +50,7 @@ export const AdminMerchantListPage = () => {
   const [isLoadingResend, setIsLoadingResend] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isMerchantFetch, setIsMerchantFetch] = useState(true);
+  const [merchantList, setMerchantList] = useState([]);
 
   // Form Validation
   const {
@@ -74,6 +75,24 @@ export const AdminMerchantListPage = () => {
     email,
   });
 
+  //CALL QUERY ALL MERCHANTS API
+  useEffect(() => {
+    axios
+      .get(
+        `${baseURL}api/v1/user/superadmin/query/merchants?merchId=${merchId}`
+      )
+      .then(function (res) {
+        if (res?.data?.code === "000000") {
+          setMerchantList(res?.data?.data);
+          setIsMerchantFetch(false);
+        }
+      })
+      .catch(function (error) {
+        console.log("queue-error", error);
+      });
+  }, []);
+
+  //CALL REGISTER API
   useEffect(() => {
     if (password && firstName && lastName) {
       registerUser();
@@ -149,70 +168,118 @@ export const AdminMerchantListPage = () => {
     setIsRegister(true);
   };
 
+  const handleMerchantDetails = (index) => {
+    console.log("index", index);
+
+    console.log("merchantList[index]", merchantList[index]);
+  };
+
+  const more = (
+    <Menu className="grid items-center justify-center">
+      <span
+        //  onClick={() => setIsEditQ1(false)}
+        className="cursor-pointer block mx-auto py-4 text_16 text-[#33B469]"
+      >
+        Edit
+      </span>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
+      <span
+        //onClick={openRemoveModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+      >
+        Remove
+      </span>
+    </Menu>
+  );
+
   return (
     <>
       <Layout>
-        <main className="xl:ml-[370px] ml-[320px] sm:px-10 px-6 bg-[#F6F7F9] h-screen">
-          <div className="pb-6 pt-10 flex justify-between">
-            <h2 className="text_18  items-center justify-center flex">
-              Merchants
-            </h2>
-            <div>
-              <span
-                onClick={openRegisterModal}
-                className="lg:flex hidden  items-center justify-center py-3 bg-[#F99762] px-6 rounded-[5px] cursor-pointer"
-              >
-                <PlusIconWhite />
-                <p className="text_16 pl-2 text-[#ffffff]">Create Merchant</p>
+        <main className="xl:ml-[370px] ml-[320px] sm:px-10 px-6 bg-[#F6F7F9] h-fit pb-20">
+          {isMerchantFetch ? (
+            <>
+              <span className="flex items-center justify-center content-center pb-40 h-screen ">
+                <SpinnerOrange />
               </span>
-            </div>
-          </div>
-
-          <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[5px]  ">
-            <table className=" w-full text-base text-center py-1  border-collapse ">
-              <thead className="text_16 font-normal capitalize bg-[#ffffff] ">
-                {column.map((header, i) => (
-                  <th
-                    scope="col"
-                    className="py-5 px-3 font-normal border-b-[0.5px] border-solid border-[#d7d7d7]"
-                    key={i}
+            </>
+          ) : (
+            <>
+              <div className="pb-6 pt-10 flex justify-between">
+                <h2 className="text_18  items-center justify-center flex">
+                  Merchants
+                </h2>
+                <div>
+                  <span
+                    onClick={openRegisterModal}
+                    className="lg:flex hidden  items-center justify-center py-3 bg-[#F99762] px-6 rounded-[5px] cursor-pointer"
                   >
-                    {header}
-                  </th>
-                ))}
-              </thead>
+                    <PlusIconWhite />
+                    <p className="text_16 pl-2 text-[#ffffff]">
+                      Create Merchant
+                    </p>
+                  </span>
+                </div>
+              </div>
 
-              <tbody>
-                <tr
-                  className="bg-[#ffffff]"
-                //key={i}
-                >
-                  <td className="text_16 px-2 py-8 capitalize">The place</td>
-                  <td className="text_16 px-2 py-8">
-                    {formatNumberWithCommas("30")}
-                  </td>
-                  <td className="text_16 px-2 py-8">
-                    {formatNumberWithCommas("500")}
-                  </td>
-                  <td className="text_16 px-2 py-8">
-                    {formatNumberWithCommas("6000")}
-                  </td>
-                  <td className="text_16 px-2 py-8">
-                    {formatNumberWithCommas("400000")}
-                  </td>
-                  <td className="text_16 px-2 py-8">served</td>
-                  <td className="text_16 px-2 py-8">
-                    <a
-                      href
-                      className="cursor-pointer sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762] hover:bg-[#F99762] hover:text-[#ffffff] w-full px-10 py-3  text-sm text-[#F99762] "
-                    >
-                      Visit Page
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+              <div className=" overflow-x-scroll overflow-y-hidden sm:overflow-x-auto sm:overflow-y-auto rounded-[5px]  ">
+                <table className=" w-full text-base text-center py-1  border-collapse ">
+                  <thead className="text_16 font-normal capitalize bg-[#ffffff] ">
+                    {column.map((header, i) => (
+                      <th
+                        scope="col"
+                        className="py-5 px-3 font-normal border-b-[0.5px] border-solid border-[#d7d7d7]"
+                        key={i}
+                      >
+                        {header}
+                      </th>
+                    ))}
+                  </thead>
+
+                  <tbody>
+                    {merchantList.map((list, index) => (
+                      <tr className="bg-[#ffffff]" key={index} onClick={() => handleMerchantDetails(index)}>
+                        <td className="text_16 px-2 py-8 capitalize">
+                          {list.merchName}
+                        </td>
+                        <td className="text_16 px-2 py-8">{list.merchPhone}</td>
+                        <td className="text_16 px-2 py-8">
+                          {truncateLongName(list.contactEmail)}
+                        </td>
+                        <td className="text_16 px-2 py-8">
+                          {truncateShortName(list.merchAddress)}
+                        </td>
+                        <td className="text_16 px-2 py-8">
+                          {formatDate(list.createTime)}
+                        </td>
+                        {/*
+                         */}
+                        <td className="text_16 px-2 py-8">
+                          <a
+                            href={`/dashboard/merchant/${list.merchId}`}
+                            className="cursor-pointer sm:h-[50px] h-[50px] rounded-[5px] bg-[#ffffff] border border-[#F99762] hover:bg-[#F99762] hover:text-[#ffffff] w-full px-7 py-3  text-sm text-[#F99762] "
+                          >
+                            Visit Page
+                          </a>
+                        </td>
+                        <td className="text_16 px-2 py-8">
+                          <Dropdown overlay={more} trigger={["click"]}>
+                            <span
+                              // onClick={() => {
+                              //   handleWaitType(0);
+                              // }}
+                              className=" cursor-pointer text_16 text-[#33B469] underline"
+                            >
+                              More
+                            </span>
+                          </Dropdown>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
         </main>
       </Layout>
 
@@ -235,13 +302,16 @@ export const AdminMerchantListPage = () => {
                         <input
                           placeholder=""
                           type="text"
-                          className={`in_putNew peer bg-[#EEEEEE] ${errors.firstName && "input_error"
-                            }`}
+                          className={`in_putNew peer bg-[#EEEEEE] ${
+                            errors.firstName && "input_error"
+                          }`}
                           {...register("firstName", {
                             required: "First Name is required",
                           })}
                         />
-                        <label className="label_new z-2">Enter First Name</label>
+                        <label className="label_new z-2">
+                          Enter First Name
+                        </label>
                         <label className="label_newTop z-2">First Name</label>
                         {errors.firstName && (
                           <p className=" mt-1 text-sm text-[red]">
@@ -253,8 +323,9 @@ export const AdminMerchantListPage = () => {
                         <input
                           placeholder=""
                           type="text"
-                          className={`in_putNew peer bg-[#EEEEEE] ${errors.lastName && "input_error"
-                            }`}
+                          className={`in_putNew peer bg-[#EEEEEE] ${
+                            errors.lastName && "input_error"
+                          }`}
                           {...register("lastName", {
                             required: "Last Name is required",
                           })}
@@ -272,13 +343,16 @@ export const AdminMerchantListPage = () => {
                       <input
                         placeholder=""
                         type="text"
-                        className={`in_putNew peer bg-[#EEEEEE] ${errors.businessName && "input_error"
-                          }`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.businessName && "input_error"
+                        }`}
                         {...register("businessName", {
                           required: "Resturant is required",
                         })}
                       />
-                      <label className="label_new z-2">Enter Resturant Name</label>
+                      <label className="label_new z-2">
+                        Enter Resturant Name
+                      </label>
                       <label className="label_newTop z-2">Resturant Name</label>
                       {errors.businessName && (
                         <p className=" mt-1 text-sm text-[red]">
@@ -291,8 +365,9 @@ export const AdminMerchantListPage = () => {
                       <input
                         placeholder=""
                         type="email"
-                        className={`in_putNew peer bg-[#EEEEEE] ${errors.email && "input_error"
-                          }`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.email && "input_error"
+                        }`}
                         {...register("email", {
                           required: "Email is required",
                         })}
@@ -310,8 +385,9 @@ export const AdminMerchantListPage = () => {
                       <input
                         placeholder=""
                         type="text"
-                        className={`in_putNew peer bg-[#EEEEEE] ${errors.address && "input_error"
-                          }`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.address && "input_error"
+                        }`}
                         {...register("address", {
                           required: "Address is required",
                         })}
@@ -328,13 +404,16 @@ export const AdminMerchantListPage = () => {
                       <input
                         placeholder=""
                         type="text"
-                        className={`in_putNew peer bg-[#EEEEEE] put ${errors.phoneNo && "input_error"
-                          }`}
+                        className={`in_putNew peer bg-[#EEEEEE] put ${
+                          errors.phoneNo && "input_error"
+                        }`}
                         {...register("phoneNo", {
                           required: "Phone Number is required",
                         })}
                       />
-                      <label className="label_new z-2">Enter Phone Number</label>
+                      <label className="label_new z-2">
+                        Enter Phone Number
+                      </label>
                       <label className="label_newTop z-2">Phone Number</label>
                       {errors.phoneNo && (
                         <p className=" mt-1 text-sm text-[red]">
@@ -346,8 +425,9 @@ export const AdminMerchantListPage = () => {
                       <input
                         type={show ? "text" : "password"}
                         placeholder=""
-                        className={`in_putNew peer bg-[#EEEEEE] ${errors.password && "input_error"
-                          }`}
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.password && "input_error"
+                        }`}
                         {...register("password", {
                           required: "password is required",
                           pattern: {

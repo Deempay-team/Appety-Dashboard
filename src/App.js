@@ -44,7 +44,7 @@ const App = () => {
               element={<AdminMerchantListPage />}
               exact
             />
-            <Route path="/dashboard/merchant" element={<MerchantHomePage />} exact />
+            <Route path="/dashboard/merchant/:customerId?" element={<MerchantHomePage />} exact />
             <Route path="/dashboard/merchant/settings/link" element={<LinkSettingsPage />} exact />
             <Route path="/dashboard/merchant/settings/image" element={<ImageSettingsPage />} exact />
             <Route path="/dashboard/merchant/settings/queue" element={<QueueSettingsPage />} exact />

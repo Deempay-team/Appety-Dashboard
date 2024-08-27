@@ -42,7 +42,6 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (data?.code === "000000") {
-      let roleStatus = "SUPERADMIN";
       const { data: userDetails } = data;
       login(userDetails?.accessToken);
       storage.add(
@@ -56,13 +55,6 @@ export const LoginPage = () => {
           phoneNo: userDetails?.phoneNo,
         })
       );
-
-      // if(roleStatus === "ADMIN") {
-      //   navigate("/dashboard/merchant");
-      // }else{
-      //   navigate("/dashboard/admin/overview");
-      // }
-
       if (userDetails?.role === "ADMIN") {
         navigate("/dashboard/merchant");
       } else {
@@ -81,6 +73,7 @@ export const LoginPage = () => {
         10
       );
     }
+    
   }, [data]);
 
   // SUBMMIT FORM
@@ -181,7 +174,7 @@ export const LoginPage = () => {
             <button
               type="submit"
               className="submit_btn "
-              disabled={isLoggingIn}
+              //disabled={isLoggingIn}
             >
               {isLoggingIn ? <SpinnerWhite /> : "Login"}
             </button>

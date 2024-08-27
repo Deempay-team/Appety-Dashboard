@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import storage from "../../../utils/storage";
 import {
   DownLoadIconWhite,
@@ -34,8 +34,11 @@ const column = [
 ];
 
 export const MerchantHomePage = () => {
-  const merchId = JSON.parse(storage.fetch("userDetails")).userId;
+  const { customerId } = useParams();
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
+  const userRole = JSON.parse(storage.fetch("userDetails")).role;
+  const merchId = JSON.parse(storage.fetch("userDetails")).userId;
+
   const baseURL = secrets.baseURL;
   const navigate = useNavigate();
   const [merchName, setMerchName] = useState("");
@@ -81,7 +84,6 @@ export const MerchantHomePage = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
   const [showJoinModal, setShowJoinModal] = useState(false);
-
   const [totalWaitingQueue, setTotalWaitingQueue] = useState(0);
 
   useEffect(() => {
@@ -91,6 +93,8 @@ export const MerchantHomePage = () => {
       setCallTimer1(timer1);
     }, 1000);
   }, []);
+
+  console.log("customerId", customerId);
 
   useEffect(() => {
     return () => {
@@ -113,7 +117,7 @@ export const MerchantHomePage = () => {
 
   //CALL TO UPDATE QUEUE
   const { data: queueUpdateData, mutate: fetchQueueUpdate } = useUpdateQueue({
-    merchId,
+    merchId: customerId ? customerId : merchId,
     waitId: currentWaitId,
     status: updateStatus,
     waitCall,
@@ -122,7 +126,11 @@ export const MerchantHomePage = () => {
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {
     axios
-      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+      .get(
+        `${baseURL}api/v1/user/merchant/query/${
+          customerId ? customerId : merchId
+        }`
+      )
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setMerchName(res.data.data?.merchName);
@@ -153,7 +161,7 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     setIsLoadingWaitType(true);
     axios
-      .get(`${baseURL}api/v1/wait/summary/${merchId}`)
+      .get(`${baseURL}api/v1/wait/summary/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsLoadingWaitType(false);
@@ -178,7 +186,9 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     if (isButtonWaitTye || statusUpdateSuccess) {
       axios
-        .get(`${baseURL}api/v1/wait/summary/${merchId}`)
+        .get(
+          `${baseURL}api/v1/wait/summary/${customerId ? customerId : merchId}`
+        )
         .then(function (res) {
           if (res?.data?.code === "000000") {
             setIsLoadingWaitType(false);
@@ -203,7 +213,9 @@ export const MerchantHomePage = () => {
     setIsExporting(true);
     axios
       .get(
-        `${baseURL}api/v1/wait/query?merchId=${merchId}&status=&waitId&waitTypeId=`
+        `${baseURL}api/v1/wait/query?merchId=${
+          customerId ? customerId : merchId
+        }&status=&waitId&waitTypeId=`
       )
       .then(function (res) {
         if (res?.data?.code === "000000") {
@@ -218,6 +230,7 @@ export const MerchantHomePage = () => {
               waitTime: q.estimateWaitTime + " mins",
               waitPostion: q.waitPosition,
               queueType: q.waitTypeName,
+              customerEmail: q.email,
               dateCreated: formatDate(q.createTime),
             };
           });
@@ -241,7 +254,9 @@ export const MerchantHomePage = () => {
       callApi();
       axios
         .get(
-          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}api/v1/wait/query?merchId=${
+            customerId ? customerId : merchId
+          }&status=WAITING&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res?.data?.code === "000000") {
@@ -271,7 +286,9 @@ export const MerchantHomePage = () => {
     if (waitTypeId) {
       axios
         .get(
-          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}api/v1/wait/query?merchId=${
+            customerId ? customerId : merchId
+          }&status=${serveStatus}&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res?.data?.code === "000000") {
@@ -289,7 +306,9 @@ export const MerchantHomePage = () => {
     if (waitTypeId) {
       axios
         .get(
-          `${baseURL}api/v1/wait/query?merchId=${merchId}&status=WAITING&waitId&waitTypeId=${waitTypeId}`
+          `${baseURL}api/v1/wait/query?merchId=${
+            customerId ? customerId : merchId
+          }&status=WAITING&waitId&waitTypeId=${waitTypeId}`
         )
         .then(function (res) {
           if (res?.data?.code === "000000") {
@@ -312,7 +331,9 @@ export const MerchantHomePage = () => {
   useEffect(() => {
     if (callTime) {
       axios
-        .get(`${baseURL}api/v1/wait/summary/${merchId}`)
+        .get(
+          `${baseURL}api/v1/wait/summary/${customerId ? customerId : merchId}`
+        )
         .then(function (res) {
           if (res?.data?.code === "000000") {
             for (let i = 0; i < res?.data?.data.length; i++) {
@@ -327,12 +348,6 @@ export const MerchantHomePage = () => {
                 setActiveWaitTypeId(i + 1);
 
                 setShowJoinModal(true);
-                // Notify(
-                //   "success",
-                //   "Joined Succesfully!",
-                //   `Someone just joined ${res?.data?.data[i].waitTypeName}`,
-                //   10
-                // );
               }
 
               let totalWaitSize = 0;
@@ -385,7 +400,6 @@ export const MerchantHomePage = () => {
   };
 
   useEffect(() => {
-    // console.log("am clicked Outside", queueList.length);
     if (updateStatus) {
       switch (updateStatus) {
         case "SERVED":
@@ -427,14 +441,12 @@ export const MerchantHomePage = () => {
 
         if (updateStatus === "SERVED") {
           if (serveStatus !== "SERVED") {
-            // handleServeStatus();
           } else {
             callApi();
             setIsLoadingServed(true);
           }
         } else {
           if (serveStatus !== "CANCELLED") {
-            //handleCancelStatus();
           } else {
             callApi();
             setIsLoadingServed(false);
@@ -513,33 +525,46 @@ export const MerchantHomePage = () => {
       {/* HEADER */}
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          <div className="flex items-center">
-            <img
-              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
-              alt="User avatar"
-              className={`${
-                imageLoaded
-                  ? "visible rounded-full h-[50px] w-[50px]"
-                  : "hidden rounded-full h-[50px] w-[50px]"
-              }`}
-              onLoad={() => setImageLoaded(true)}
-            />
-            {!imageLoaded && (
-              <FaUserCircle
-                size={50}
-                style={{
-                  display: "flex",
-                  alignSelf: "center",
-                  opacity: 0.25,
-                  cursor: "pointer",
-                }}
-              />
-            )}
+          {userRole === "ADMIN" ? (
+            <>
+              <div className="flex items-center">
+                <img
+                  src={`${baseURL}api/v1/user/logo/${logoUrl}`}
+                  alt="User avatar"
+                  className={`${
+                    imageLoaded
+                      ? "visible rounded-full h-[50px] w-[50px]"
+                      : "hidden rounded-full h-[50px] w-[50px]"
+                  }`}
+                  onLoad={() => setImageLoaded(true)}
+                />
+                {!imageLoaded && (
+                  <FaUserCircle
+                    size={50}
+                    style={{
+                      display: "flex",
+                      alignSelf: "center",
+                      opacity: 0.25,
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
 
-            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
-              {merchName}
-            </p>
-          </div>
+                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
+                  {merchName}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center">
+                <AppetyLogoMedium />
+                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
+                  appety
+                </p>
+              </div>
+            </>
+          )}
 
           <div className="flex ">
             <span className="flex  xl:mr-[96px] mr-[30px] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
@@ -582,13 +607,23 @@ export const MerchantHomePage = () => {
               {changeIcon ? (
                 <>
                   <div className="absolute right-0 top-[59px] z-10 mt-2 w-40 origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                    <div className="py-3 text-center">
-                      <Link to="/dashboard/merchant/settings/queue">
-                        <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                          Queue Settings
-                        </p>
-                      </Link>
-                    </div>
+                    {userRole === "ADMIN" ? (
+                      <div className="py-3 text-center">
+                        <Link to="/dashboard/merchant/settings/queue">
+                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                            Queue Settings
+                          </p>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="py-3 text-center">
+                        <Link to="/dashboard/admin/overview">
+                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                            Settings
+                          </p>
+                        </Link>
+                      </div>
+                    )}
 
                     <div className="py-3 text-center">
                       <p
@@ -658,7 +693,11 @@ export const MerchantHomePage = () => {
                                   </p>
                                   <p className="text_16 text-[#33B469] underline">
                                     <Link
-                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
+                                      to={`https://api.whatsapp.com/send?phone=${
+                                        list.cusPhone
+                                      }&text=Hello ${
+                                        list.cusName
+                                      } your table is ready, please proceed to ${merchName.toUpperCase()}`}
                                       target="_blank"
                                     >
                                       {list.cusPhone}
@@ -1061,7 +1100,11 @@ export const MerchantHomePage = () => {
                                   </p>
                                   <p className="text_16 text-[#33B469] underline">
                                     <Link
-                                      to={`https://api.whatsapp.com/send?phone=${list.cusPhone}&text=Hello ${list.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
+                                      to={`https://api.whatsapp.com/send?phone=${
+                                        list.cusPhone
+                                      }&text=Hello ${
+                                        list.cusName
+                                      } your table is ready, please proceed to ${merchName.toUpperCase()}`}
                                       target="_blank"
                                     >
                                       {list.cusPhone}
@@ -1193,7 +1236,11 @@ export const MerchantHomePage = () => {
                       <p className="text_14 text-[#6b6968]">Phone Number</p>
                       <p className="text_18 text-[#33B469] underline">
                         <Link
-                          to={`https://api.whatsapp.com/send?phone=${cancelQueueList?.cusPhone}&text=Hello ${cancelQueueList?.cusName} your table is ready, please proceed to ${merchName.toUpperCase()}`}
+                          to={`https://api.whatsapp.com/send?phone=${
+                            cancelQueueList?.cusPhone
+                          }&text=Hello ${
+                            cancelQueueList?.cusName
+                          } your table is ready, please proceed to ${merchName.toUpperCase()}`}
                           target="_blank"
                         >
                           {cancelQueueList?.cusPhone}

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import storage from "../utils/storage";
 import { FaUserCircle } from "react-icons/fa";
-import { ArrowDownIcon, ArrowUpIcon } from "../assests/icons/Icons";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  AppetyLogoMedium,
+} from "../assests/icons/Icons";
 import axios from "axios";
 import secrets from "../config/secrets";
 
@@ -11,6 +15,7 @@ const HeaderPage = () => {
   const baseURL = secrets.baseURL;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
+  const userRole = JSON.parse(storage.fetch("userDetails")).role;
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -19,13 +24,13 @@ const HeaderPage = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
 
-   useEffect(() => {
-      let timer1 = 0;
-  setInterval(function () {
-    timer1 += 1;
-    setCallTimer1(timer1);
-  }, 1000);
-  }, [])
+  useEffect(() => {
+    let timer1 = 0;
+    setInterval(function () {
+      timer1 += 1;
+      setCallTimer1(timer1);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -40,7 +45,7 @@ const HeaderPage = () => {
         day: "numeric",
       });
       setCurrentTime(timeRun);
-      setCurrentDate(dateRun); 
+      setCurrentDate(dateRun);
     };
   }, [calltimer1]);
 
@@ -68,32 +73,47 @@ const HeaderPage = () => {
     <>
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          <div className="flex items-center">
-            <img
-              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
-              alt="User avatar"
-              className={`${
-                imageLoaded
-                  ? "visible rounded-full h-[50px] w-[50px]"
-                  : "hidden rounded-full h-[50px] w-[50px]"
-              }`}
-              onLoad={() => setImageLoaded(true)}
-            />
-            {!imageLoaded && (
-              <FaUserCircle
-                size={50}
-                style={{
-                  display: "flex",
-                  alignSelf: "center",
-                  opacity: 0.25,
-                  cursor: "pointer",
-                }}
-              />
-            )}
-            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
-              {merchName}
-            </p>
-          </div>
+          
+          {userRole === "ADMIN" ? (
+            <>
+              <div className="flex items-center">
+                <img
+                  src={`${baseURL}api/v1/user/logo/${logoUrl}`}
+                  alt="User avatar"
+                  className={`${
+                    imageLoaded
+                      ? "visible rounded-full h-[50px] w-[50px]"
+                      : "hidden rounded-full h-[50px] w-[50px]"
+                  }`}
+                  onLoad={() => setImageLoaded(true)}
+                />
+                {!imageLoaded && (
+                  <FaUserCircle
+                    size={50}
+                    style={{
+                      display: "flex",
+                      alignSelf: "center",
+                      opacity: 0.25,
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
+                  {merchName}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center">
+                <AppetyLogoMedium />
+                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
+                  appety
+                </p>
+              </div>
+            </>
+          )}
+
           <div className="flex ">
             <span className="flex gray2-bg opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">
               <p className="">{currentDate}</p>
@@ -112,13 +132,23 @@ const HeaderPage = () => {
               {changeIcon ? (
                 <>
                   <div className="absolute right-0 top-[59px] z-10 mt-2 w-40 origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                    <div className="py-3 text-center">
-                      <Link to="/dashboard/merchant/settings/queue">
-                        <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                          Queue Settings
-                        </p>
-                      </Link>
-                    </div>
+                    {userRole === "ADMIN" ? (
+                      <div className="py-3 text-center">
+                        <Link to="/dashboard/merchant/settings/queue">
+                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                            Queue Settings
+                          </p>
+                        </Link>
+                      </div>
+                    ) : (
+                      <div className="py-3 text-center">
+                        <Link to="/dashboard/admin/overview">
+                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                            Settings
+                          </p>
+                        </Link>
+                      </div>
+                    )}
 
                     <div className="py-3 text-center">
                       <p

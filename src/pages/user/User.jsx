@@ -470,8 +470,7 @@ export const UserHomePage = () => {
                           <label className="label_new z-2">Enter Email</label>
                           <label className="label_newTop z-2">Email</label>
                         </div>
-                      ) : 
-                      null}
+                      ) : null}
 
                       <div>
                         <button

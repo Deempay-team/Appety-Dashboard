@@ -1,6 +1,3 @@
-//import React, { useState, useEffect } from "react";
-
-//const [currentTime1, setCurrentTime1] = useState("0");
 
 export const currentDate = new Date().toLocaleDateString("en-us", {
   year: "numeric",
@@ -13,33 +10,6 @@ export const currentTime = new Date().toLocaleTimeString("en-us", {
   hour: "2-digit",
   minute: "2-digit",
 });
-
-// function myFunction() {
-//   return Math.PI;
-// }
-
-//export const currentTime = currentTime1;
-
-// export function currentTime  () {
-//   "90:49";
-// }
-
-// export function currentTime () {
-//   let timeRun = new Date().toLocaleTimeString("en-us", {
-//     hour: "2-digit",
-//     minute: "2-digit",
-//   });
-//   let timer = 0;
-//     setInterval(function () {
-//     timer += 1;  
-//     timeRun = new Date().toLocaleTimeString("en-us", {
-//       hour: "2-digit",
-//       minute: "2-digit",
-//     })
-//   }, 1000);
-
-//   return "23:45";
-// }
 
 export const formatDateTime = (undate) => {
   return new Date(undate).toLocaleDateString("en-us", {
@@ -79,33 +49,11 @@ export const formatDate = (undate) => {
   });
 };
 
-
-
-
 export const formatTime = (timeString) => {
   const [hourString, minute] = toString(timeString).split(":");
   const hour = +hourString % 24;
   return (hour % 12 || 12) + ":" + minute + (hour < 12 ? "AM" : "PM");
 };
-
-
-// export const redirectTo = (roleName) => {
-//   let redirectTo;
-//   switch (roleName) {
-//     case "Admin":
-//       redirectTo = "/dashboard/merchant/overview";
-//       break;
-//     case "Manager":
-//       redirectTo = "/dashboard/manager/overview";
-//       break;
-//     case "Supervisor":
-//       redirectTo = "/dashboard/supervisor/overview";
-//       break;
-//     default:
-//       redirectTo = "/dashboard/cashier/overview";
-//   }
-//   return redirectTo;
-// };
 
 export const formatMonthYear = (monthyear) => {
   const month = new Date(monthyear).toDateString("en-us", {
@@ -114,4 +62,28 @@ export const formatMonthYear = (monthyear) => {
     day: "numeric",
   });
   return month;
+};
+
+export const truncateLongName = (str, num) => {
+  num = 22;
+
+  if (str === "" || !str) {
+    return str;
+  } else if (str.length <= num) {
+    return str;
+  } else {
+    return str.slice(0, num) + "...";
+  }
+};
+
+export const truncateShortName = (str, num) => {
+  num = 12;
+
+  if (str === "" || !str) {
+    return str;
+  } else if (str.length <= num) {
+    return str;
+  } else {
+    return str.slice(0, num) + "...";
+  }
 };
