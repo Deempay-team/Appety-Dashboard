@@ -5,33 +5,34 @@ import useRegister from "../../../hooks/useSignUp";
 import { Modal } from "antd";
 import {
   PlusIconWhite,
-  RemoveQueueModalIcon,
   CloseModalIcon,
   CloseIcon,
   OpenIcon,
 } from "../../../assests/icons/Icons";
 import {
   SpinnerMediumWhite,
+  SpinnerOrangeMedium,
   SpinnerOrange,
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import axios from "axios";
 import { truncateLongName, truncateShortName } from "../../../utils/functions";
 import { EmailImage } from "../../../assests/images";
-import { formatDate, formatDateTime } from "../../../utils/functions";
+import { formatDateT } from "../../../utils/functions";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
 import storage from "../../../utils/storage";
 import { Dropdown, Menu } from "antd";
+import useForget from "../../../hooks/useForget";
 
 const column = [
   "Restaurant Name",
-  "Customer Phone",
-  "Email",
-  "Address",
+  "Merchant Phone",
+  "Merchant Email",
+  "Merchant Address",
   "Date Created",
-  "Action",
-  "Action",
+  "Pages",
+  "Actions",
 ];
 
 export const AdminMerchantListPage = () => {
@@ -51,6 +52,11 @@ export const AdminMerchantListPage = () => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isMerchantFetch, setIsMerchantFetch] = useState(true);
   const [merchantList, setMerchantList] = useState([]);
+  const [editMerchantList, setEditMerchantList] = useState([]);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [verifyToken, setVerifyToken] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [isLoadingPassword, setIsLoadingPassword] = useState(false);
 
   // Form Validation
   const {
@@ -59,6 +65,16 @@ export const AdminMerchantListPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+
+  const {
+    isLoading,
+    data: forgetData,
+    mutate: forgetUser,
+  } = useForget({
+    verifyToken,
+    password,
+    email: contactEmail,
+  });
 
   const {
     isLoading: isRegistering,
@@ -92,6 +108,47 @@ export const AdminMerchantListPage = () => {
       });
   }, []);
 
+  //API TO SEND VERIFYTOKEN
+  const sendVerifyToken = () => {
+    setIsLoadingPassword(true);
+    axios
+      .get(
+        `${baseURL}api/v1/user/superadmin/sendemail?email=${editMerchantList.contactEmail}&method=PASSWORD&merchId=${merchId}`,
+        {}
+      )
+      .then(function (response) {
+        if (response.data.code === "000000") {
+          setIsLoadingPassword(false);
+          setShowPasswordModal(true);
+          setVerifyToken(response?.data?.data);
+        }
+      })
+      .catch(function (error) {
+        console.log("err", error);
+      });
+  };
+
+  //CALL FORGET PASSWORD API
+  useEffect(() => {
+    if (password && verifyToken && contactEmail) {
+      forgetUser();
+    }
+  }, [password, verifyToken, contactEmail]);
+
+  useEffect(() => {
+    if (forgetData) {
+      if (forgetData?.code === "000000") {
+        Notify("success", "Password has being reset successfully!");
+        setShowPasswordModal(false);
+        setPassword("");
+        reset();
+      } else {
+        Notify("error", "Failed to Update!", forgetData?.message, 5);
+        setPassword("");
+      }
+    }
+  }, [forgetData]);
+
   //CALL REGISTER API
   useEffect(() => {
     if (password && firstName && lastName) {
@@ -100,15 +157,22 @@ export const AdminMerchantListPage = () => {
   }, [password, firstName, lastName]);
 
   useEffect(() => {
-    if (data?.code === "000000") {
-      setIsRegister(false);
-    } else if (data?.code === "U00002") {
-      Modal.success({
-        title: "Email already registered!",
-        content: "Use a different email to create a new account",
-      });
-      reset();
+    if (data) {
+      if (data?.code === "000000") {
+        setIsRegister(false);
+      } else if (data?.code === "U00002") {
+        Modal.success({
+          title: "Email already registered!",
+          content:
+            "Use a different email to create a new account or reset the password.",
+        });
+      } else {
+        Notify("error", "Failed to Register!");
+      }
     }
+    setPassword("");
+    setFirstName("");
+    setLastName("");
   }, [data]);
 
   //CALL REGISTER RESEND CODE
@@ -130,6 +194,13 @@ export const AdminMerchantListPage = () => {
       });
   };
 
+  //SUBMIT DATA FOR PASSWORD CHANGE
+  const onSubmitPassword = (data) => {
+    const { password } = data;
+    setPassword(password);
+  };
+
+  //SUBMIT DATA FOR REGISTRATION
   const onSubmitHandler = (data) => {
     const {
       password,
@@ -165,29 +236,34 @@ export const AdminMerchantListPage = () => {
     setPhoneNo("");
     setAddress("");
     setBusinessName("");
+    setVerifyToken("");
     setIsRegister(true);
+    setShowPasswordModal(false);
   };
 
   const handleMerchantDetails = (index) => {
-    console.log("index", index);
+    setEditMerchantList(merchantList[index]);
+  };
 
-    console.log("merchantList[index]", merchantList[index]);
+  const openPasswordModal = () => {
+    sendVerifyToken();
+    setContactEmail(editMerchantList.contactEmail);
   };
 
   const more = (
     <Menu className="grid items-center justify-center">
       <span
-        //  onClick={() => setIsEditQ1(false)}
-        className="cursor-pointer block mx-auto py-4 text_16 text-[#33B469]"
+        onClick={openPasswordModal}
+        className="cursor-pointer block mx-auto py-4 px-4 text_16 text-[#33B469]"
       >
-        Edit
+        {isLoadingPassword ? <SpinnerOrangeMedium /> : "Change Password"}
       </span>
       <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
-        //onClick={openRemoveModal}
+        //onClick={}
         className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
       >
-        Remove
+        Disable Account
       </span>
     </Menu>
   );
@@ -237,7 +313,11 @@ export const AdminMerchantListPage = () => {
 
                   <tbody>
                     {merchantList.map((list, index) => (
-                      <tr className="bg-[#ffffff]" key={index} onClick={() => handleMerchantDetails(index)}>
+                      <tr
+                        className="bg-[#ffffff]"
+                        key={index}
+                        onClick={() => handleMerchantDetails(index)}
+                      >
                         <td className="text_16 px-2 py-8 capitalize">
                           {list.merchName}
                         </td>
@@ -249,10 +329,8 @@ export const AdminMerchantListPage = () => {
                           {truncateShortName(list.merchAddress)}
                         </td>
                         <td className="text_16 px-2 py-8">
-                          {formatDate(list.createTime)}
+                          {formatDateT(list.createTime)}
                         </td>
-                        {/*
-                         */}
                         <td className="text_16 px-2 py-8">
                           <a
                             href={`/dashboard/merchant/${list.merchId}`}
@@ -263,12 +341,7 @@ export const AdminMerchantListPage = () => {
                         </td>
                         <td className="text_16 px-2 py-8">
                           <Dropdown overlay={more} trigger={["click"]}>
-                            <span
-                              // onClick={() => {
-                              //   handleWaitType(0);
-                              // }}
-                              className=" cursor-pointer text_16 text-[#33B469] underline"
-                            >
+                            <span className=" cursor-pointer text_16 text-[#000000] underline">
                               More
                             </span>
                           </Dropdown>
@@ -458,7 +531,7 @@ export const AdminMerchantListPage = () => {
                       </span>
                     </div>
 
-                    <div className="pt-8">
+                    <div className="pt-10">
                       <button
                         type="submit"
                         className="submit_btn"
@@ -504,6 +577,74 @@ export const AdminMerchantListPage = () => {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {/* SHOW CANCEL QUEUE MODAL */}
+      {showPasswordModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg px-[85px] pt-[64px] pb-[53px] w-[600px] relative">
+              <span
+                onClick={closeModal}
+                class="absolute top-[12%] right-[15%] cursor-pointer"
+              >
+                <CloseModalIcon />
+              </span>
+              <form
+                onSubmit={handleSubmit(onSubmitPassword)}
+                className="space-y-6"
+              >
+                <div className="relative">
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="email" className="input_label">
+                      Password
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      name="password"
+                      placeholder="Enter New Password"
+                      type={show ? "text" : "password"}
+                      className={`input_password ${
+                        errors.password && "input_error"
+                      }`}
+                      {...register("password", {
+                        required: "password is required",
+                        pattern: {
+                          value:
+                            /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z!@#\$%\^\&*\)\(+=._-\d]{6,}$/,
+                          message:
+                            "Your password should contain at least a number and a letter and minimum of 6 characters",
+                        },
+                      })}
+                    />
+                    {errors.password && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.password.message}
+                      </p>
+                    )}
+                    <span onClick={() => setShow(!show)}>
+                      {show ? (
+                        <span className="absolute right-[14px] top-[53px] cursor-pointer">
+                          <OpenIcon />
+                        </span>
+                      ) : (
+                        <span className="absolute right-[14px] top-[53px] cursor-pointer">
+                          <CloseIcon />
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <button type="submit" className="submit_btn">
+                    {isLoading ? <SpinnerWhite /> : "Submit"}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </>

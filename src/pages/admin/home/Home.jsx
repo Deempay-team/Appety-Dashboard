@@ -6,7 +6,7 @@ import { DownLoadIconWhite } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import { currentDate, currentTime } from "../../../utils/functions";
-import { formatDate, formatDateTime } from "../../../utils/functions";
+import { formatDate, formatDateT } from "../../../utils/functions";
 import {
   SpinnerOrange,
   SpinnerWhite,
@@ -32,6 +32,10 @@ export const AdminHomePage = () => {
   const [exportQueues, setExportQueues] = useState([]);
   const [queueList, setQueueList] = useState([]);
   const [isExporting, setIsExporting] = useState(false);
+  const [totalMerchs, setTotalMerchs] = useState("");
+  const [totalCustomers, setTotalCustomers] = useState("");
+  const [totalQueue, setTotalQueue] = useState("");
+  const [totalServedQueue, setTotalServedQueue] = useState("");
 
   //CALL QUERY QUEUE API
   useEffect(() => {
@@ -42,6 +46,23 @@ export const AdminHomePage = () => {
           setQueueList(res?.data?.data);
           setIsExporting(false);
           setIsQueueFetch(false);
+        }
+      })
+      .catch(function (error) {
+        console.log("queue-error", error);
+      });
+  }, []);
+
+  //CALL QUERY SUPERADMIN SUMMARY API
+  useEffect(() => {
+    axios
+      .get(`${baseURL}api/v1/wait/superadmin/summary?superAdminId=${merchId}`)
+      .then(function (res) {
+        if (res?.data?.code === "000000") {
+          setTotalMerchs(res?.data?.data?.totalMerchs)
+          setTotalCustomers(res?.data?.data?.totalCustomers)
+          setTotalQueue(res?.data?.data?.totalQueue)
+          setTotalServedQueue(res?.data?.data?.totalServedQueue)          
         }
       })
       .catch(function (error) {
@@ -104,7 +125,7 @@ export const AdminHomePage = () => {
                           Total Restaurants
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("6000")}
+                          {formatNumberWithCommas(totalMerchs)}
                         </p>
                       </div>
                       <div>
@@ -124,7 +145,7 @@ export const AdminHomePage = () => {
                           Total Person
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("406890")}
+                          {formatNumberWithCommas(totalCustomers)}
                         </p>
                       </div>
                       <div>
@@ -144,7 +165,7 @@ export const AdminHomePage = () => {
                           Total Queues
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("200030")}
+                          {formatNumberWithCommas(totalQueue)}
                         </p>
                       </div>
                       <div>
@@ -164,7 +185,7 @@ export const AdminHomePage = () => {
                           Active Users
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
-                          {formatNumberWithCommas("103689")}
+                          {formatNumberWithCommas(totalServedQueue)}
                         </p>
                       </div>
                       <div>
@@ -230,10 +251,10 @@ export const AdminHomePage = () => {
                         <td className="text_16 px-2 py-5">{list.cusName}</td>
                         <td className="text_16 px-2 py-5">{list.cusPhone}</td>
                         <td className="text_16 px-2 py-5">
-                          {formatDate(list.createTime)}
+                          {formatDateT(list.createTime)}
                         </td>
                         <td className="text_16 px-2 py-5">
-                          {formatDate(list.updateTime)}
+                          {formatDateT(list.updateTime)}
                         </td>
                         <td className="text_16 px-2 py-5">{list.status}</td>
                         <td className="text_16 px-2 py-5">{list.waitNo}</td>

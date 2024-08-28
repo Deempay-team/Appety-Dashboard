@@ -73,7 +73,8 @@ export const LoginPage = () => {
         10
       );
     }
-    
+    setPassword("");
+    setEmail("");
   }, [data]);
 
   // SUBMMIT FORM

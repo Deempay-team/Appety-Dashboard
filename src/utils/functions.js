@@ -1,4 +1,3 @@
-
 export const currentDate = new Date().toLocaleDateString("en-us", {
   year: "numeric",
   month: "numeric",
@@ -49,6 +48,16 @@ export const formatDate = (undate) => {
   });
 };
 
+export const formatDateT = (undate) => {
+  return new Date(undate).toLocaleDateString("en-us", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+};
+
 export const formatTime = (timeString) => {
   const [hourString, minute] = toString(timeString).split(":");
   const hour = +hourString % 24;
@@ -77,7 +86,7 @@ export const truncateLongName = (str, num) => {
 };
 
 export const truncateShortName = (str, num) => {
-  num = 12;
+  num = 15;
 
   if (str === "" || !str) {
     return str;
