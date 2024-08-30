@@ -645,7 +645,7 @@ export const MerchantHomePage = () => {
         <div class="sticky top-0  2xl:w-[380px] w-[362px]   border-r border-[#D9D9D9] bg-[#F6F7F9]">
           <div className="flow-root border-b border-[#d9d9d9]">
             <div className="flex items-center py-5 ">
-              <span className="flex pl-10 ">
+              <span className="flex pl-10 items-center justify-center ">
                 <p className="text_24">Waiting in Queue</p>
                 <span className="xl:ml-[66px] ml-[10px] text-[#ffffff] rounded-full xl:h-[55px] h-[30px] xl:w-[55px] w-[30px] text_34  bg-[#FAA87C] items-center flex justify-center ">
                   {totalWaitingQueue}
