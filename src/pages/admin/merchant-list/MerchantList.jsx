@@ -77,6 +77,7 @@ export const AdminMerchantListPage = () => {
   const [merchStatus, setMerchStatus] = useState("1");
   const [showDisableModal, setShowDisableModal] = useState(false);
   const [isVerifyRegisterToken, setIsVerifyRegisterToken] = useState("");
+  const [isLoadingStatistic, setIsLoadingStatistic] = useState(false);
   const [totalMerchs, setTotalMerchs] = useState("");
   const [totalCustomers, setTotalCustomers] = useState("");
   const [totalQueue, setTotalQueue] = useState("");
@@ -304,12 +305,15 @@ export const AdminMerchantListPage = () => {
 
   //CALL QUERY MERCHANT SUMMARY API
   const callMerchantSummary = () => {
+    setIsLoadingStatistic(true);
     axios
       .get(
         `${baseURL}api/v1/wait/superadmin/summary?superAdminId=${merchId}&merchId=${editMerchantList.merchId}`
       )
       .then(function (res) {
+        setIsLoadingStatistic(false);
         if (res?.data?.code === "000000") {
+          setShowStatisticsModal(true);
           setTotalMerchs(res?.data?.data?.totalMerchs);
           setTotalCustomers(res?.data?.data?.totalCustomers);
           setTotalQueue(res?.data?.data?.totalQueue);
@@ -472,7 +476,7 @@ export const AdminMerchantListPage = () => {
 
   const openStaticsModal = () => {
     callMerchantSummary();
-    setShowStatisticsModal(true);
+    setIsLoadingStatistic(true);
   };
 
   console.log("editMerchantList", editMerchantList);
@@ -508,7 +512,8 @@ export const AdminMerchantListPage = () => {
         onClick={openStaticsModal}
         className="cursor-pointer block px-8 py-4 text_16 text-[000000]"
       >
-        Merchant Statistics
+        {isLoadingStatistic ? <SpinnerOrangeMedium /> : "Merchant Statistics"}
+        
       </span>
       <div class="border-[0.5px] border-[#D9D9D9]"></div>
       {editMerchantList?.merchStatus === "1" ? (
