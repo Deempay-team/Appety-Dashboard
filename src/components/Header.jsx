@@ -5,7 +5,6 @@ import { FaUserCircle } from "react-icons/fa";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  AppetyLogoMedium,
   BackArrowIcon,
 } from "../assests/icons/Icons";
 import axios from "axios";
@@ -14,6 +13,7 @@ import secrets from "../config/secrets";
 const HeaderPage = () => {
   const navigate = useNavigate();
   const baseURL = secrets.baseURL;
+  const customerId = JSON.parse(storage.fetch("customerId")).customerId;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
   const userRole = JSON.parse(storage.fetch("userDetails")).role;
@@ -24,6 +24,7 @@ const HeaderPage = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
   const [calltimer1, setCallTimer1] = useState(0);
+
 
   useEffect(() => {
     let timer1 = 0;
@@ -53,7 +54,7 @@ const HeaderPage = () => {
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {
     axios
-      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}api/v1/user/merchant/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setMerchName(res.data.data?.merchName);
@@ -74,51 +75,42 @@ const HeaderPage = () => {
     <>
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          {userRole === "ADMIN" ? (
+          <div className="flex items-center">
+          {userRole === "ADMIN" ? null : (
             <>
-              <div className="flex items-center">
-                <img
-                  src={`${baseURL}api/v1/user/logo/${logoUrl}`}
-                  alt="User avatar"
-                  className={`${
-                    imageLoaded
-                      ? "visible rounded-full h-[50px] w-[50px]"
-                      : "hidden rounded-full h-[50px] w-[50px]"
-                  }`}
-                  onLoad={() => setImageLoaded(true)}
-                />
-                {!imageLoaded && (
-                  <FaUserCircle
-                    size={50}
-                    style={{
-                      display: "flex",
-                      alignSelf: "center",
-                      opacity: 0.25,
-                      cursor: "pointer",
-                    }}
-                  />
-                )}
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
-                  {merchName}
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center">
               <Link
-                  to="/dashboard/admin/overview"
-                  className="flex pr-3 cursor-pointer "
-                >
-                  <BackArrowIcon />
-                </Link>
-                <AppetyLogoMedium />
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
-                  appety
-                </p>
-              </div>
+                to="/dashboard/admin/overview"
+                className="flex pr-3 cursor-pointer "
+              >
+                <BackArrowIcon />
+              </Link>
             </>
           )}
+            <img
+              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
+              alt="User avatar"
+              className={`${
+                imageLoaded
+                  ? "visible rounded-full h-[50px] w-[50px]"
+                  : "hidden rounded-full h-[50px] w-[50px]"
+              }`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
+              <FaUserCircle
+                size={50}
+                style={{
+                  display: "flex",
+                  alignSelf: "center",
+                  opacity: 0.25,
+                  cursor: "pointer",
+                }}
+              />
+            )}
+            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
+              {merchName}
+            </p>
+          </div>
 
           <div className="flex ">
             <span className="flex gray2-bg opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">

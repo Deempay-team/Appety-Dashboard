@@ -39,7 +39,6 @@ export const MerchantHomePage = () => {
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
   const userRole = JSON.parse(storage.fetch("userDetails")).role;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
-
   const baseURL = secrets.baseURL;
   const navigate = useNavigate();
   const [merchName, setMerchName] = useState("");
@@ -95,8 +94,15 @@ export const MerchantHomePage = () => {
     }, 1000);
   }, []);
 
-  console.log("customerId", customerId);
-
+  useEffect(() => {
+    storage.add(
+      "customerId",
+      JSON.stringify({
+        customerId: customerId,
+      })
+    );
+  }, [customerId])
+ 
   useEffect(() => {
     return () => {
       let timeRun = new Date().toLocaleTimeString("en-us", {
@@ -529,7 +535,7 @@ export const MerchantHomePage = () => {
             {userRole === "ADMIN" ? null : (
               <>
                 <Link
-                  to="/dashboard/admin/overview"
+                  to="/dashboard/admin/merchantlist"
                   className="flex pr-3 cursor-pointer "
                 >
                   <BackArrowIcon />

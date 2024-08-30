@@ -29,6 +29,7 @@ const column = ["Day", "Start Time", "End Time", "Action"];
 const LinkSettingsPage = () => {
   const exportRef = useRef();
   const baseURL = secrets.baseURL;
+  const customerId = JSON.parse(storage.fetch("customerId")).customerId;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const linkUrl = JSON.parse(storage.fetch("merchantDetails")).linkUrl;
   const switchIsOn = JSON.parse(storage.fetch("merchantDetails")).linkUrlStatus;
@@ -215,7 +216,7 @@ const LinkSettingsPage = () => {
 
   //CALL TO UPDATE WAIT-TIME
   const { data, mutate: fetchEditWaitTime } = useEditWaitTime({
-    merchId,
+    merchId: customerId ? customerId : merchId,
     waitTimeId,
     startTime,
     status,
@@ -225,7 +226,7 @@ const LinkSettingsPage = () => {
   //CALL TO UPDATE MERCHANT STATUS
   const { data: updateMerchantData, mutate: fetchUpdateMerchant } =
     useUpdateMerchant({
-      merchId,
+      merchId: customerId ? customerId : merchId,
       linkUrlStatus,
       preOrderUrl,
       adsVideoUrl,
@@ -235,7 +236,7 @@ const LinkSettingsPage = () => {
   useEffect(() => {
     setIsLoadingTime(true);
     axios
-      .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsTimeFetch(false);
@@ -254,7 +255,7 @@ const LinkSettingsPage = () => {
   //CALL QUERY WAIT-TIME API TO UPDATE STATE
   const timeUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/wait/time/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsLoadingTime(false);
@@ -270,7 +271,7 @@ const LinkSettingsPage = () => {
   //CALL QUERY MERCHANT DETAILS API
   const queryMerchantUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}api/v1/user/merchant/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsUpdatedMerch(false);

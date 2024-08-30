@@ -10,6 +10,7 @@ import { SpinnerWhite } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
 
 const ImageSettingsPage = () => {
+  const customerId = JSON.parse(storage.fetch("customerId")).customerId;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const baseURL = secrets.baseURL;
   const imgRef = useRef();
@@ -20,7 +21,7 @@ const ImageSettingsPage = () => {
   //CALL QUERY MERCHANT DETAILS API
   const queryMerchantUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+      .get(`${baseURL}api/v1/user/merchant/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
           storage.add(
@@ -52,7 +53,7 @@ const ImageSettingsPage = () => {
   useEffect(() => {
     if (file) {
       axios
-        .post(`${baseURL}api/v1/user/uploadImage/${merchId}`, formData, {
+        .post(`${baseURL}api/v1/user/uploadImage/${customerId ? customerId : merchId}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

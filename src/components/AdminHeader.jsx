@@ -1,25 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import storage from "../utils/storage";
-import { FaUserCircle } from "react-icons/fa";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   AppetyLogoMedium,
-  BackArrowIcon,
 } from "../assests/icons/Icons";
-import axios from "axios";
-import secrets from "../config/secrets";
 
 const HeaderPage = () => {
   const navigate = useNavigate();
-  const baseURL = secrets.baseURL;
-  const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
-  const userRole = JSON.parse(storage.fetch("userDetails")).role;
-  const [merchName, setMerchName] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
-
   const [changeIcon, setChangeIcon] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -51,19 +41,19 @@ const HeaderPage = () => {
   }, [calltimer1]);
 
   //CALL QUERY MERCHANT DETAILS API
-  useEffect(() => {
-    axios
-      .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
-      .then(function (res) {
-        if (res.data.code === "000000") {
-          setMerchName(res.data.data?.merchName);
-          setLogoUrl(res.data.data?.logoUrl);
-        }
-      })
-      .catch(function (error) {
-        console.log("merchant-error", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${baseURL}api/v1/user/merchant/query/${merchId}`)
+  //     .then(function (res) {
+  //       if (res.data.code === "000000") {
+  //         // setMerchName(res.data.data?.merchName);
+  //         // setLogoUrl(res.data.data?.logoUrl);
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("merchant-error", error);
+  //     });
+  // }, []);
 
   const handleLogout = () => {
     storage.clear();
@@ -74,47 +64,6 @@ const HeaderPage = () => {
     <>
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          {/* {userRole === "ADMIN" ? (
-            <>
-              <div className="flex items-center">
-                <img
-                  src={`${baseURL}api/v1/user/logo/${logoUrl}`}
-                  alt="User avatar"
-                  className={`${
-                    imageLoaded
-                      ? "visible rounded-full h-[50px] w-[50px]"
-                      : "hidden rounded-full h-[50px] w-[50px]"
-                  }`}
-                  onLoad={() => setImageLoaded(true)}
-                />
-                {!imageLoaded && (
-                  <FaUserCircle
-                    size={50}
-                    style={{
-                      display: "flex",
-                      alignSelf: "center",
-                      opacity: 0.25,
-                      cursor: "pointer",
-                    }}
-                  />
-                )}
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
-                  {merchName}
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center">
-            
-                <AppetyLogoMedium />
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
-                  appety
-                </p>
-              </div>
-            </>
-          )} */}
-
           <div className="flex items-center">
             <AppetyLogoMedium />
             <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
@@ -140,13 +89,13 @@ const HeaderPage = () => {
               {changeIcon ? (
                 <>
                   <div className="absolute right-0 top-[59px] z-10 mt-2 w-40 origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                    <div className="py-3 text-center">
+                    {/* <div className="py-3 text-center">
                       <Link to="/dashboard/merchant/settings/queue">
                         <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
                           Queue Settings
                         </p>
                       </Link>
-                    </div>
+                    </div> */}
                     <div className="py-3 text-center">
                       <p
                         onClick={handleLogout}

@@ -23,6 +23,7 @@ const column = [
 ];
 
 const QueueSettingsPage = () => {
+  const customerId = JSON.parse(storage.fetch("customerId")).customerId;
   const merchId = JSON.parse(storage.fetch("userDetails")).userId;
   const baseURL = secrets.baseURL;
   const [minPax, setMinPax] = useState("");
@@ -151,7 +152,7 @@ const QueueSettingsPage = () => {
 
   //CALL TO UPDATE QUEUE
   const { data, mutate: fetchEditWaitType } = useEditWaitType({
-    merchId,
+    merchId: customerId ? customerId : merchId,
     waitTypeId,
     minPax,
     maxPax,
@@ -172,7 +173,7 @@ const QueueSettingsPage = () => {
   useEffect(() => {
     setIsLoadingWaitType(true);
     axios
-      .get(`${baseURL}api/v1/wait/type/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/type/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);
@@ -189,7 +190,7 @@ const QueueSettingsPage = () => {
   // CALL QUERY WAITTYPE API TO UPDATE STATE
   const queryUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/wait/type/query/${merchId}`)
+      .get(`${baseURL}api/v1/wait/type/query/${customerId ? customerId : merchId}`)
       .then(function (res) {
         if (res.data.code === "000000") {
           setIsLoadingWaitType(false);

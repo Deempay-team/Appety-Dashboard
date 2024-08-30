@@ -479,8 +479,6 @@ export const AdminMerchantListPage = () => {
     setIsLoadingStatistic(true);
   };
 
-  console.log("editMerchantList", editMerchantList);
-
   //SET MERCHANT EDIT VALUES
   useEffect(() => {
     setValue("merchPhone", oldMerchPhone);
