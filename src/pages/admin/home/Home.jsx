@@ -59,10 +59,10 @@ export const AdminHomePage = () => {
       .get(`${baseURL}api/v1/wait/superadmin/summary?superAdminId=${merchId}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
-          setTotalMerchs(res?.data?.data?.totalMerchs)
-          setTotalCustomers(res?.data?.data?.totalCustomers)
-          setTotalQueue(res?.data?.data?.totalQueue)
-          setTotalServedQueue(res?.data?.data?.totalServedQueue)          
+          setTotalMerchs(res?.data?.data?.totalMerchs);
+          setTotalCustomers(res?.data?.data?.totalCustomers);
+          setTotalQueue(res?.data?.data?.totalQueue);
+          setTotalServedQueue(res?.data?.data?.totalServedQueue);
         }
       })
       .catch(function (error) {

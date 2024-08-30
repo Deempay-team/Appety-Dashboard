@@ -9,6 +9,7 @@ import {
   RemoveQueueModalIcon,
   SuccessModalIcon,
   AppetyLogoMedium,
+  BackArrowIcon,
 } from "../../../assests/icons/Icons";
 import axios from "axios";
 import { CSVLink } from "react-csv";
@@ -414,7 +415,6 @@ export const MerchantHomePage = () => {
         default:
           break;
       }
-
       fetchQueueUpdate();
     }
   }, [updateStatus]);
@@ -525,46 +525,44 @@ export const MerchantHomePage = () => {
       {/* HEADER */}
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          {userRole === "ADMIN" ? (
-            <>
-              <div className="flex items-center">
-                <img
-                  src={`${baseURL}api/v1/user/logo/${logoUrl}`}
-                  alt="User avatar"
-                  className={`${
-                    imageLoaded
-                      ? "visible rounded-full h-[50px] w-[50px]"
-                      : "hidden rounded-full h-[50px] w-[50px]"
-                  }`}
-                  onLoad={() => setImageLoaded(true)}
-                />
-                {!imageLoaded && (
-                  <FaUserCircle
-                    size={50}
-                    style={{
-                      display: "flex",
-                      alignSelf: "center",
-                      opacity: 0.25,
-                      cursor: "pointer",
-                    }}
-                  />
-                )}
+          <div className="flex items-center">
+            {userRole === "ADMIN" ? null : (
+              <>
+                <Link
+                  to="/dashboard/admin/overview"
+                  className="flex pr-3 cursor-pointer "
+                >
+                  <BackArrowIcon />
+                </Link>
+              </>
+            )}
 
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
-                  {merchName}
-                </p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center">
-                <AppetyLogoMedium />
-                <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
-                  appety
-                </p>
-              </div>
-            </>
-          )}
+            <img
+              src={`${baseURL}api/v1/user/logo/${logoUrl}`}
+              alt="User avatar"
+              className={`${
+                imageLoaded
+                  ? "visible rounded-full h-[50px] w-[50px]"
+                  : "hidden rounded-full h-[50px] w-[50px]"
+              }`}
+              onLoad={() => setImageLoaded(true)}
+            />
+            {!imageLoaded && (
+              <FaUserCircle
+                size={50}
+                style={{
+                  display: "flex",
+                  alignSelf: "center",
+                  opacity: 0.25,
+                  cursor: "pointer",
+                }}
+              />
+            )}
+
+            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 capitalize">
+              {merchName}
+            </p>
+          </div>
 
           <div className="flex ">
             <span className="flex  xl:mr-[96px] mr-[30px] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
@@ -607,23 +605,24 @@ export const MerchantHomePage = () => {
               {changeIcon ? (
                 <>
                   <div className="absolute right-0 top-[59px] z-10 mt-2 w-40 origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                    {userRole === "ADMIN" ? (
-                      <div className="py-3 text-center">
-                        <Link to="/dashboard/merchant/settings/queue">
-                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                            Queue Settings
-                          </p>
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="py-3 text-center">
-                        <Link to="/dashboard/admin/overview">
-                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                            Settings
-                          </p>
-                        </Link>
-                      </div>
-                    )}
+                    {
+                      userRole === "ADMIN" ? (
+                        <div className="py-3 text-center">
+                          <Link to="/dashboard/merchant/settings/queue">
+                            <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                              Queue Settings
+                            </p>
+                          </Link>
+                        </div>
+                      ) : null
+                      // <div className="py-3 text-center">
+                      //   <Link to="/dashboard/admin/overview">
+                      //     <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                      //       Settings
+                      //     </p>
+                      //   </Link>
+                      // </div>
+                    }
 
                     <div className="py-3 text-center">
                       <p

@@ -8,6 +8,7 @@ import {
   CloseModalIcon,
   CloseIcon,
   OpenIcon,
+  RemoveQueueModalIcon,
 } from "../../../assests/icons/Icons";
 import {
   SpinnerMediumWhite,
@@ -16,14 +17,19 @@ import {
   SpinnerWhite,
 } from "../../../components/spinner/Spinner";
 import axios from "axios";
-import { truncateLongName, truncateShortName } from "../../../utils/functions";
+import {
+  truncateLongName,
+  truncateShortName,
+  formatNumberWithCommas,
+} from "../../../utils/functions";
 import { EmailImage } from "../../../assests/images";
-import { formatDateT } from "../../../utils/functions";
+import { formatDateT, formatDateOnly } from "../../../utils/functions";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
 import storage from "../../../utils/storage";
 import { Dropdown, Menu } from "antd";
 import useForget from "../../../hooks/useForget";
+import { useUpdateMerchantDetails } from "../../../hooks/useSuperAdmin";
 
 const column = [
   "Restaurant Name",
@@ -48,7 +54,7 @@ export const AdminMerchantListPage = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [isRegister, setIsRegister] = useState(true);
-  const [isLoadingResend, setIsLoadingResend] = useState(false);
+  //const [isLoadingResend, setIsLoadingResend] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isMerchantFetch, setIsMerchantFetch] = useState(true);
   const [merchantList, setMerchantList] = useState([]);
@@ -57,11 +63,52 @@ export const AdminMerchantListPage = () => {
   const [verifyToken, setVerifyToken] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [isLoadingPassword, setIsLoadingPassword] = useState(false);
+  const [showViewDetailsModal, setShowViewDetailsModal] = useState(false);
+  const [showStatisticsModal, setShowStatisticsModal] = useState(false);
+  const [isViewMerchantDetails, setIsViewMerchantDetails] = useState(true);
+  const [merchPhone, setMerchPhone] = useState("");
+  const [merchName, setMerchName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [merchAddress, setMerchAddress] = useState("");
+  const [province, setProvince] = useState("");
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [merchStatus, setMerchStatus] = useState("1");
+  const [showDisableModal, setShowDisableModal] = useState(false);
+  const [isVerifyRegisterToken, setIsVerifyRegisterToken] = useState("");
+  const [totalMerchs, setTotalMerchs] = useState("");
+  const [totalCustomers, setTotalCustomers] = useState("");
+  const [totalQueue, setTotalQueue] = useState("");
+  const [totalServedQueue, setTotalServedQueue] = useState("");
+  const [totalMerchToday, setTotalMerchToday] = useState("");
+  const [totalCustomerToday, setTotalCustomerToday] = useState("");
+  const [totalQueueToday, setTotalQueueToday] = useState("");
+  const [totalQueueYesterday, setTotalQueueYesterday] = useState("");
+  const [totalServedQueueToday, setTotalServedQueueToday] = useState("");
+  const [totalServedQueueYesterday, setTotalServedQueueYesterday] =
+    useState("");
+  const [totalWaitingQueue, setTotalWaitingQueue] = useState("");
+  const [totalWaitingQueueToday, setTotalWaitingQueueToday] = useState("");
+  const [totalWaitingQueueYesterday, setTotalWaitingQueueYesterday] =
+    useState("");
+  const [totalCancelledQueue, setTotalCancelledQueue] = useState("");
+  const [totalCancelledQueueToday, setTotalCancelledQueueToday] = useState("");
+  const [totalCancelledQueueYesterday, setTotalCancelledQueueYesterday] =
+    useState("");
+
+  const [oldMerchPhone, setOldMerchPhone] = useState("");
+  const [oldMerchName, setOldMerchName] = useState("");
+  // const [oldContactName, setOldContactName] = useState("");
+  // const [oldMerchAddress, setOldMerchAddress] = useState("");
+  // const [oldProvince, setOldProvince] = useState("");
+  // const [oldCountry, setOldCountry] = useState("");
+  // const [oldCity, setOldCity] = useState("");
 
   // Form Validation
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset,
   } = useForm();
@@ -91,6 +138,23 @@ export const AdminMerchantListPage = () => {
     email,
   });
 
+  const {
+    isLoading: isUpdatingDetails,
+    data: updateMerchantData,
+    mutate: updateMerchant,
+  } = useUpdateMerchantDetails({
+    superAdminId: merchId,
+    merchId: editMerchantList?.merchId,
+    merchAddress,
+    merchPhone,
+    merchName,
+    contactName,
+    province,
+    merchStatus,
+    country,
+    city,
+  });
+
   //CALL QUERY ALL MERCHANTS API
   useEffect(() => {
     axios
@@ -108,8 +172,8 @@ export const AdminMerchantListPage = () => {
       });
   }, []);
 
-  //API TO SEND VERIFYTOKEN
-  const sendVerifyToken = () => {
+  //API TO SEND PASSWORD VERIFYTOKEN
+  const sendPasswordToken = () => {
     setIsLoadingPassword(true);
     axios
       .get(
@@ -117,7 +181,7 @@ export const AdminMerchantListPage = () => {
         {}
       )
       .then(function (response) {
-        if (response.data.code === "000000") {
+        if (response?.data?.code === "000000") {
           setIsLoadingPassword(false);
           setShowPasswordModal(true);
           setVerifyToken(response?.data?.data);
@@ -139,12 +203,13 @@ export const AdminMerchantListPage = () => {
     if (forgetData) {
       if (forgetData?.code === "000000") {
         Notify("success", "Password has being reset successfully!");
-        setShowPasswordModal(false);
-        setPassword("");
+        closeModal();
         reset();
+        setVerifyToken("");
       } else {
         Notify("error", "Failed to Update!", forgetData?.message, 5);
         setPassword("");
+        setVerifyToken("");
       }
     }
   }, [forgetData]);
@@ -156,37 +221,16 @@ export const AdminMerchantListPage = () => {
     }
   }, [password, firstName, lastName]);
 
-  useEffect(() => {
-    if (data) {
-      if (data?.code === "000000") {
-        setIsRegister(false);
-      } else if (data?.code === "U00002") {
-        Modal.success({
-          title: "Email already registered!",
-          content:
-            "Use a different email to create a new account or reset the password.",
-        });
-      } else {
-        Notify("error", "Failed to Register!");
-      }
-    }
-    setPassword("");
-    setFirstName("");
-    setLastName("");
-  }, [data]);
-
-  //CALL REGISTER RESEND CODE
-  const resendCode = () => {
-    setIsLoadingResend(true);
+  //API TO SEND REGISTER VERIFYTOKEN
+  const sendRegisterToken = () => {
     axios
       .get(
-        `${baseURL}account_verification/resend?email=${email}&method=REGISTER`,
+        `${baseURL}api/v1/user/superadmin/sendemail?email=${email}&method=REGISTER&merchId=${merchId}`,
         {}
       )
       .then(function (response) {
-        if (response.data.code === "000000") {
-          setIsLoadingResend(false);
-          Notify("success", "Email was sent Successfully!");
+        if (response?.data?.code === "000000") {
+          setVerifyToken(response?.data?.data);
         }
       })
       .catch(function (error) {
@@ -194,10 +238,152 @@ export const AdminMerchantListPage = () => {
       });
   };
 
+  //CALL VERIFY REGISTER TOKEN API
+  const registeredMerchant = () => {
+    setIsVerifyRegisterToken(true);
+    axios
+      .get(`${baseURL}account_verification/email/${verifyToken}`)
+      .then(function (response) {
+        if (response.data.code === "000000") {
+          setIsVerifyRegisterToken(false);
+          Notify("success", "Account was created Successfully!");
+          closeModal();
+          window.location.reload();
+        }
+      })
+      .catch(function (error) {
+        console.log("err", error);
+      });
+  };
+
+  //DATA RETURN FROM REGISTER API
+  useEffect(() => {
+    if (data) {
+      if (data?.code === "000000") {
+        setIsRegister(false);
+        sendRegisterToken();
+      } else if (data?.code === "U00002") {
+        Modal.success({
+          title: "Email already registered!",
+          content:
+            "Use a different email to create a new account or reset the password.",
+        });
+      } else {
+        Notify("error", "Failed to Register!", data?.message);
+      }
+    }
+    setPassword("");
+    setFirstName("");
+    setLastName("");
+  }, [data]);
+
+  //CALL UPDATE MERCHANT API
+  useEffect(() => {
+    if (merchName && merchPhone) {
+      updateMerchant();
+    }
+  }, [merchName, merchPhone]);
+
+  //RETURN DATA FOR UPDATE MERCHANT DETAILS
+  useEffect(() => {
+    if (updateMerchantData) {
+      if (updateMerchantData?.code === "000000") {
+        Notify("success", "Merchant details updated successfully!");
+        closeModal();
+        window.location.reload();
+      } else {
+        Notify(
+          "error",
+          "Failed to Update Merchant Details!",
+          updateMerchantData?.message,
+          5
+        );
+      }
+    }
+  }, [updateMerchantData]);
+
+  //CALL QUERY MERCHANT SUMMARY API
+  const callMerchantSummary = () => {
+    axios
+      .get(
+        `${baseURL}api/v1/wait/superadmin/summary?superAdminId=${merchId}&merchId=${editMerchantList.merchId}`
+      )
+      .then(function (res) {
+        if (res?.data?.code === "000000") {
+          setTotalMerchs(res?.data?.data?.totalMerchs);
+          setTotalCustomers(res?.data?.data?.totalCustomers);
+          setTotalQueue(res?.data?.data?.totalQueue);
+          setTotalServedQueue(res?.data?.data?.totalServedQueue);
+          setTotalMerchToday(res?.data?.data?.totalMerchToday);
+          setTotalCustomerToday(res?.data?.data?.totalCustomerToday);
+          setTotalQueueToday(res?.data?.data?.totalQueueToday);
+          setTotalQueueYesterday(res?.data?.data?.totalQueueYesterday);
+          setTotalServedQueueToday(res?.data?.data?.totalServedQueueToday);
+          setTotalServedQueueYesterday(
+            res?.data?.data?.totalServedQueueYesterday
+          );
+          setTotalWaitingQueue(res?.data?.data?.totalWaitingQueue);
+          setTotalWaitingQueueToday(res?.data?.data?.totalWaitingQueueToday);
+          setTotalWaitingQueueYesterday(
+            res?.data?.data?.totalWaitingQueueYesterday
+          );
+          setTotalCancelledQueue(res?.data?.data?.totalCancelledQueue);
+          setTotalCancelledQueueToday(
+            res?.data?.data?.totalCancelledQueueToday
+          );
+          setTotalCancelledQueueYesterday(
+            res?.data?.data?.totalCancelledQueueYesterday
+          );
+        }
+      })
+      .catch(function (error) {
+        console.log("queue-error", error);
+      });
+  };
+
+  //CALL REGISTER RESEND CODE
+  // const resendCode = () => {
+  //   setIsLoadingResend(true);
+  //   axios
+  //     .get(
+  //       `${baseURL}account_verification/resend?email=${email}&method=REGISTER`,
+  //       {}
+  //     )
+  //     .then(function (response) {
+  //       if (response?.data?.code === "000000") {
+  //         setIsLoadingResend(false);
+  //         Notify("success", "Email was sent Successfully!");
+  //       }
+  //     })
+  //     .catch(function (error) {
+  //       console.log("err", error);
+  //     });
+  // };
+
   //SUBMIT DATA FOR PASSWORD CHANGE
   const onSubmitPassword = (data) => {
     const { password } = data;
     setPassword(password);
+  };
+
+  //SUBMIT DATA FOR MERCHANT UPDATE
+  const onSubmitMerchantUpdate = (data) => {
+    const {
+      merchAddress,
+      merchPhone,
+      merchName,
+      contactName,
+      province,
+      country,
+      city,
+    } = data;
+    setMerchAddress(merchAddress);
+    setMerchPhone(merchPhone);
+    setMerchName(merchName);
+    setContactName(contactName);
+    setProvince(province);
+    setCountry(country);
+    setCity(city);
   };
 
   //SUBMIT DATA FOR REGISTRATION
@@ -239,32 +425,104 @@ export const AdminMerchantListPage = () => {
     setVerifyToken("");
     setIsRegister(true);
     setShowPasswordModal(false);
+    setShowViewDetailsModal(false);
+    setShowStatisticsModal(false);
+    setIsViewMerchantDetails(true);
+    setMerchPhone("");
+    setMerchName("");
+    setContactName("");
+    setMerchAddress("");
+    setProvince("");
+    setCountry("");
+    setCity("");
+    setMerchStatus("1");
+    setShowDisableModal(false);
   };
 
   const handleMerchantDetails = (index) => {
     setEditMerchantList(merchantList[index]);
+
+    setOldMerchName(merchantList[index].merchName);
+    setOldMerchPhone(merchantList[index].merchPhone);
   };
 
   const openPasswordModal = () => {
-    sendVerifyToken();
-    setContactEmail(editMerchantList.contactEmail);
+    sendPasswordToken();
+    setContactEmail(editMerchantList?.contactEmail);
   };
+
+  const handleDiableAcc = () => {
+    updateMerchant();
+  };
+
+  const openDiableModal = () => {
+    if (editMerchantList.merchStatus === "1") {
+      setMerchStatus("0");
+      setShowDisableModal(true);
+    } else {
+      setMerchStatus("1");
+      setShowDisableModal(true);
+    }
+  };
+
+  const openStaticsModal = () => {
+    callMerchantSummary();
+    setShowStatisticsModal(true);
+  };
+
+  console.log("editMerchantList", editMerchantList);
+
+  console.log("editMerchantList.merchId", editMerchantList.merchId);
+
+  // useEffect(() => {
+  //   setValue("merchPhone", oldMerchPhone);
+  //   setValue("merchName", oldMerchName);
+  //   setValue("contactName", editMerchantList?.contactName);
+  //   setValue("merchAddress", editMerchantList?.merchAddress);
+  //   // setValue("city", maxPaxOld);
+  //   // setValue("country", estimateTimeOld);
+  //   // setValue("province", estimateTimeOld);
+  //   setValue("merchPhone", editMerchantList?.merchPhone);
+  // }, [merchPhone, merchName, contactName, merchAddress, merchPhone ]);
 
   const more = (
     <Menu className="grid items-center justify-center">
       <span
+        onClick={() => setShowViewDetailsModal(true)}
+        className="cursor-pointer block px-8 py-4 text_16 text-[#000000]"
+      >
+        View Details
+      </span>
+      <div class="border-[0.5px] border-[#D9D9D]"></div>
+      <span
         onClick={openPasswordModal}
-        className="cursor-pointer block mx-auto py-4 px-4 text_16 text-[#33B469]"
+        className="cursor-pointer block mx-auto py-4 px-4 text_16 text-[#000000]"
       >
         {isLoadingPassword ? <SpinnerOrangeMedium /> : "Change Password"}
       </span>
       <div class="border-[0.5px] border-[#D9D9D9]"></div>
       <span
-        //onClick={}
-        className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+        onClick={openStaticsModal}
+        className="cursor-pointer block px-8 py-4 text_16 text-[000000]"
       >
-        Disable Account
+        Merchant Statistics
       </span>
+      <div class="border-[0.5px] border-[#D9D9D9]"></div>
+      {editMerchantList?.merchStatus === "1" ? (
+        <span
+          onClick={openDiableModal}
+          className="cursor-pointer block px-8 py-4 text_16 text-[#ff0000]"
+        >
+          Disable Account
+        </span>
+      ) : (
+        <span
+          onClick={openDiableModal}
+          className="cursor-pointer block px-8 py-4 text_16 text-[#33B469]"
+        >
+          Activate Account
+        </span>
+      )}
     </Menu>
   );
 
@@ -329,7 +587,7 @@ export const AdminMerchantListPage = () => {
                           {truncateShortName(list.merchAddress)}
                         </td>
                         <td className="text_16 px-2 py-8">
-                          {formatDateT(list.createTime)}
+                          {formatDateOnly(list.createTime)}
                         </td>
                         <td className="text_16 px-2 py-8">
                           <a
@@ -356,7 +614,7 @@ export const AdminMerchantListPage = () => {
         </main>
       </Layout>
 
-      {/* SHOW CANCEL QUEUE MODAL */}
+      {/* SHOW REGISTER MERCHANT MODAL */}
       {showRegisterModal ? (
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
@@ -420,13 +678,15 @@ export const AdminMerchantListPage = () => {
                           errors.businessName && "input_error"
                         }`}
                         {...register("businessName", {
-                          required: "Resturant is required",
+                          required: "Restaurant is required",
                         })}
                       />
                       <label className="label_new z-2">
-                        Enter Resturant Name
+                        Enter Restaurant Name
                       </label>
-                      <label className="label_newTop z-2">Resturant Name</label>
+                      <label className="label_newTop z-2">
+                        Restaurant Name
+                      </label>
                       {errors.businessName && (
                         <p className=" mt-1 text-sm text-[red]">
                           {errors.businessName.message}
@@ -558,20 +818,17 @@ export const AdminMerchantListPage = () => {
                       </h2>
                       <p lassName="text_14 pb-3 ">
                         Please let the Merchant confirm their email by clicking
-                        the link we sent to their email inbox
+                        the link we sent to their email inbox or you can confirm
+                        it to complete the registeration.
                       </p>
                     </div>
                     <div>
                       <button
-                        onClick={resendCode}
+                        onClick={registeredMerchant}
                         className="submit_btn"
-                        disabled={isLoadingResend}
+                        disabled={isVerifyRegisterToken}
                       >
-                        {isLoadingResend ? (
-                          <SpinnerWhite />
-                        ) : (
-                          "Resend Verification"
-                        )}
+                        {isVerifyRegisterToken ? <SpinnerWhite /> : "Confirm"}
                       </button>
                     </div>
                   </div>
@@ -582,7 +839,7 @@ export const AdminMerchantListPage = () => {
         </>
       ) : null}
 
-      {/* SHOW CANCEL QUEUE MODAL */}
+      {/* SHOW CHANGE PASSWORD MODAL */}
       {showPasswordModal ? (
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
@@ -595,7 +852,7 @@ export const AdminMerchantListPage = () => {
               </span>
               <form
                 onSubmit={handleSubmit(onSubmitPassword)}
-                className="space-y-6"
+                className="space-y-6 my-20"
               >
                 <div className="relative">
                   <div className="flex items-center justify-between">
@@ -649,6 +906,544 @@ export const AdminMerchantListPage = () => {
           </div>
         </>
       ) : null}
+
+      {/* SHOW VIEW DETAILS MODAL & EDIT MERCHANT DETAILS */}
+      {showViewDetailsModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg px-[85px] pt-[64px] pb-[53px] w-[600px] relative">
+              <span
+                onClick={closeModal}
+                class="absolute top-[5.5%] right-[15%] cursor-pointer"
+              >
+                <CloseModalIcon />
+              </span>
+              {isViewMerchantDetails ? (
+                <form className="overflow-y-auto max-h-[660px] min-h-[450px]">
+                  <div className="relative">
+                    <label className="input_label ">Restaurant Name</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.merchName}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Merchant FullName</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.contactName}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Merchant Phone</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.merchPhone}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Merchant Email</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.contactEmail}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Merchant Address</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.merchAddress}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Merchant Status</label>
+                    <input
+                      name="password"
+                      placeholder={
+                        editMerchantList?.merchStatus === "1"
+                          ? "Active"
+                          : "Inactive"
+                      }
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Date Created</label>
+                    <input
+                      name="password"
+                      placeholder={formatDateT(editMerchantList?.createTime)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <label className="input_label ">Link URL</label>
+                    <input
+                      name="password"
+                      placeholder={editMerchantList?.linkUrl}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="pt-10">
+                    <button
+                      onClick={() => setIsViewMerchantDetails(false)}
+                      className="submit_btn"
+                    >
+                      Edit Details
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <form
+                  onSubmit={handleSubmit(onSubmitMerchantUpdate)}
+                  className="overflow-y-auto max-h-[660px] min-h-[450px]"
+                >
+                  <div className="mt-8 relative">
+                    <input
+                      placeholder=""
+                      type="text"
+                      className={`in_putNew peer bg-[#EEEEEE] ${
+                        errors.contactName && "input_error"
+                      }`}
+                      {...register("contactName", {
+                        required: "Full Name is required",
+                      })}
+                    />
+                    <label className="label_new z-2">Enter Full Name</label>
+                    <label className="label_newTop z-2">Full Name</label>
+                    {errors.contactName && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.contactName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <input
+                      placeholder=""
+                      type="text"
+                      className={`in_putNew peer bg-[#EEEEEE] ${
+                        errors.merchName && "input_error"
+                      }`}
+                      {...register("merchName", {
+                        required: "Restaurant Name is required",
+                      })}
+                    />
+                    <label className="label_new z-2">
+                      Enter Restaurant Name
+                    </label>
+                    <label className="label_newTop z-2">Restaurant Name</label>
+                    {errors.merchName && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.merchName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <input
+                      placeholder=""
+                      type="text"
+                      className={`in_putNew peer bg-[#EEEEEE] ${
+                        errors.merchAddress && "input_error"
+                      }`}
+                      {...register("merchAddress", {
+                        required: "Address is required",
+                      })}
+                    />
+                    <label className="label_new z-2">Enter Address</label>
+                    <label className="label_newTop z-2">Address</label>
+                    {errors.merchAddress && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.merchAddress.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <input
+                      placeholder=""
+                      type="text"
+                      className={`in_putNew peer bg-[#EEEEEE] put ${
+                        errors.merchPhone && "input_error"
+                      }`}
+                      {...register("merchPhone", {
+                        required: "Phone Number is required",
+                      })}
+                    />
+                    <label className="label_new z-2">Enter Phone Number</label>
+                    <label className="label_newTop z-2">Phone Number</label>
+                    {errors.merchPhone && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.merchPhone.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="mt-8 relative">
+                    <input
+                      placeholder=""
+                      type="text"
+                      className={`in_putNew peer bg-[#EEEEEE] ${
+                        errors.email && "input_error"
+                      }`}
+                      {...register("country", {
+                        required: "Country is required",
+                      })}
+                    />
+                    <label className="label_new z-2">Enter Country</label>
+                    <label className="label_newTop z-2">Country</label>
+                    {errors.country && (
+                      <p className=" mt-1 text-sm text-[red]">
+                        {errors.country.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid">
+                    <div className="mt-8 relative">
+                      <input
+                        placeholder=""
+                        type="text"
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.province && "input_error"
+                        }`}
+                        {...register("province", {
+                          required: "State is required",
+                        })}
+                      />
+                      <label className="label_new z-2">Enter State</label>
+                      <label className="label_newTop z-2">State</label>
+                      {errors.province && (
+                        <p className=" mt-1 text-sm text-[red]">
+                          {errors.province.message}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mt-8 relative">
+                      <input
+                        placeholder=""
+                        type="text"
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.city && "input_error"
+                        }`}
+                        {...register("city", {
+                          required: "City is required",
+                        })}
+                      />
+                      <label className="label_new z-2">Enter City</label>
+                      <label className="label_newTop z-2">City</label>
+                      {errors.city && (
+                        <p className=" mt-1 text-sm text-[red]">
+                          {errors.city.message}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-10">
+                    <button
+                      type="submit"
+                      className="submit_btn"
+                      disabled={isUpdatingDetails}
+                    >
+                      {isUpdatingDetails ? <SpinnerWhite /> : " Submit"}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {/* SHOW VIEW DETAILS MODAL */}
+      {showStatisticsModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg px-[85px] pt-[64px] pb-[53px] w-[600px] relative">
+              <span
+                onClick={closeModal}
+                class="absolute top-[5.5%] right-[15%] cursor-pointer"
+              >
+                <CloseModalIcon />
+              </span>
+              <form className="overflow-y-auto max-h-[500px] min-h-[350px]">
+                <div className="md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">Total Merchant</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalMerchs)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">Total Customer</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalCustomers)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">Total Queue</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalQueue)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">Total Served Queue</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalServedQueue)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">Total Waiting Queue</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalWaitingQueue)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Cancelled Queue
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalCancelledQueue)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">Total Merchant Today</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalMerchToday)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">Total Customer Today</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalCustomerToday)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">Total Queue Today</label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalQueueToday)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Served QueueToday
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalServedQueueToday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Waiting Queue Today
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalWaitingQueueToday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Cancelled Queue Today
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalCancelledQueueToday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Queue Yesterday
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(totalQueueYesterday)}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total Served Queue Yesterday
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalServedQueueYesterday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-8 md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total WaitingQueue Yesterday
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalWaitingQueueYesterday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="input_label ">
+                      Total CancelledQueue Yesterday
+                    </label>
+                    <input
+                      name="password"
+                      placeholder={formatNumberWithCommas(
+                        totalCancelledQueueYesterday
+                      )}
+                      className="input_details"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {/* SHOW DISABLE MODAL MODAL */}
+      {showDisableModal ? (
+        <>
+          <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
+            <div className="bg-[#ffffff] rounded-[15px] shadow-lg p-[112px] w-[600px] relative">
+              <div className="">
+                <div className="flex justify-center items-center">
+                  <RemoveQueueModalIcon />
+                </div>
+                <div className=" text-center ">
+                  <p className="text-[32px] text-[#000000] font-semibold pt-3 pb-2">
+                    Are you sure?
+                  </p>
+                  {editMerchantList.merchStatus === "1" ? (
+                    <p className="text_18 text-[#000000] pb-[84px]">
+                      This will disable the Merchant
+                    </p>
+                  ) : (
+                    <p className="text_18 text-[#000000] pb-[84px]">
+                      This will activate the Merchant
+                    </p>
+                  )}
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={closeModal}
+                    type="submit"
+                    className="short_btn mr-[24px]"
+                  >
+                    Go Back
+                  </button>
+                  <button
+                    onClick={handleDiableAcc}
+                    type="submit"
+                    className="short_btn_white"
+                  >
+                    {isUpdatingDetails ? <SpinnerOrangeMedium /> : "Continue"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : null}
+      
     </>
   );
 };

@@ -58,6 +58,26 @@ export const formatDateT = (undate) => {
   });
 };
 
+export const formatDateOnly = (undate) => {
+  return new Date(undate).toLocaleDateString("en-us", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    // hour: "numeric",
+    // minute: "numeric",
+  });
+};
+
+export const formatTimeOnly = (undate) => {
+  return new Date(undate).toLocaleDateString("en-us", {
+    // year: "numeric",
+    // month: "numeric",
+    // day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+};
+
 export const formatTime = (timeString) => {
   const [hourString, minute] = toString(timeString).split(":");
   const hour = +hourString % 24;

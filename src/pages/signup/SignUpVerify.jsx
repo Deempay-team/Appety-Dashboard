@@ -17,7 +17,7 @@ export const SignUpVerifyPage = () => {
     storage.clear();
   };
 
- //CALL REGISTER RESEND CODE
+ //CALL VERIFY REGISTER TOKEN API
   useEffect(() => {
       axios
         .get(
