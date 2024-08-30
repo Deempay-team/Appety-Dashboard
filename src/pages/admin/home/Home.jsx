@@ -105,7 +105,7 @@ export const AdminHomePage = () => {
   return (
     <>
       <Layout>
-        <main className="xl:ml-[370px] ml-[320px]  sm:px-10 px-6 bg-[#F6F7F9] h-screen">
+        <main className="xl:ml-[370px] ml-[320px]  sm:px-10 px-6 bg-[#F6F7F9] h-fit">
           {isQueueFetch ? (
             <>
               <span className="flex items-center justify-center content-center pb-40 h-screen ">
