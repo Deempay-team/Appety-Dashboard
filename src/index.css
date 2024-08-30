@@ -53,6 +53,28 @@ body {
   ::-webkit-scrollbar-thumb:hover {
     background: #FDDCCB;
   }
+  
+
+  .remov-scroll-bar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+
+  .remov-scroll-bar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #ffffff;
+  }
+
+  .remov-scroll-bar::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 100vh;
+    border: 2px solid #ffffff;
+  }
+
+  .remov-scroll-bar::-webkit-scrollbar-thumb:hover {
+    background: #ffffff;
+  }
+
 
 
 .put::-webkit-outer-spin-button,
@@ -145,11 +167,11 @@ body {
   }
 
   .input_password {
-    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#bdbdbd] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] px-4 dark:placeholder-[#bdbdbd] h-[52px] outline-none ;
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#000000] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] px-4 dark:placeholder-[#bdbdbd] h-[52px] outline-none ;
   }
 
   .input_details {
-    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#5a5959] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] px-4 dark:placeholder-[#bdbdbd] h-[52px] outline-none ;
+    @apply bg-[#EEEEEE] border border-[#FEEAE0] text-[#000000] placeholder-[#000000] rounded-lg block w-full focus:border-[#F99762] focus:border-[1.5px] px-4 dark:placeholder-[#bdbdbd] h-[52px] outline-none ;
   }
 
   .input-time {

@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from "react";
 import MenuItem from "./MenuItems";
 import { Link } from "react-router-dom";
-import { merchantLinks, adminLinks } from "./links";
+import { merchantLinks } from "./links";
 import { BackArrowIcon } from "../assests/icons/Icons";
 import storage from "../utils/storage";
 
 const Sidebar = () => {
   //let roleStatus = "SUPERADMIN";
   const roleStatus = JSON.parse(storage.fetch("userDetails")).role;
-  const [menuItems, setMenuItems] = useState([]);
   const [isMerchant, setIsMerchant] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
     
 useEffect(() => {
   if (roleStatus === "ADMIN") {
-    setMenuItems(merchantLinks);
     setIsMerchant(true);
     setIsAdmin(false);
   } else {
-    setMenuItems(adminLinks)
-    setIsAdmin(true);
+      setIsAdmin(true);
     setIsMerchant(false)
   }
 }, [])
@@ -41,7 +38,7 @@ useEffect(() => {
          </div>
          )}
           <ul className="mt-10">
-            {menuItems.map((link, i) => (
+            {merchantLinks.map((link, i) => (
               <MenuItem key={i} item={link} />
             ))}
           </ul>

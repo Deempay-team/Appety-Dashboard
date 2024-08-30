@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Layout from "../../../components/MerchantLayout";
+import Layout from "../../../components/superAdminLayout";
 import useRegister from "../../../hooks/useSignUp";
 import { Modal } from "antd";
 import {
@@ -928,7 +928,7 @@ export const AdminMerchantListPage = () => {
                   >
                     <CloseModalIcon />
                   </span>
-                  <form className="overflow-y-auto max-h-[560px] min-h-[450px]">
+                  <form className="overflow-y-auto max-h-[560px] min-h-[450px] remov-scroll-bar">
                     <div className="relative">
                       <label className="input_label ">Restaurant Name</label>
                       <input
@@ -1155,7 +1155,7 @@ export const AdminMerchantListPage = () => {
         </>
       ) : null}
 
-      {/* SHOW VIEW DETAILS MODAL */}
+      {/* SHOW STATISTICS MODAL */}
       {showStatisticsModal ? (
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
@@ -1166,7 +1166,7 @@ export const AdminMerchantListPage = () => {
               >
                 <CloseModalIcon />
               </span>
-              <form className="overflow-y-auto max-h-[500px] min-h-[350px]">
+              <form className="overflow-y-auto max-h-[500px] min-h-[350px] remov-scroll-bar">
                 <div className="md:grid-cols-2 grid-cols-1 md:gap-4 gap-0 overflow-hidden md:flex grid">
                   <div className="relative">
                     <label className="input_label ">Total Merchant</label>

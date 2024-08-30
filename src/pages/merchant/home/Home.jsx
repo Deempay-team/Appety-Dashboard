@@ -605,24 +605,13 @@ export const MerchantHomePage = () => {
               {changeIcon ? (
                 <>
                   <div className="absolute right-0 top-[59px] z-10 mt-2 w-40 origin-top-right divide-y divide-[#D9D9D9] rounded-md bg-[#ffffff] border border-[#D9D9D9] focus:outline-none">
-                    {userRole === "ADMIN" ? (
-                      <div className="py-3 text-center">
-                        <Link to="/dashboard/merchant/settings/queue">
-                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                            Queue Settings
-                          </p>
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="py-3 text-center">
-                        <Link to="/dashboard/admin/overview">
-                          <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
-                            Settings
-                          </p>
-                        </Link>
-                      </div>
-                    )}
-
+                    <div className="py-3 text-center">
+                      <Link to="/dashboard/merchant/settings/queue">
+                        <p className="cursor-pointer block px-4 py-2 text_16 text-[#33B469]">
+                          Queue Settings
+                        </p>
+                      </Link>
+                    </div>
                     <div className="py-3 text-center">
                       <p
                         onClick={handleLogout}

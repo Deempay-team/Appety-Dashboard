@@ -19,7 +19,7 @@ const HeaderPage = () => {
   const userRole = JSON.parse(storage.fetch("userDetails")).role;
   const [merchName, setMerchName] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
-  const [imageLoaded, setImageLoaded] = useState(false);
+
   const [changeIcon, setChangeIcon] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -74,7 +74,7 @@ const HeaderPage = () => {
     <>
       <div className="z-20 border-b top-0 border-[#D9D9D9] sticky w-full bg-[#F6F7F9] px-10 py-4">
         <div className="flex justify-between">
-          {userRole === "ADMIN" ? (
+          {/* {userRole === "ADMIN" ? (
             <>
               <div className="flex items-center">
                 <img
@@ -106,19 +106,21 @@ const HeaderPage = () => {
           ) : (
             <>
               <div className="flex items-center">
-              <Link
-                  to="/dashboard/admin/overview"
-                  className="flex pr-3 cursor-pointer "
-                >
-                  <BackArrowIcon />
-                </Link>
+            
                 <AppetyLogoMedium />
                 <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
                   appety
                 </p>
               </div>
             </>
-          )}
+          )} */}
+
+          <div className="flex items-center">
+            <AppetyLogoMedium />
+            <p className="font-semibold xl:text-[32px] text-[24px] text-black pl-3 ">
+              appety
+            </p>
+          </div>
 
           <div className="flex ">
             <span className="flex gray2-bg opacity-90 items-center rounded-[5px] place-self-center py-[15px] px-[16px] text_16">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Layout from "../../../components/MerchantLayout";
+import Layout from "../../../components/superAdminLayout";
 import { StoreImage, PeopleImage, QueueImage } from "../../../assests/images";
 import { formatNumberWithCommas } from "../../../utils/functions";
 import { DownLoadIconWhite } from "../../../assests/icons/Icons";
@@ -182,7 +182,7 @@ export const AdminHomePage = () => {
                     <div className="flex justify-between">
                       <div>
                         <p className="text_12 text-[#6b6968] capitalize ">
-                          Active Users
+                        Served Queue
                         </p>
                         <p className="text_24 text-[#000000] font-medium pt-2 ">
                           {formatNumberWithCommas(totalServedQueue)}
