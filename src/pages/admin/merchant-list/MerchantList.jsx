@@ -9,6 +9,7 @@ import {
   CloseIcon,
   OpenIcon,
   RemoveQueueModalIcon,
+  BackArrowIcon,
 } from "../../../assests/icons/Icons";
 import {
   SpinnerMediumWhite,
@@ -95,11 +96,10 @@ export const AdminMerchantListPage = () => {
   const [totalCancelledQueueToday, setTotalCancelledQueueToday] = useState("");
   const [totalCancelledQueueYesterday, setTotalCancelledQueueYesterday] =
     useState("");
-
   const [oldMerchPhone, setOldMerchPhone] = useState("");
   const [oldMerchName, setOldMerchName] = useState("");
-  // const [oldContactName, setOldContactName] = useState("");
-  // const [oldMerchAddress, setOldMerchAddress] = useState("");
+  const [oldContactName, setOldContactName] = useState("");
+  const [oldMerchAddress, setOldMerchAddress] = useState("");
   // const [oldProvince, setOldProvince] = useState("");
   // const [oldCountry, setOldCountry] = useState("");
   // const [oldCity, setOldCity] = useState("");
@@ -439,11 +439,16 @@ export const AdminMerchantListPage = () => {
     setShowDisableModal(false);
   };
 
+  //INDEXING MERCHANT ROW
   const handleMerchantDetails = (index) => {
     setEditMerchantList(merchantList[index]);
-
-    setOldMerchName(merchantList[index].merchName);
-    setOldMerchPhone(merchantList[index].merchPhone);
+    setOldMerchName(merchantList[index]?.merchName);
+    setOldMerchPhone(merchantList[index]?.merchPhone);
+    setOldContactName(merchantList[index]?.contactName);
+    setOldMerchAddress(merchantList[index]?.merchAddress);
+    // setOldProvince(merchantList[index]?.province);
+    // setOldCountry(merchantList[index]?.country);
+    // setOldCity(merchantList[index]?.city);
   };
 
   const openPasswordModal = () => {
@@ -472,18 +477,16 @@ export const AdminMerchantListPage = () => {
 
   console.log("editMerchantList", editMerchantList);
 
-  console.log("editMerchantList.merchId", editMerchantList.merchId);
-
-  // useEffect(() => {
-  //   setValue("merchPhone", oldMerchPhone);
-  //   setValue("merchName", oldMerchName);
-  //   setValue("contactName", editMerchantList?.contactName);
-  //   setValue("merchAddress", editMerchantList?.merchAddress);
-  //   // setValue("city", maxPaxOld);
-  //   // setValue("country", estimateTimeOld);
-  //   // setValue("province", estimateTimeOld);
-  //   setValue("merchPhone", editMerchantList?.merchPhone);
-  // }, [merchPhone, merchName, contactName, merchAddress, merchPhone ]);
+  //SET MERCHANT EDIT VALUES
+  useEffect(() => {
+    setValue("merchPhone", oldMerchPhone);
+    setValue("merchName", oldMerchName);
+    setValue("contactName", oldContactName);
+    setValue("merchAddress", oldMerchAddress);
+    // setValue("city", oldCity);
+    // setValue("country", oldCountry);
+    // setValue("province", oldProvince);
+  }, [merchPhone, merchName, contactName, oldMerchAddress]);
 
   const more = (
     <Menu className="grid items-center justify-center">
@@ -912,233 +915,140 @@ export const AdminMerchantListPage = () => {
         <>
           <div className="fixed inset-0 z-30 flex items-center justify-center bg-[#858585] bg-opacity-75">
             <div className="bg-[#ffffff] rounded-[15px] shadow-lg px-[85px] pt-[64px] pb-[53px] w-[600px] relative">
-              <span
-                onClick={closeModal}
-                class="absolute top-[5.5%] right-[15%] cursor-pointer"
-              >
-                <CloseModalIcon />
-              </span>
               {isViewMerchantDetails ? (
-                <form className="overflow-y-auto max-h-[660px] min-h-[450px]">
-                  <div className="relative">
-                    <label className="input_label ">Restaurant Name</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.merchName}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                <>
+                  <span
+                    onClick={closeModal}
+                    class="absolute top-[5.5%] right-[15%] cursor-pointer"
+                  >
+                    <CloseModalIcon />
+                  </span>
+                  <form className="overflow-y-auto max-h-[560px] min-h-[450px]">
+                    <div className="relative">
+                      <label className="input_label ">Restaurant Name</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.merchName}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Merchant FullName</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.contactName}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Merchant FullName</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.contactName}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Merchant Phone</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.merchPhone}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Merchant Phone</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.merchPhone}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Merchant Email</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.contactEmail}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Merchant Email</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.contactEmail}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Merchant Address</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.merchAddress}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Merchant Address</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.merchAddress}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Merchant Status</label>
-                    <input
-                      name="password"
-                      placeholder={
-                        editMerchantList?.merchStatus === "1"
-                          ? "Active"
-                          : "Inactive"
-                      }
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Merchant Status</label>
+                      <input
+                        name="password"
+                        placeholder={
+                          editMerchantList?.merchStatus === "1"
+                            ? "Active"
+                            : "Inactive"
+                        }
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Date Created</label>
-                    <input
-                      name="password"
-                      placeholder={formatDateT(editMerchantList?.createTime)}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Date Created</label>
+                      <input
+                        name="password"
+                        placeholder={formatDateT(editMerchantList?.createTime)}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="mt-8 relative">
-                    <label className="input_label ">Link URL</label>
-                    <input
-                      name="password"
-                      placeholder={editMerchantList?.linkUrl}
-                      className="input_details"
-                      disabled={true}
-                    />
-                  </div>
+                    <div className="mt-8 relative">
+                      <label className="input_label ">Link URL</label>
+                      <input
+                        name="password"
+                        placeholder={editMerchantList?.linkUrl}
+                        className="input_details"
+                        disabled={true}
+                      />
+                    </div>
 
-                  <div className="pt-10">
-                    <button
-                      onClick={() => setIsViewMerchantDetails(false)}
-                      className="submit_btn"
-                    >
-                      Edit Details
-                    </button>
-                  </div>
-                </form>
+                    <div className="pt-10">
+                      <button
+                        onClick={() => setIsViewMerchantDetails(false)}
+                        className="submit_btn"
+                      >
+                        Edit Details
+                      </button>
+                    </div>
+                  </form>
+                </>
               ) : (
-                <form
-                  onSubmit={handleSubmit(onSubmitMerchantUpdate)}
-                  className="overflow-y-auto max-h-[660px] min-h-[450px]"
-                >
-                  <div className="mt-8 relative">
-                    <input
-                      placeholder=""
-                      type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
-                        errors.contactName && "input_error"
-                      }`}
-                      {...register("contactName", {
-                        required: "Full Name is required",
-                      })}
-                    />
-                    <label className="label_new z-2">Enter Full Name</label>
-                    <label className="label_newTop z-2">Full Name</label>
-                    {errors.contactName && (
-                      <p className=" mt-1 text-sm text-[red]">
-                        {errors.contactName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mt-8 relative">
-                    <input
-                      placeholder=""
-                      type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
-                        errors.merchName && "input_error"
-                      }`}
-                      {...register("merchName", {
-                        required: "Restaurant Name is required",
-                      })}
-                    />
-                    <label className="label_new z-2">
-                      Enter Restaurant Name
-                    </label>
-                    <label className="label_newTop z-2">Restaurant Name</label>
-                    {errors.merchName && (
-                      <p className=" mt-1 text-sm text-[red]">
-                        {errors.merchName.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mt-8 relative">
-                    <input
-                      placeholder=""
-                      type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
-                        errors.merchAddress && "input_error"
-                      }`}
-                      {...register("merchAddress", {
-                        required: "Address is required",
-                      })}
-                    />
-                    <label className="label_new z-2">Enter Address</label>
-                    <label className="label_newTop z-2">Address</label>
-                    {errors.merchAddress && (
-                      <p className=" mt-1 text-sm text-[red]">
-                        {errors.merchAddress.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mt-8 relative">
-                    <input
-                      placeholder=""
-                      type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] put ${
-                        errors.merchPhone && "input_error"
-                      }`}
-                      {...register("merchPhone", {
-                        required: "Phone Number is required",
-                      })}
-                    />
-                    <label className="label_new z-2">Enter Phone Number</label>
-                    <label className="label_newTop z-2">Phone Number</label>
-                    {errors.merchPhone && (
-                      <p className=" mt-1 text-sm text-[red]">
-                        {errors.merchPhone.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mt-8 relative">
-                    <input
-                      placeholder=""
-                      type="text"
-                      className={`in_putNew peer bg-[#EEEEEE] ${
-                        errors.email && "input_error"
-                      }`}
-                      {...register("country", {
-                        required: "Country is required",
-                      })}
-                    />
-                    <label className="label_new z-2">Enter Country</label>
-                    <label className="label_newTop z-2">Country</label>
-                    {errors.country && (
-                      <p className=" mt-1 text-sm text-[red]">
-                        {errors.country.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid">
+                <>
+                  <span
+                    onClick={() => setIsViewMerchantDetails(true)}
+                    class="absolute top-[4.5%] left-[15%] cursor-pointer"
+                  >
+                    <BackArrowIcon />
+                  </span>
+                  <span
+                    onClick={closeModal}
+                    class="absolute top-[5.5%] right-[15%] cursor-pointer"
+                  >
+                    <CloseModalIcon />
+                  </span>
+                  <form
+                    onSubmit={handleSubmit(onSubmitMerchantUpdate)}
+                    className="overflow-y-auto max-h-[660px] min-h-[450px]"
+                  >
                     <div className="mt-8 relative">
                       <input
                         placeholder=""
                         type="text"
                         className={`in_putNew peer bg-[#EEEEEE] ${
-                          errors.province && "input_error"
+                          errors.contactName && "input_error"
                         }`}
-                        {...register("province", {
-                          required: "State is required",
+                        {...register("contactName", {
+                          required: "Full Name is required",
                         })}
                       />
-                      <label className="label_new z-2">Enter State</label>
-                      <label className="label_newTop z-2">State</label>
-                      {errors.province && (
-                        <p className=" mt-1 text-sm text-[red]">
-                          {errors.province.message}
-                        </p>
-                      )}
+                      <label className="label_new z-2">Enter Full Name</label>
+                      <label className="label_newTop z-2">Full Name</label>
                     </div>
 
                     <div className="mt-8 relative">
@@ -1146,32 +1056,94 @@ export const AdminMerchantListPage = () => {
                         placeholder=""
                         type="text"
                         className={`in_putNew peer bg-[#EEEEEE] ${
-                          errors.city && "input_error"
+                          errors.merchName && "input_error"
                         }`}
-                        {...register("city", {
-                          required: "City is required",
+                        {...register("merchName", {
+                          required: "Restaurant Name is required",
                         })}
                       />
-                      <label className="label_new z-2">Enter City</label>
-                      <label className="label_newTop z-2">City</label>
-                      {errors.city && (
-                        <p className=" mt-1 text-sm text-[red]">
-                          {errors.city.message}
-                        </p>
-                      )}
+                      <label className="label_new z-2">
+                        Enter Restaurant Name
+                      </label>
+                      <label className="label_newTop z-2">
+                        Restaurant Name
+                      </label>
                     </div>
-                  </div>
 
-                  <div className="pt-10">
-                    <button
-                      type="submit"
-                      className="submit_btn"
-                      disabled={isUpdatingDetails}
-                    >
-                      {isUpdatingDetails ? <SpinnerWhite /> : " Submit"}
-                    </button>
-                  </div>
-                </form>
+                    <div className="mt-8 relative">
+                      <input
+                        placeholder=""
+                        type="text"
+                        className={`in_putNew peer bg-[#EEEEEE] ${
+                          errors.merchAddress && "input_error"
+                        }`}
+                        {...register("merchAddress")}
+                      />
+                      <label className="label_new z-2">Enter Address</label>
+                      <label className="label_newTop z-2">Address</label>
+                    </div>
+
+                    <div className="mt-8 relative">
+                      <input
+                        placeholder=""
+                        type="text"
+                        className={`in_putNew peer bg-[#EEEEEE] put ${
+                          errors.merchPhone && "input_error"
+                        }`}
+                        {...register("merchPhone")}
+                      />
+                      <label className="label_new z-2">
+                        Enter Phone Number
+                      </label>
+                      <label className="label_newTop z-2">Phone Number</label>
+                    </div>
+
+                    <div className="mt-8 relative">
+                      <input
+                        placeholder=""
+                        type="text"
+                        className="in_putNew peer bg-[#EEEEEE]"
+                        {...register("country")}
+                      />
+                      <label className="label_new z-2">Enter Country</label>
+                      <label className="label_newTop z-2">Country</label>
+                    </div>
+
+                    <div className="md:grid-cols-2 grid-cols-1 md:gap-2 gap-0 overflow-hidden md:flex grid">
+                      <div className="mt-8 relative">
+                        <input
+                          placeholder=""
+                          type="text"
+                          className="in_putNew peer bg-[#EEEEEE]"
+                          {...register("province")}
+                        />
+                        <label className="label_new z-2">Enter State</label>
+                        <label className="label_newTop z-2">State</label>
+                      </div>
+
+                      <div className="mt-8 relative">
+                        <input
+                          placeholder=""
+                          type="text"
+                          className="in_putNew peer bg-[#EEEEEE]"
+                          {...register("city")}
+                        />
+                        <label className="label_new z-2">Enter City</label>
+                        <label className="label_newTop z-2">City</label>
+                      </div>
+                    </div>
+
+                    <div className="pt-10">
+                      <button
+                        type="submit"
+                        className="submit_btn"
+                        disabled={isUpdatingDetails}
+                      >
+                        {isUpdatingDetails ? <SpinnerWhite /> : " Submit"}
+                      </button>
+                    </div>
+                  </form>
+                </>
               )}
             </div>
           </div>
@@ -1443,7 +1415,6 @@ export const AdminMerchantListPage = () => {
           </div>
         </>
       ) : null}
-      
     </>
   );
 };
