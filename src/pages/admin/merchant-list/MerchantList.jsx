@@ -100,9 +100,8 @@ export const AdminMerchantListPage = () => {
   const [oldMerchName, setOldMerchName] = useState("");
   const [oldContactName, setOldContactName] = useState("");
   const [oldMerchAddress, setOldMerchAddress] = useState("");
-  // const [oldProvince, setOldProvince] = useState("");
-  // const [oldCountry, setOldCountry] = useState("");
-  // const [oldCity, setOldCity] = useState("");
+  const [isConfirmMerchant, setIsConfirmMerchant] = useState(false);
+  const [isLoadingResend, setIsLoadingResend] = useState(false);
 
   // Form Validation
   const {
@@ -223,6 +222,7 @@ export const AdminMerchantListPage = () => {
 
   //API TO SEND REGISTER VERIFYTOKEN
   const sendRegisterToken = () => {
+    setIsLoadingResend(true);
     axios
       .get(
         `${baseURL}api/v1/user/superadmin/sendemail?email=${email}&method=REGISTER&merchId=${merchId}`,
@@ -230,7 +230,9 @@ export const AdminMerchantListPage = () => {
       )
       .then(function (response) {
         if (response?.data?.code === "000000") {
+          setIsLoadingResend(false);
           setVerifyToken(response?.data?.data);
+          setIsConfirmMerchant(true);
         }
       })
       .catch(function (error) {
@@ -269,7 +271,8 @@ export const AdminMerchantListPage = () => {
             "Use a different email to create a new account or reset the password.",
         });
       } else {
-        Notify("error", "Failed to Register!", data?.message);
+        Notify("error", "Failed to Register! Please try Again", data?.message);
+        closeModal();
       }
     }
     setPassword("");
@@ -355,6 +358,7 @@ export const AdminMerchantListPage = () => {
   //     .then(function (response) {
   //       if (response?.data?.code === "000000") {
   //         setIsLoadingResend(false);
+  //         setIsConfirmMerchant(true);
   //         Notify("success", "Email was sent Successfully!");
   //       }
   //     })
@@ -440,6 +444,7 @@ export const AdminMerchantListPage = () => {
     setCity("");
     setMerchStatus("1");
     setShowDisableModal(false);
+    setIsConfirmMerchant(false);
   };
 
   //INDEXING MERCHANT ROW
@@ -449,9 +454,6 @@ export const AdminMerchantListPage = () => {
     setOldMerchPhone(merchantList[index]?.merchPhone);
     setOldContactName(merchantList[index]?.contactName);
     setOldMerchAddress(merchantList[index]?.merchAddress);
-    // setOldProvince(merchantList[index]?.province);
-    // setOldCountry(merchantList[index]?.country);
-    // setOldCity(merchantList[index]?.city);
   };
 
   const openPasswordModal = () => {
@@ -484,9 +486,6 @@ export const AdminMerchantListPage = () => {
     setValue("merchName", oldMerchName);
     setValue("contactName", oldContactName);
     setValue("merchAddress", oldMerchAddress);
-    // setValue("city", oldCity);
-    // setValue("country", oldCountry);
-    // setValue("province", oldProvince);
   }, [merchPhone, merchName, contactName, oldMerchAddress]);
 
   const more = (
@@ -828,13 +827,23 @@ export const AdminMerchantListPage = () => {
                       </p>
                     </div>
                     <div>
-                      <button
+                      {isConfirmMerchant ? (
+                        <button
                         onClick={registeredMerchant}
                         className="submit_btn"
                         disabled={isVerifyRegisterToken}
                       >
                         {isVerifyRegisterToken ? <SpinnerWhite /> : "Confirm"}
                       </button>
+                      ) : (
+                        <button
+                        onClick={sendRegisterToken}
+                        className="submit_btn"
+                        disabled={isLoadingResend}
+                      >
+                        {isLoadingResend ? <SpinnerWhite /> : "Resend Code"}
+                      </button>
+                      )}
                     </div>
                   </div>
                 </>
