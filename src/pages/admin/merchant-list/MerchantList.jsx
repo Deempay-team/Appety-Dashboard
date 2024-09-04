@@ -55,7 +55,6 @@ export const AdminMerchantListPage = () => {
   const [phoneNo, setPhoneNo] = useState("");
   const [address, setAddress] = useState("");
   const [isRegister, setIsRegister] = useState(true);
-  //const [isLoadingResend, setIsLoadingResend] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [isMerchantFetch, setIsMerchantFetch] = useState(true);
   const [merchantList, setMerchantList] = useState([]);

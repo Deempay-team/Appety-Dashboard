@@ -8,6 +8,7 @@ import {
   AppetyLogoSmall,
   NotOpenIcon,
   TickIcon,
+  HomeIcon,
 } from "../../assests/icons/Icons";
 import { useJoinQueue } from "../../hooks/useUser";
 import secrets from "../../config/secrets";
@@ -513,10 +514,12 @@ export const UserHomePage = () => {
                       </div>
                     ) : (
                       <div className="mt-10 sm:max-w-md max-w-[366px] rounded-[5px] items-center mx-auto grid  bg-[#33b469] py-[22px] px-6">
-                        <div className="flex items-center justify-center text-base">
-                          <TickIcon />
-                          <p className="text-center text-[#ffffff] pl-2 text-sm">
-                            Your table is ready
+                        <div className="grid text-center items-center justify-center text-base pt-2">
+                          <span className="mx-auto">
+                            <HomeIcon />
+                          </span>
+                          <p className="text-center text-[#ffffff] pt-[30px] pb-[40px] text-[23px]">
+                            Your table is ready.
                           </p>
                         </div>
                       </div>

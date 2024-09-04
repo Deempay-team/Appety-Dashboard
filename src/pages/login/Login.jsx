@@ -37,6 +37,8 @@ export const LoginPage = () => {
   useEffect(() => {
     if (email && password) {
       loginUser();
+      setPassword("");
+      setEmail("");
     }
   }, [email, password]);
 
@@ -116,9 +118,7 @@ export const LoginPage = () => {
                 type="email"
                 placeholder=""
                 onFocus={() => setApiResponseError("")}
-                className={`in_putNew peer  ${
-                  errors.email && "input_error"
-                }`}
+                className={`in_putNew peer  ${errors.email && "input_error"}`}
                 {...register("email", {
                   required: "Email is required",
                 })}
