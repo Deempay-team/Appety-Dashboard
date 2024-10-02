@@ -12,7 +12,6 @@ import {
   BackArrowIcon,
 } from "../../../assests/icons/Icons";
 import {
-  SpinnerMediumWhite,
   SpinnerOrangeMedium,
   SpinnerOrange,
   SpinnerWhite,

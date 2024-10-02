@@ -7,7 +7,6 @@ import axios from "axios";
 import {
   AppetyLogoSmall,
   NotOpenIcon,
-  TickIcon,
   HomeIcon,
 } from "../../assests/icons/Icons";
 import { useJoinQueue } from "../../hooks/useUser";
