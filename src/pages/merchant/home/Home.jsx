@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { UserContext } from "../../../contexts/UserContext";
 import storage from "../../../utils/storage";
 import {
   DownLoadIconWhite,
@@ -15,7 +16,7 @@ import axios from "axios";
 import { CSVLink } from "react-csv";
 import { FaUserCircle } from "react-icons/fa";
 import { formatDate, formatDateTime } from "../../../utils/functions";
-import { useUpdateQueue } from "../../../hooks/useMechant";
+import { useUpdateQueue, useUpdateMerchant } from "../../../hooks/useMechant";
 import {
   SpinnerOrange,
   SpinnerOrangeMedium,
@@ -23,6 +24,7 @@ import {
 } from "../../../components/spinner/Spinner";
 import Notify from "../../../components/Notification";
 import secrets from "../../../config/secrets";
+import { Switch, ConfigProvider } from "antd";
 
 import "./styles.css";
 
@@ -35,6 +37,7 @@ const column = [
 ];
 
 export const MerchantHomePage = () => {
+  const { setIsTableAvail } = useContext(UserContext);
   const { customerId } = useParams();
   const firstName = JSON.parse(storage.fetch("userDetails")).firstName;
   const userRole = JSON.parse(storage.fetch("userDetails")).role;
@@ -85,6 +88,8 @@ export const MerchantHomePage = () => {
   const [calltimer1, setCallTimer1] = useState(0);
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [totalWaitingQueue, setTotalWaitingQueue] = useState(0);
+  const [tableAvailable, setTableAvailable] = useState("");
+  const [isSwitchOn, setIsSwitchOn] = useState("");
 
   useEffect(() => {
     let timer1 = 0;
@@ -101,8 +106,8 @@ export const MerchantHomePage = () => {
         customerId: customerId,
       })
     );
-  }, [customerId])
- 
+  }, [customerId]);
+
   useEffect(() => {
     return () => {
       let timeRun = new Date().toLocaleTimeString("en-us", {
@@ -130,6 +135,15 @@ export const MerchantHomePage = () => {
     waitCall,
   });
 
+  const {
+    isLoading: isUpdatingMerchant,
+    data: updateMerchantData,
+    mutate: updateMerchant,
+  } = useUpdateMerchant({
+    merchId: merchId,
+    tableAvailable,
+  });
+
   //CALL QUERY MERCHANT DETAILS API
   useEffect(() => {
     axios
@@ -140,6 +154,11 @@ export const MerchantHomePage = () => {
       )
       .then(function (res) {
         if (res?.data?.code === "000000") {
+          if (res?.data?.data?.tableAvailable === "0") {
+            setIsTableAvail(false);
+          } else {
+            setIsTableAvail(true);
+          }
           setMerchName(res.data.data?.merchName);
           setLogoUrl(res.data.data?.logoUrl);
           storage.add(
@@ -155,6 +174,7 @@ export const MerchantHomePage = () => {
               preOrderUrl: res?.data?.data?.preOrderUrl,
               monitorUrl: res?.data?.data?.monitorUrl,
               adsVideoUrl: res?.data?.data?.adsVideoUrl,
+              tableAvailable: res?.data?.data?.tableAvailable,
             })
           );
         }
@@ -163,6 +183,30 @@ export const MerchantHomePage = () => {
         console.log("merchant-error", error);
       });
   }, []);
+
+  //CALL UPDATE MERCHANT API
+  useEffect(() => {
+    if (tableAvailable) {
+      updateMerchant();
+    }
+  }, [tableAvailable]);
+
+  //UPDATE MERCHANT DATA
+  useEffect(() => {
+    if (updateMerchantData) {
+      if (updateMerchantData?.code === "000000") {
+        Notify(
+          "success",
+          "Updated Succesfully!",
+          "Table status has being updated!",
+          5
+        );
+      } else {
+        setUpdateStatus("");
+        Notify("error", "Failed to Update", updateMerchantData?.message, 5);
+      }
+    }
+  }, [updateMerchantData]);
 
   //CALL QUERY SUMMARY API
   useEffect(() => {
@@ -387,6 +431,16 @@ export const MerchantHomePage = () => {
     }
   }, [serveStatus]);
 
+  const onChange = (checked) => {
+    if (checked) {
+      setTableAvailable("1");
+      setIsTableAvail(true);
+    } else {
+      setTableAvailable("0");
+      setIsTableAvail(true);
+    }
+  };
+
   const handleServeStatus = () => {
     setServeStatus("SERVED");
     setIsServed(true);
@@ -571,7 +625,28 @@ export const MerchantHomePage = () => {
           </div>
 
           <div className="flex ">
-            <span className="flex  xl:mr-[96px] mr-[30px] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
+            <span className="grid xl:mr-[56px] mr-[20px] items-center justify-center py-2 border border-[#FAA87C] bg-[#ffffff] w-[67px] rounded-[5px] ">
+              <p className="text_14 align-center items-center justify-center text-[#000000]">
+                Table
+              </p>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "#F99762",
+                    borderRadius: 2,
+                    colorBgContainer: "#f6ffed",
+                  },
+                }}
+              >
+                {isSwitchOn || tableAvailable === "1" ? (
+                  <Switch defaultChecked onChange={onChange} />
+                ) : (
+                  <Switch onChange={onChange} />
+                )}
+              </ConfigProvider>
+            </span>
+
+            <span className="flex  xl:mr-[56px] mr-[20px] items-center justify-center py-2 bg-[#FAA87C] w-[67px] rounded-[5px] ">
               <p className="text_16 text-[#ffffff]">{waitTypeName}</p>
             </span>
             <CSVLink

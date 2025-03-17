@@ -290,6 +290,7 @@ const LinkSettingsPage = () => {
               preOrderUrl: res?.data?.data?.preOrderUrl,
               monitorUrl: res?.data?.data?.monitorUrl,
               adsVideoUrl:  res?.data?.data?.adsVideoUrl,
+              tableAvailable:  res?.data?.data?.tableAvailable,
             })
           );
           isSwitchOn(res?.data?.data?.linkUrlStatus);
