@@ -348,6 +348,30 @@ export const StoreFrontIcon = () => {
   );
 };
 
+export const BackIcon = () => {
+  return (
+   <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="25"
+    height="24"
+    fill="none"
+    viewBox="0 0 25 24"
+  >
+    <g clipPath="url(#clip0_1864_176)">
+      <path
+        fill="#09121F"
+        d="M7.034 3H21.5a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7.034a1 1 0 0 1-.832-.445l-5.333-8a1 1 0 0 1 0-1.11l5.333-8A1 1 0 0 1 7.034 3m6.465 7.586-2.828-2.829-1.415 1.415L12.086 12l-2.83 2.828 1.415 1.415 2.828-2.829 2.828 2.829 1.415-1.415L14.913 12l2.83-2.828-1.416-1.415z"
+      ></path>
+    </g>
+    <defs>
+      <clipPath id="clip0_1864_176">
+        <path fill="#fff" d="M.5 0h24v24H.5z"></path>
+      </clipPath>
+    </defs>
+  </svg>
+  );
+};
+
 export const NotOpenIcon = () => {
   return (
     <svg

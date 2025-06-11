@@ -19,6 +19,7 @@ import LinkSettingsPage from "./pages/merchant/linksettings/LinkSettings";
 import ImageSettingsPage from "./pages/merchant/imagesettings/ImageSettings";
 import QueueSettingsPage from "./pages/merchant/queuesettings/QueueSettings";
 import { TvPage } from "./pages/tv";
+import { MonitorPage } from "./pages/monitor"
 import { AdminMerchantListPage } from "./pages/admin/merchant-list";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => {
           <Route path="/password/reset/:email?/:token?" exact element={<ResetPasswordPage />} />
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
           <Route path="/display-tv/:monitorUrl?" element={<TvPage />} exact />
+          <Route path="/monitor/:linkUrl?" element={<MonitorPage />} exact />
           <Route path="/signup" element={<SignUpPage />} exact />
           <Route path="/signup/verify/:email?/:token?" element={<SignUpVerifyPage />} exact />
           <Route path="*" element={<NotFoundPage />} />

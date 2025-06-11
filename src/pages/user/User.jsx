@@ -52,19 +52,6 @@ export const UserHomePage = () => {
   const [calltimer1, setCallTimer1] = useState(0);
   const [play] = useSound(ringer);
 
-  //AUDIO SOUND FOR WHEN TABLE IS READY
-  // const audio = new Audio(ringer);
-  // audio.loop = true;
-
-  // const playSound = () => {
-  //   try {
-  //     audio.loop = true;
-  //     audio.play();
-  //   } catch (error) {
-  //     console.log("audio error", error);
-  //   }
-  // };
-
   var timeOutId;
 
   useEffect(() => {
