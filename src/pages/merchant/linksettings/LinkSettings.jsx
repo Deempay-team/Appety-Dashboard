@@ -595,7 +595,7 @@ const LinkSettingsPage = () => {
   //COPY TEXT TO CLIPBOARD
   const handleCopyIpad = () => {
     navigator.clipboard
-      .writeText(`https://queue.appety.com.sg/monitor/${linkUrl}`)
+      .writeText(`https://queue.appety.com.sg/tablet/${linkUrl}`)
       .then(() => {
         setCopiedIpad(false);
         setTimeout(() => {
@@ -1731,13 +1731,13 @@ const LinkSettingsPage = () => {
                 <div class="mx-6 border-[0.5px] border-[#e0e0e0] "></div>
                 <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
                   <span class="text-base font-normal">
-                    <h1 className="text_18">Ipad Link</h1>
+                    <h1 className="text_18">Tablet Link</h1>
                     <p className="text_12 mt-2 text-[#6b6968] mb-4">
-                      This will dispalay on the Ipad
+                      This will dispalay on the Tablet
                     </p>
                     <div className="flex">
                       <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
-                        {`https://queue.appety.com.sg/monitor/${linkUrl}`}
+                        {`https://queue.appety.com.sg/tablet/${linkUrl}`}
                       </button>
 
                       <button

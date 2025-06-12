@@ -56,7 +56,7 @@ const App = () => {
           <Route path="/password/reset/:email?/:token?" exact element={<ResetPasswordPage />} />
           <Route path="/password/forgot" exact element={<ForgotPasswordPage />} />
           <Route path="/display-tv/:monitorUrl?" element={<TvPage />} exact />
-          <Route path="/monitor/:linkUrl?" element={<MonitorPage />} exact />
+          <Route path="/tablet/:linkUrl?" element={<MonitorPage />} exact />
           <Route path="/signup" element={<SignUpPage />} exact />
           <Route path="/signup/verify/:email?/:token?" element={<SignUpVerifyPage />} exact />
           <Route path="*" element={<NotFoundPage />} />
