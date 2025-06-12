@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BackIcon } from "../../assests/icons/Icons";
 import secrets from "../../config/secrets";
 import { useParams } from "react-router-dom";
@@ -8,9 +8,11 @@ import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { useJoinQueue } from "../../hooks/useUser";
 import Notify from "../../components/Notification";
+//import { UserContext } from "../../contexts/UserContext";
 
 export const MonitorPage = () => {
   const baseURL = secrets.baseURL;
+ // const { isTableAvail, setIsTableAvail } = useContext(UserContext);
   const [merchId, setMerchId] = useState("");
   const [phone, setPhone] = useState("");
   const { linkUrl } = useParams();
@@ -36,7 +38,7 @@ export const MonitorPage = () => {
   const [estimateTime, setEstimateTime] = useState("--");
   const [waitPostion, setWaitPosition] = useState("");
   const [cusPhone, setCusPhone] = useState("");
-  const [cusName, setCusName] = useState("james");
+  //const [cusName, setCusName] = useState("");
   const [userName, setuserName] = useState("");
   const [personNo, setPersonNo] = useState("");
   const [waitNo, setWaitNo] = useState("");
@@ -144,7 +146,7 @@ export const MonitorPage = () => {
     waitTypeId,
     paxNo,
     cusPhone,
-    cusName,
+    cusName: cusPhone,
     marketing,
     email: "-",
   });
@@ -163,7 +165,7 @@ export const MonitorPage = () => {
         5
       );
     }
-  }, [paxNo, waitType, agree]);
+  }, [paxNo, waitType]);
 
   const handleSubmits = () => {
     setPaxNo(pax);
@@ -399,7 +401,8 @@ export const MonitorPage = () => {
                           <button
                             key={i}
                             onClick={handleSubmits}
-                            disabled={!agree || phone.length !== 8}
+                            //disabled={!agree || phone.length !== 8}
+                            disabled={phone.length !== 8}
                             className="submit_btn cursor-pointer"
                           >
                             {isJoining ? <SpinnerWhite /> : "Next"}
@@ -437,12 +440,18 @@ export const MonitorPage = () => {
             ) : (
               <>
                 <div className="h-fit bg-white max-w-xl grid items-center mx-auto">
-                  <h2 className="text-[104px] font-bold pb-2 pt-[150px] mx-auto">
-                    {" "}
+                   <p className="text-black font-normal text-[16px] pt-[100px] mx-auto">
+                  Current Waiting
+                </p>
+                  <h2 className="text-[110px] font-bold pb-3 pt-[15px] mx-auto">
                     {waitNo}
                   </h2>
-                  <p className="text-gray-600 pb-[43px] mx-auto pt-8 ">
-                    Thank you.
+                   <p className="text-black font-normal text-[16px] pt-3 mx-auto ">
+                  Estimated Wait time
+                </p>
+                 <p className="text-[62px] font-bold mx-auto">
+                    {estimateTime}
+                    <span className="text-[16px] mx-2 font-normal ">mins</span>
                   </p>
                 </div>
               </>

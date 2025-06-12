@@ -27,7 +27,6 @@ export const TvPage = () => {
   const [nextCalled, setNextCalled] = useState("-");
   const [nextCalledPosition, setNextCalledPosition] = useState(-1);
   const [callList, setCallList] = useState([]);
-
   const [callListSaved, setCallListSaved] = useState([]);
   const [callTimer, setCallTime] = useState(0);
   const [callInterval, setCallInterval] = useState(10000);
