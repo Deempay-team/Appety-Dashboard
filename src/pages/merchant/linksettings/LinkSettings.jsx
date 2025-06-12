@@ -35,7 +35,9 @@ const LinkSettingsPage = () => {
   const switchIsOn = JSON.parse(storage.fetch("merchantDetails")).linkUrlStatus;
   const monitorUrl = JSON.parse(storage.fetch("merchantDetails")).monitorUrl;
   const OldOrderLink = JSON.parse(storage.fetch("merchantDetails")).preOrderUrl;
-  const OldMonitorLink = JSON.parse(storage.fetch("merchantDetails")).adsVideoUrl;
+  const OldMonitorLink = JSON.parse(
+    storage.fetch("merchantDetails")
+  ).adsVideoUrl;
   const [waitTimeId, setWaitTimeId] = useState("");
   const [endTime, setEndTime] = useState("");
   const [startTime, setstartTime] = useState("");
@@ -72,6 +74,7 @@ const LinkSettingsPage = () => {
   const [isTimeFetch, setIsTimeFetch] = useState(true);
   const [adsVideoUrl, setAdsVideoUrl] = useState("");
   const [copied, setCopied] = useState(true);
+  const [copiedIpad, setCopiedIpad] = useState(true);
   const [isUpdatedMerch, setIsUpdatedMerch] = useState(false);
 
   // FORM VALIDATION
@@ -236,15 +239,17 @@ const LinkSettingsPage = () => {
   useEffect(() => {
     setIsLoadingTime(true);
     axios
-      .get(`${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`)
+      .get(
+        `${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`
+      )
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsTimeFetch(false);
           setIsLoadingTime(false);
           const daysData = res?.data?.data;
           setTimeList(daysData);
-          setPreOrderUrl(OldOrderLink)
-          setAdsVideoUrl(OldMonitorLink)
+          setPreOrderUrl(OldOrderLink);
+          setAdsVideoUrl(OldMonitorLink);
         }
       })
       .catch(function (error) {
@@ -255,7 +260,9 @@ const LinkSettingsPage = () => {
   //CALL QUERY WAIT-TIME API TO UPDATE STATE
   const timeUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`)
+      .get(
+        `${baseURL}api/v1/wait/time/query/${customerId ? customerId : merchId}`
+      )
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsLoadingTime(false);
@@ -271,7 +278,11 @@ const LinkSettingsPage = () => {
   //CALL QUERY MERCHANT DETAILS API
   const queryMerchantUpdate = () => {
     axios
-      .get(`${baseURL}api/v1/user/merchant/query/${customerId ? customerId : merchId}`)
+      .get(
+        `${baseURL}api/v1/user/merchant/query/${
+          customerId ? customerId : merchId
+        }`
+      )
       .then(function (res) {
         if (res?.data?.code === "000000") {
           setIsUpdatedMerch(false);
@@ -289,8 +300,8 @@ const LinkSettingsPage = () => {
               logoUrl: res?.data?.data?.logoUrl,
               preOrderUrl: res?.data?.data?.preOrderUrl,
               monitorUrl: res?.data?.data?.monitorUrl,
-              adsVideoUrl:  res?.data?.data?.adsVideoUrl,
-              tableAvailable:  res?.data?.data?.tableAvailable,
+              adsVideoUrl: res?.data?.data?.adsVideoUrl,
+              tableAvailable: res?.data?.data?.tableAvailable,
             })
           );
           isSwitchOn(res?.data?.data?.linkUrlStatus);
@@ -326,7 +337,7 @@ const LinkSettingsPage = () => {
       Notify("success", "Your Queue has being updated Successfully!");
       setWaitTimeId("");
       setEndTime("");
-      setstartTime("")
+      setstartTime("");
     } else {
       setIsLoadingMonday(false);
       setIsLoadingTuesday(false);
@@ -345,10 +356,10 @@ const LinkSettingsPage = () => {
       setIsEditSaturday(true);
       setIsEditSunday(true);
       closeModal();
-    // Notify("error", data?.message);
+      // Notify("error", data?.message);
       setWaitTimeId("");
       setEndTime("");
-      setstartTime("")
+      setstartTime("");
     }
   }, [data]);
 
@@ -399,7 +410,6 @@ const LinkSettingsPage = () => {
 
   //MERCHANT RETURN DATA API
   useEffect(() => {
-    
     if (updateMerchantData?.code === "000000") {
       setIsLoadingOrderUrl(false);
       setIsLoadingVideoUrl(false);
@@ -490,8 +500,11 @@ const LinkSettingsPage = () => {
   const onSubmitPreOrder = (data) => {
     const { preOrderUrl } = data;
     if (preOrderUrl) {
-
-      setPreOrderUrl(`https://${preOrderUrl.includes("https://") ? preOrderUrl.slice(8) : preOrderUrl}`);
+      setPreOrderUrl(
+        `https://${
+          preOrderUrl.includes("https://") ? preOrderUrl.slice(8) : preOrderUrl
+        }`
+      );
       setIsLoadingOrderUrl(true);
       setIsUpdatedMerch(true);
     }
@@ -499,9 +512,13 @@ const LinkSettingsPage = () => {
 
   const onSubmitAdsVideoUrl = (data) => {
     const { adsVideoUrl } = data;
-  
+
     if (adsVideoUrl) {
-      setAdsVideoUrl(`https://${adsVideoUrl.includes("https://") ? adsVideoUrl.slice(8) : adsVideoUrl}`);
+      setAdsVideoUrl(
+        `https://${
+          adsVideoUrl.includes("https://") ? adsVideoUrl.slice(8) : adsVideoUrl
+        }`
+      );
       setIsLoadingVideoUrl(true);
       setIsUpdatedMerch(true);
     }
@@ -550,7 +567,7 @@ const LinkSettingsPage = () => {
   }, [startTimeOld, endTimeOld]);
 
   useEffect(() => {
-    setValue("adsVideoUrl", adsVideoUrl ? adsVideoUrl.slice(8): "");
+    setValue("adsVideoUrl", adsVideoUrl ? adsVideoUrl.slice(8) : "");
   }, [adsVideoUrl]);
 
   useEffect(() => {
@@ -570,6 +587,19 @@ const LinkSettingsPage = () => {
         setCopied(false);
         setTimeout(() => {
           setCopied(true);
+        }, 1500);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  //COPY TEXT TO CLIPBOARD
+  const handleCopyIpad = () => {
+    navigator.clipboard
+      .writeText(`https://queue.appety.com.sg/monitor/${linkUrl}`)
+      .then(() => {
+        setCopiedIpad(false);
+        setTimeout(() => {
+          setCopiedIpad(true);
         }, 1500);
       })
       .catch((error) => console.log(error));
@@ -694,8 +724,7 @@ const LinkSettingsPage = () => {
                         ) : (
                           <>
                             <td className="">
-                              <span
-                              >
+                              <span>
                                 <input
                                   type="time"
                                   className={`input-time mx-auto ${
@@ -1650,9 +1679,7 @@ const LinkSettingsPage = () => {
                     <p className="text_12 mt-2 text-[#6b6968] mb-4">
                       This will play on the monitor
                     </p>
-                    <div
-                      className="flex"
-                    >
+                    <div className="flex">
                       <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
                         {`https://queue.appety.com.sg/display-tv/${monitorUrl}`}
                       </button>
@@ -1698,6 +1725,43 @@ const LinkSettingsPage = () => {
                         {isLoadingVideoUrl ? <SpinnerMediumWhite /> : "Save"}
                       </button>
                     </form>
+                  </span>
+                </div>
+
+                <div class="mx-6 border-[0.5px] border-[#e0e0e0] "></div>
+                <div className="py-10 px-10 grid  gap-6 xl:grid-cols-2 grid-cols-1">
+                  <span class="text-base font-normal">
+                    <h1 className="text_18">Ipad Link</h1>
+                    <p className="text_12 mt-2 text-[#6b6968] mb-4">
+                      This will dispalay on the Ipad
+                    </p>
+                    <div className="flex">
+                      <button className="text-[#000000] md:py-[20px] py-4 mr-[2px] rounded-[5px] gray-bg  text_14 md:px-4 px-6 font-normal">
+                        {`https://queue.appety.com.sg/monitor/${linkUrl}`}
+                      </button>
+
+                      <button
+                        type="submit"
+                        onClick={handleCopyIpad}
+                        className="gray-bg ml-2 px-6 md:py-[20px] py-4 rounded-[5px] text_16 text-[#000000] "
+                      >
+                        {copiedIpad ? (
+                          <span
+                            class="  cursor-pointer"
+                            onClick={handleCopyIpad}
+                          >
+                            <CopyIcon />
+                          </span>
+                        ) : (
+                          <span
+                            class=" cursor-pointer"
+                            onClick={handleCopyIpad}
+                          >
+                            <CopiedIcon />
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   </span>
                 </div>
 

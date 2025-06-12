@@ -7,6 +7,7 @@ import { AppetyLogoMedium } from "../../assests/icons/Icons";
 import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { useJoinQueue } from "../../hooks/useUser";
+import Notify from "../../components/Notification";
 
 export const MonitorPage = () => {
   const baseURL = secrets.baseURL;
@@ -148,14 +149,29 @@ export const MonitorPage = () => {
     email: "-",
   });
 
+  useEffect(() => {
+    // if (!agree) {
+    //   Notify("error", "Please agree to the personal terms.");
+    // }
+    if (paxNo && waitType) {
+      joinQueue();
+      setIsOpenPage(false);
+      Notify(
+        "success",
+        "joined succesfully!",
+        "Queue joined succeessfully!",
+        5
+      );
+    }
+  }, [paxNo, waitType, agree]);
+
   const handleSubmits = () => {
     setPaxNo(pax);
     setCusPhone(phone);
 
-    if (paxNo && cusPhone && merchId && waitType) {
-      joinQueue();
-      setIsOpenPage(false);
-    }
+    // if (!agree) {
+    //   Notify("error", "Please agree to the personal terms.");
+    // }
   };
 
   //CALL API TO JOIN QUEUE
@@ -181,7 +197,7 @@ export const MonitorPage = () => {
 
   useEffect(() => {
     if (waitId) {
-      // start timer
+      //start timer
       handleStartTimer();
     }
   }, [waitId]);
@@ -325,15 +341,11 @@ export const MonitorPage = () => {
                   Estimated Wait time
                 </p>
                 {estimateTime === "--" ? (
-                  <p className="text-[58px] font-bold ">
-                    {estimateTime}
-                  </p>
+                  <p className="text-[58px] font-bold ">{estimateTime}</p>
                 ) : (
                   <p className="text-[58px] font-bold ">
                     {estimateTime}
-                    <span className="text-[16px] mx-2 font-normal ">
-                      mins
-                    </span>
+                    <span className="text-[16px] mx-2 font-normal ">mins</span>
                   </p>
                 )}
               </div>
@@ -425,8 +437,13 @@ export const MonitorPage = () => {
             ) : (
               <>
                 <div className="h-fit bg-white max-w-xl grid items-center mx-auto">
-                  <h2 className="text-[104px] font-bold pb-2 pt-6 mx-auto"> {waitNo}</h2>
-                  <p className="text-gray-600 pb-[43px] mx-auto pt-8 ">Thank you.</p>
+                  <h2 className="text-[104px] font-bold pb-2 pt-[150px] mx-auto">
+                    {" "}
+                    {waitNo}
+                  </h2>
+                  <p className="text-gray-600 pb-[43px] mx-auto pt-8 ">
+                    Thank you.
+                  </p>
                 </div>
               </>
             )}
