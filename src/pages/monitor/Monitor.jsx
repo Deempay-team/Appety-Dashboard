@@ -8,11 +8,11 @@ import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { useJoinQueue } from "../../hooks/useUser";
 import Notify from "../../components/Notification";
-//import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 
 export const MonitorPage = () => {
   const baseURL = secrets.baseURL;
- // const { isTableAvail, setIsTableAvail } = useContext(UserContext);
+  const { isTableAvail, setIsTableAvail } = useContext(UserContext);
   const [merchId, setMerchId] = useState("");
   const [phone, setPhone] = useState("");
   const { linkUrl } = useParams();
@@ -79,6 +79,11 @@ export const MonitorPage = () => {
       .get(`${baseURL}api/v1/link/fetch/${linkUrl}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
+          if (res?.data?.data?.tableAvailable === "0") {
+            setIsTableAvail(false);
+          } else {
+            setIsTableAvail(true);
+          }
           setMerchId(res?.data?.data?.merchId);
           setLogoUrl(res?.data?.data?.logoUrl);
           setMerchName(res?.data?.data?.merchName);
@@ -152,18 +157,9 @@ export const MonitorPage = () => {
   });
 
   useEffect(() => {
-    // if (!agree) {
-    //   Notify("error", "Please agree to the personal terms.");
-    // }
     if (paxNo && waitType) {
       joinQueue();
       setIsOpenPage(false);
-      Notify(
-        "success",
-        "joined succesfully!",
-        "Queue joined succeessfully!",
-        5
-      );
     }
   }, [paxNo, waitType]);
 
@@ -178,22 +174,32 @@ export const MonitorPage = () => {
 
   //CALL API TO JOIN QUEUE
   useEffect(() => {
-    if (data?.code === "000000") {
-      setWaitNo(data?.data?.waitNo);
-      setWaitPosition(data?.data?.waitPosition);
-      setuserName(data?.data?.cusName);
-      setEstimateTime(parseInt(data?.data?.estimateWaitTime));
-      setPersonNo(data?.data?.paxNo);
-      //setWaitStatus(data?.data?.status);
-      setFillDataPage(false);
-      setWaitId(data?.data?.waitId);
-
-      // var totalQueue = data?.data?.totalNumberQueue;
-      // var waitos = data?.data?.waitPosition;
-      // var percentPos =
-      //   ((parseInt(totalQueue) - parseInt(waitos) + 1) / parseInt(totalQueue)) *
-      //   100;
-      // setPosPercent(percentPos);
+    if (data) {
+      if (data?.code === "000000") {
+        setWaitNo(data?.data?.waitNo);
+        setWaitPosition(data?.data?.waitPosition);
+        setuserName(data?.data?.cusName);
+        setEstimateTime(parseInt(data?.data?.estimateWaitTime));
+        setPersonNo(data?.data?.paxNo);
+        //setWaitStatus(data?.data?.status);
+        setFillDataPage(false);
+        setWaitId(data?.data?.waitId);
+        Notify(
+          "success",
+          "joined succesfully!",
+          "Queue joined succeessfully!",
+          5
+        );
+        setTimeout(() => {
+          setIsOpenPage(true);
+          setPhone("");
+          setPax("");
+          setPaxNo("");
+          setWaitPosition("");
+          setEstimateTime("--");
+          setWaitNo("");
+        }, 20000);
+      }
     }
   }, [data]);
 
@@ -203,6 +209,16 @@ export const MonitorPage = () => {
       handleStartTimer();
     }
   }, [waitId]);
+
+  //RESET VALUES IF TABLE IS AVAILABLE UPSTAIRS
+  useEffect(() => {
+    if (isTableAvail) {
+      setPhone("");
+      setPax("");
+      setEstimateTime("--");
+      setWaitNo("");
+    }
+  }, [isTableAvail]);
 
   // start timer function 2mins
   let timer = 0;
@@ -216,25 +232,16 @@ export const MonitorPage = () => {
         )
         .then(function (res) {
           if (res.data.code === "000000") {
+            if (res?.data?.data?.tableAvailable === "0") {
+              setIsTableAvail(false);
+            } else {
+              setIsTableAvail(true);
+            }
             setWaitPosition(res?.data?.data?.waitPosition);
             setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
             //setWaitStatus(res?.data?.data?.status);
             setFillDataPage(false);
-            // var totalQueue = res?.data?.data?.totalNumberQueue;
-            // var waitos = res?.data?.data?.waitPosition;
-            // var percentPos =
-            //   ((parseInt(totalQueue) - parseInt(waitos) + 1) /
-            //     parseInt(totalQueue)) *
-            //   100;
-            // setPosPercent(percentPos);
-
             if (res?.data?.data?.waitPosition === 0) clearTimeout(timeOutId);
-
-            if (res?.data?.data?.waitCall === "1") {
-              // setProgressBar(false);
-              //playSound();
-              // play();
-            }
           }
         })
         .catch(function (error) {
@@ -247,10 +254,6 @@ export const MonitorPage = () => {
   const handleCheckbox = (e) => {
     setAgree(e.target.checked);
   };
-
-  // function formatted(str) {
-  //   return str.split("").join(" ");
-  // }
 
   const handleDigit = (digit) => {
     if (activeInput === "pax" && pax.length < 2) {
@@ -266,6 +269,14 @@ export const MonitorPage = () => {
     } else if (activeInput === "phone") {
       setPhone(phone.slice(0, -1));
     }
+  };
+
+  const resetInputField = () => {
+    setPhone("");
+    setPax("");
+    setEstimateTime("--");
+    setIsOpenPage(true);
+    setWaitNo("");
   };
 
   return (
@@ -312,21 +323,21 @@ export const MonitorPage = () => {
         </div>
       </div>
 
-      <div className="h-fit bg-[#f6f6f6]">
+      <div className="max-h-screen bg-[#f6f6f6]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6  p-6">
-          <div className="bg-white rounded-[5px] px-10 py-[50px]">
+          <div className="bg-white rounded-[5px] px-10 py-[20px]">
             <h2 className="text-2xl font-bold mb-2">Reserve your spot!</h2>
-            <p className="text-gray-600 pb-[43px]">
+            <p className="text-gray-600 pb-[20px]">
               Check your message via KakaoTalk
             </p>
             <hr className="pt-[34px]" />
-            <p className="text-2xl font-normal text-black pt-[77px]">
+            <p className="text-2xl font-normal text-black pt-[87px]">
               Cafe Name:{" "}
               <span className="text-black text-[32px] font-semibold">
                 {merchName}
               </span>
             </p>
-            <div className="flex space-x-6 mt-[100px] pt-[64px]">
+            <div className="flex space-x-6 omt-[100px] pt-[66px]">
               <div className="bg-[#f6f6f6] rounded-lg grid w-[297px] h-[219px]  text-center items-center">
                 <p className="text-black font-normal text-[16px] pt-6">
                   Current Waiting
@@ -354,106 +365,154 @@ export const MonitorPage = () => {
             </div>
           </div>
 
-          <div className=" bg-white rounded-[5px] px-10 pt-[50px] pb-6">
+          <div className=" bg-white rounded-[5px] px-10 pt-[20px] pb-8">
             {isOpenPage ? (
               <>
-                <div className="h-fit bg-white max-w-xl mx-auto">
-                  <h2 className="text-2xl font-bold mb-2">Welcome!</h2>
-                  <p className="text-gray-600 pb-[43px]">
-                    Please enter your pax and mobile phone number.
-                  </p>
-                  <hr className=" pt-[34px]" />
-
-                  <div className="grid grid-cols-2 gap-4 mb-12">
-                    <div>
-                      <label className="block text-sm mb-1">Pax Number</label>
-                      <input
-                        name="pax"
-                        value={pax}
-                        placeholder="Enter Pax"
-                        onFocus={() => setActiveInput("pax")}
-                        className="w-full border px-3 py-2 rounded-md cursor-pointer h-[50px] block focus:border-[#F99762] outline-none"
-                        readOnly
-                      />
+                {isTableAvail ? (
+                  <>
+                    <div className=" ">
+                      <h1 className="text-center pt-[62px] font-bold text-[80px] text-[#000000]">
+                        Come Upstairs The Table is Free
+                      </h1>
                     </div>
-                    <div>
-                      <label className="block text-sm mb-1">Phone Number</label>
-                      <div className="flex border rounded-md overflow-hidden">
-                        <span className="px-3 h-[50px] flex items-center bg-white border-r">
-                          (+65)
-                        </span>
+                  </>
+                ) : (
+                  <div className="h-fit bg-white max-w-xl mx-auto">
+                    <h2 className="text-2xl font-bold mb-2">Welcome!</h2>
+                    <p className="text-gray-600 pb-[20px]">
+                      Please enter your pax and mobile phone number.
+                    </p>
+                    <hr className=" pt-[34px]" />
+
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                      <div>
+                        <label className="block text-sm mb-1">Pax Number</label>
                         <input
-                          name="phone"
-                          value={phone}
-                          placeholder="Enter Phone Number"
-                          onFocus={() => setActiveInput("phone")}
-                          className="w-full px-3 py-2 cursor-pointer h-[50px] block focus:border-[#F99762] outline-none"
+                          name="pax"
+                          value={pax}
+                          placeholder="Enter Pax"
+                          onFocus={() => setActiveInput("pax")}
+                          className="w-full border px-3 py-2 rounded-md cursor-pointer h-[50px] block focus:border-[#F99762] outline-none"
                           readOnly
                         />
                       </div>
+                      <div>
+                        <label className="block text-sm mb-1">
+                          Phone Number
+                        </label>
+                        <div className="flex border rounded-md overflow-hidden">
+                          <span className="px-3 h-[50px] flex items-center bg-white border-r">
+                            (+65)
+                          </span>
+                          <input
+                            name="phone"
+                            value={phone}
+                            placeholder="Enter Phone Number"
+                            onFocus={() => setActiveInput("phone")}
+                            className="w-full px-3 py-2 cursor-pointer h-[50px] block focus:border-[#F99762] outline-none"
+                            readOnly
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, "del", 0, "Next"].map(
+                        (digit, i) =>
+                          digit === "Next" ? (
+                            <button
+                              key={i}
+                              onClick={handleSubmits}
+                              //disabled={!agree || phone.length !== 8}
+                              disabled={phone.length !== 8}
+                              className="submit_btn cursor-pointer"
+                            >
+                              {isJoining ? <SpinnerWhite /> : "Next"}
+                            </button>
+                          ) : digit === "del" ? (
+                            <button
+                              key={i}
+                              onClick={handleDelete}
+                              className="p-3 bg-[#f6f6f6] rounded-md"
+                            >
+                              <span className="flex items-center justify-center">
+                                <BackIcon className="" />
+                              </span>
+                            </button>
+                          ) : (
+                            <button
+                              key={i}
+                              onClick={() => handleDigit(digit)}
+                              className="p-4 bg-[#f6f6f6] rounded-md"
+                            >
+                              {digit}
+                            </button>
+                          )
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-2 pt-4">
+                      <input type="checkbox" onChange={handleCheckbox} />
+                      <label className="text-sm accent-[#F99762]">
+                        I agree to the collection and use of my personal
+                        information
+                      </label>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-3 gap-4 mb-6">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, "del", 0, "Next"].map(
-                      (digit, i) =>
-                        digit === "Next" ? (
-                          <button
-                            key={i}
-                            onClick={handleSubmits}
-                            //disabled={!agree || phone.length !== 8}
-                            disabled={phone.length !== 8}
-                            className="submit_btn cursor-pointer"
-                          >
-                            {isJoining ? <SpinnerWhite /> : "Next"}
-                          </button>
-                        ) : digit === "del" ? (
-                          <button
-                            key={i}
-                            onClick={handleDelete}
-                            className="p-4 bg-[#f6f6f6] rounded-md"
-                          >
-                            <span className="flex items-center justify-center">
-                              <BackIcon className="" />
-                            </span>
-                          </button>
-                        ) : (
-                          <button
-                            key={i}
-                            onClick={() => handleDigit(digit)}
-                            className="p-4 bg-[#f6f6f6] rounded-md"
-                          >
-                            {digit}
-                          </button>
-                        )
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2 pt-4">
-                    <input type="checkbox" onChange={handleCheckbox} />
-                    <label className="text-sm">
-                      I agree to the collection and use of my personal
-                      information
-                    </label>
-                  </div>
-                </div>
+                )}
               </>
             ) : (
               <>
-                <div className="h-fit bg-white max-w-xl grid items-center mx-auto">
-                   <p className="text-black font-normal text-[16px] pt-[100px] mx-auto">
-                  Current Waiting
-                </p>
-                  <h2 className="text-[110px] font-bold pb-3 pt-[15px] mx-auto">
-                    {waitNo}
-                  </h2>
-                   <p className="text-black font-normal text-[16px] pt-3 mx-auto ">
-                  Estimated Wait time
-                </p>
-                 <p className="text-[62px] font-bold mx-auto">
-                    {estimateTime}
-                    <span className="text-[16px] mx-2 font-normal ">mins</span>
-                  </p>
-                </div>
+                {isJoining ? (
+                  <span className="h-screen flex items-center justify-center">
+                    <SpinnerOrange />
+                  </span>
+                ) : (
+                  <div className="max-h-screen bg-white grid items-center mx-auto">
+                    <div className=" mt-6 ">
+                      <h2 className="text-center text-base text-[#6B6968] font-normal">
+                        Queue Number
+                      </h2>
+                      <h3 className="text-center text-[110px] font-bold  text-[#000000]">
+                        {waitNo}
+                      </h3>
+                      <div class="rounded-b-[5px] border-t-[1px] border-[#e0e0e0] pt-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
+                        <span class="text-lg font-normal text-[#8a8a89]">
+                          Estimated Time
+                        </span>
+                        <span class="text-[24px] font-medium text-[#000000]">
+                          {estimateTime + " mins"}
+                        </span>
+                      </div>
+
+                      <div class="rounded-b-[5px] border-t-[1px] border-[#e0e0e0] pt-5 px-6 flex justify-between bg-[#ffffff] w-full mt-4">
+                        <span class="text-lg font-normal text-[#8a8a89]">
+                          Pax
+                        </span>
+                        <span class="text-[24px] font-medium text-[#000000]">
+                          {personNo}
+                        </span>
+                      </div>
+                    </div>
+                    <div class=" rounded-[5px]  bg-[#ffffff] sm:max-w-md max-w-[366px]  items-center mx-auto mt-6"></div>
+
+                    <div className="mt-2 rounded-lg items-center mx-auto grid pt-6  px-10">
+                      <p className="text-center text-[#000000] font-semibold text-lg ">
+                        Do Not Close This Page
+                      </p>
+                    </div>
+
+                    <div class="w-full items-center mx-auto pt-4 mt-10">
+                      <button
+                        type="button"
+                        onClick={resetInputField}
+                        className="submit_btn"
+                      >
+                        Go Back
+                      </button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>

@@ -552,8 +552,8 @@ export const UserHomePage = () => {
                       </p>
                       <p className="text-center text-sm mt-[14px]">
                         Queue number will be updated here, if you accidentally
-                        you close this page, rescan QR code and enter the same
-                        hone number to obtain your queue number back.
+                        close this page, rescan QR code and enter the same
+                        phone number to obtain your queue number back.
                       </p>
                     </div>
 
