@@ -53,7 +53,7 @@ export const MonitorPage = () => {
     setInterval(function () {
       timer1 += 1;
       setCallTimer1(timer1);
-    }, 1000);
+    }, 3000);
   }, []);
 
   useEffect(() => {
@@ -97,6 +97,30 @@ export const MonitorPage = () => {
         console.log("log-error", error);
       });
   }, []);
+
+  useEffect(() => {
+   axios
+      .get(`${baseURL}api/v1/link/fetch/${linkUrl}`)
+      .then(function (res) {
+        if (res?.data?.code === "000000") {
+          if (res?.data?.data?.tableAvailable === "0") {
+            setIsTableAvail(false);
+          } else {
+            setIsTableAvail(true);
+          }
+          // setMerchId(res?.data?.data?.merchId);
+          // setLogoUrl(res?.data?.data?.logoUrl);
+          // setMerchName(res?.data?.data?.merchName);
+          // setWaitTypeList(res?.data?.data?.waitType);
+          // setLinkUrlStatus(res?.data?.data?.linkUrlStatus);
+
+          // setIsUserFetch(false);
+        }
+      })
+      .catch(function (error) {
+        console.log("log-error", error);
+      });
+  }, [calltimer1])
 
   //  //CHECK IF THE USER HAS INPUTTED  OR NOT
   useEffect(() => {
@@ -232,11 +256,7 @@ export const MonitorPage = () => {
         )
         .then(function (res) {
           if (res.data.code === "000000") {
-            if (res?.data?.data?.tableAvailable === "0") {
-              setIsTableAvail(false);
-            } else {
-              setIsTableAvail(true);
-            }
+            //checkTableApi();
             setWaitPosition(res?.data?.data?.waitPosition);
             setEstimateTime(parseInt(res?.data?.data?.estimateWaitTime));
             //setWaitStatus(res?.data?.data?.status);
