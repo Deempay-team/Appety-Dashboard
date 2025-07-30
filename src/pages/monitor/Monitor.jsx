@@ -38,13 +38,13 @@ export const MonitorPage = () => {
   const [estimateTime, setEstimateTime] = useState("--");
   const [waitPostion, setWaitPosition] = useState("");
   const [cusPhone, setCusPhone] = useState("");
-  //const [cusName, setCusName] = useState("");
   const [userName, setuserName] = useState("");
   const [personNo, setPersonNo] = useState("");
   const [waitNo, setWaitNo] = useState("");
   const [waitId, setWaitId] = useState("");
   const [fillDataPage, setFillDataPage] = useState(true);
   const [marketing, setMarketing] = useState(1);
+  const [isGrayCol, setIsGrayCol] = useState(false);
 
   var timeOutId;
 
@@ -54,6 +54,10 @@ export const MonitorPage = () => {
       timer1 += 1;
       setCallTimer1(timer1);
     }, 3000);
+  }, []);
+
+  useEffect(() => {
+    setActiveInput("pax");
   }, []);
 
   useEffect(() => {
@@ -99,7 +103,7 @@ export const MonitorPage = () => {
   }, []);
 
   useEffect(() => {
-   axios
+    axios
       .get(`${baseURL}api/v1/link/fetch/${linkUrl}`)
       .then(function (res) {
         if (res?.data?.code === "000000") {
@@ -108,19 +112,12 @@ export const MonitorPage = () => {
           } else {
             setIsTableAvail(true);
           }
-          // setMerchId(res?.data?.data?.merchId);
-          // setLogoUrl(res?.data?.data?.logoUrl);
-          // setMerchName(res?.data?.data?.merchName);
-          // setWaitTypeList(res?.data?.data?.waitType);
-          // setLinkUrlStatus(res?.data?.data?.linkUrlStatus);
-
-          // setIsUserFetch(false);
         }
       })
       .catch(function (error) {
         console.log("log-error", error);
       });
-  }, [calltimer1])
+  }, [calltimer1]);
 
   //  //CHECK IF THE USER HAS INPUTTED  OR NOT
   useEffect(() => {
@@ -221,7 +218,12 @@ export const MonitorPage = () => {
           setPaxNo("");
           setWaitPosition("");
           setEstimateTime("--");
+          setActiveInput("pax");
+          setIsGrayCol(true);
           setWaitNo("");
+          setTimeout(() => {
+            setIsGrayCol(false);
+          }, 20000);
         }, 20000);
       }
     }
@@ -241,6 +243,7 @@ export const MonitorPage = () => {
       setPax("");
       setEstimateTime("--");
       setWaitNo("");
+      setActiveInput("pax");
     }
   }, [isTableAvail]);
 
@@ -297,6 +300,11 @@ export const MonitorPage = () => {
     setEstimateTime("--");
     setIsOpenPage(true);
     setWaitNo("");
+    setActiveInput("pax");
+    setIsGrayCol(true);
+    setTimeout(() => {
+      setIsGrayCol(false);
+    }, 20000);
   };
 
   return (
@@ -443,7 +451,6 @@ export const MonitorPage = () => {
                             <button
                               key={i}
                               onClick={handleSubmits}
-                              //disabled={!agree || phone.length !== 8}
                               disabled={phone.length !== 8}
                               className="submit_btn cursor-pointer"
                             >
@@ -453,7 +460,11 @@ export const MonitorPage = () => {
                             <button
                               key={i}
                               onClick={handleDelete}
-                              className="p-3 bg-[#f6f6f6] rounded-md"
+                              className={`${
+                                isGrayCol
+                                  ? "bg-[#989797] p-3 rounded-md"
+                                  : "bg-[#f6f6f6] p-3 rounded-md"
+                              }`}
                             >
                               <span className="flex items-center justify-center">
                                 <BackIcon className="" />
@@ -463,7 +474,11 @@ export const MonitorPage = () => {
                             <button
                               key={i}
                               onClick={() => handleDigit(digit)}
-                              className="p-4 bg-[#f6f6f6] rounded-md"
+                              className={`${
+                                isGrayCol
+                                  ? "bg-[#989797] p-4  rounded-md"
+                                  : "bg-[#f6f6f6] p-4  rounded-md"
+                              }`}
                             >
                               {digit}
                             </button>
